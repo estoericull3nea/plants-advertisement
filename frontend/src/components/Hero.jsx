@@ -6,36 +6,36 @@ import 'swiper/css/pagination'
 import 'swiper/css/effect-fade'
 const heroBanner = [
   {
-    head: 'Creative Solutions',
-    title: 'Empowering Your Business Vision',
+    head: 'Smart Shopping Innovations',
+    title: 'Shop Smart, Connect Instantly',
     description:
       'We provide the expertise and innovative solutions to help you realize your business aspirations.',
     image:
-      'https://res.cloudinary.com/dpb8r7bqq/image/upload/v1721837719/download_rdxjld.webp',
+      'https://images.squarespace-cdn.com/content/v1/5e1a000279b1df2af2fd8a16/1689972295048-2FV7XQHZGZN8FH6WZB15/Chicken-Grazing-Vernon-Family-Farm.jpg',
   },
   {
-    head: 'Innovative Agency',
-    title: 'Unlock Your Business Potential',
+    head: 'Community-Driven Marketplace',
+    title: 'Your Marketplace, Your Community',
     description:
       'Our team is dedicated to turning your dreams into reality through cutting-edge solutions and expert guidance.',
     image:
-      'https://res.cloudinary.com/dpb8r7bqq/image/upload/v1721837648/features-img-1_msjovk.webp',
+      'https://cdn.britannica.com/56/155656-050-EF76EB04/chickens-poultry-farm.jpg',
   },
   {
-    head: 'Expert Team',
-    title: 'Achieve Your Business Goals',
+    head: 'Engaging Customer Experiences',
+    title: 'Where Shopping Meets Conversation',
     description:
       'Partner with us to leverage innovative strategies and expert knowledge to reach your business objectives.',
     image:
-      'https://res.cloudinary.com/dpb8r7bqq/image/upload/v1721837633/hero-slider-1-img_iopzxw.webp',
+      'https://images.pexels.com/photos/195226/pexels-photo-195226.jpeg?cs=srgb&dl=pexels-aburrell-195226.jpg&fm=jpg',
   },
   {
-    head: 'Future-Driven',
-    title: 'Transform Your Business',
+    head: 'Seamless Shopping Solutions',
+    title: 'Discover, Chat, and Shop with Ease',
     description:
       'We offer the innovative solutions and expertise needed to help you achieve your business dreams and goals.',
     image:
-      'https://res.cloudinary.com/dpb8r7bqq/image/upload/v1721837633/hero-slider-img-3_klmsdx.webp',
+      'https://images.coolwallpapers.me/picsup/3017960-account_accountant_accounting_analysis_apple_banking_bill_bookkeeper_budget_business_businessman_businesswoman_calculation_cash_cell_computer_corporate_desk_document_economy_finance_financial_han.jpg',
   },
 ]
 
@@ -58,7 +58,7 @@ function Hero() {
             <div className=' w-full h-full'>
               <img
                 src={item.image || ''}
-                className='object-cover h-full w-full'
+                className='object-cover h-full w-full brightness-75'
               />
             </div>
             <div className='absolute top-0 left-10 w-[80%] m-auto flex justify-start items-center h-full '>

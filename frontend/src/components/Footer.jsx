@@ -3,44 +3,43 @@ import React from 'react'
 const Footer = () => {
   const footerNavs = [
     {
-      label: 'Resources',
-      items: [
-        { href: 'javascript:void(0)', name: 'Contact' },
-        { href: 'javascript:void(0)', name: 'Support' },
-        { href: 'javascript:void(0)', name: 'Documentation' },
-        { href: 'javascript:void(0)', name: 'Pricing' },
-      ],
-    },
-    {
-      label: 'About',
-      items: [
-        { href: 'javascript:void(0)', name: 'Terms' },
-        { href: 'javascript:void(0)', name: 'License' },
-        { href: 'javascript:void(0)', name: 'Privacy' },
-        { href: 'javascript:void(0)', name: 'About Us' },
-      ],
-    },
-    {
       label: 'Explore',
       items: [
-        { href: 'javascript:void(0)', name: 'Showcase' },
-        { href: 'javascript:void(0)', name: 'Roadmap' },
-        { href: 'javascript:void(0)', name: 'Languages' },
-        { href: 'javascript:void(0)', name: 'Blog' },
+        { href: 'javascript:void(0)', name: 'Crops' },
+        { href: 'javascript:void(0)', name: 'Livestock' },
+        { href: 'javascript:void(0)', name: 'Fisheries' },
       ],
     },
     {
-      label: 'Company',
+      label: 'Quick Links',
       items: [
-        { href: 'javascript:void(0)', name: 'Partners' },
-        { href: 'javascript:void(0)', name: 'Team' },
-        { href: 'javascript:void(0)', name: 'Careers' },
+        { href: 'javascript:void(0)', name: 'Home' },
+        { href: 'javascript:void(0)', name: 'Posts' },
+        { href: 'javascript:void(0)', name: 'About' },
+        { href: 'javascript:void(0)', name: 'Contact' },
+      ],
+    },
+    {
+      label: 'Connect',
+      items: [
+        { href: 'javascript:void(0)', name: 'Instagram' },
+        { href: 'javascript:void(0)', name: 'Facebook' },
+        { href: 'javascript:void(0)', name: 'Get in Touch' },
+      ],
+    },
+    {
+      label: 'Legal',
+      items: [
+        { href: 'javascript:void(0)', name: 'Terms Of Service' },
+        { href: 'javascript:void(0)', name: 'Privacy Policy' },
+        { href: 'javascript:void(0)', name: 'Cookies Policy' },
+        { href: 'javascript:void(0)', name: 'FAQs' },
       ],
     },
   ]
 
   return (
-    <footer className='pt-10'>
+    <footer className='pt-10 container'>
       <div className='max-w-screen-xl mx-auto px-4 md:px-8'>
         <div className='flex-1 mt-16 space-y-6 justify-between sm:flex md:space-y-0'>
           {footerNavs.map((nav, idx) => (
@@ -63,7 +62,7 @@ const Footer = () => {
         </div>
         <div className='mt-10 py-10 border-t items-center justify-between sm:flex'>
           <p className='text-gray-600'>
-            © 2022 Flash UI Inc. All rights reserved.
+            © 2024 Plants Advertisement | All rights reserved.
           </p>
         </div>
       </div>
