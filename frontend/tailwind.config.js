@@ -10,7 +10,7 @@ export default {
         },
       },
       colors: {
-        main: '#df0001',
+        main: '#06d001',
       },
       fontFamily: {
         poppins: ['Poppins', 'sans-serif'],
