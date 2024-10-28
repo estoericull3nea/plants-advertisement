@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Logo from '../../src/assets/logo/logo.png'
 import { Link } from 'react-router-dom'
+import { toast } from 'react-hot-toast'
 
 const Register = () => {
   const [barangays, setBarangays] = useState([])
@@ -85,14 +86,29 @@ const Register = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:5000/api/users/register', {
-        method: 'POST',
-        body: form,
-      })
+      const response = await fetch(
+        `${import.meta.env.VITE_DEV_BACKEND_URL}/users/register`,
+        {
+          method: 'POST',
+          body: form,
+        }
+      )
 
       const result = await response.json()
       if (response.ok) {
-        console.log('User registered successfully:', result)
+        toast.success('User Registered')
+
+        setFormData({
+          firstName: '',
+          lastName: '',
+          email: '',
+          contactNumber: '',
+          municipality: '',
+          barangay: '',
+          password: '',
+          confirmPassword: '',
+          idImage: null,
+        })
       } else {
         console.error('Error registering user:', result)
       }
@@ -107,7 +123,7 @@ const Register = () => {
 
   return (
     <div>
-      <section className='bg-gray-50'>
+      <section className='bg-gray-50 py-10'>
         <div className='flex flex-col items-center justify-center px-6 py-8 mx-auto lg:py-0'>
           <Link
             to='/'
@@ -296,32 +312,17 @@ const Register = () => {
                   />
                 </div>
 
-                <div className='flex items-start'>
-                  <div className='flex items-center h-5'>
-                    <input
-                      id='terms'
-                      aria-describedby='terms'
-                      type='checkbox'
-                      className='w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300'
-                      required
-                    />
-                  </div>
-                  <div className='ml-3 text-sm'>
-                    <label htmlFor='terms' className='font-light text-gray-500'>
-                      I accept the{' '}
-                      <a
-                        className='font-medium text-primary-600 hover:underline'
-                        href='#'
-                      >
-                        Terms and Conditions
-                      </a>
-                    </label>
-                  </div>
+                <span></span>
+
+                <div className='text-end'>
+                  <Link to='/forgot' className='text-sm text-end'>
+                    Forgot password?
+                  </Link>
                 </div>
 
                 <button
                   type='submit'
-                  className='w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center'
+                  className='w-full border border-black text-black bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center'
                 >
                   Create an account
                 </button>
