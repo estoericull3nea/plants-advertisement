@@ -1,22 +1,27 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import { toast } from 'react-hot-toast'
 
 const UserInfo = () => {
   const { userId } = useParams()
-  const [userData, setUserData] = useState(null)
+  const navigate = useNavigate()
+  const [userData, setUserData] = useState(null) // userData can be null initially
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [isUpdating, setIsUpdating] = useState(false)
 
   useEffect(() => {
     const fetchUserData = async () => {
+      setLoading(true)
+      setError(null)
       try {
         const response = await axios.get(
           `${import.meta.env.VITE_DEV_BACKEND_URL}/users/${userId}`
         )
         setUserData(response.data)
       } catch (err) {
-        setError('Error fetching user data')
+        setError('Failed to fetch user data')
       } finally {
         setLoading(false)
       }
@@ -25,32 +30,40 @@ const UserInfo = () => {
     fetchUserData()
   }, [userId])
 
-  const handleSubmit = async (e) => {
+  const handleUpdate = async (e) => {
     e.preventDefault()
-    // Create an object with form data
-    const updatedUserData = {
-      firstName: e.target.firstName.value,
-      lastName: e.target.lastName.value,
-      age: e.target.age.value,
-      dateOfBirth: e.target.dob.value,
-      contactNumber: e.target.contactNumber.value,
-      password: e.target.password.value,
-    }
-
+    setIsUpdating(true)
+    setError(null)
     try {
+      const updateData = {
+        firstName: e.target.firstName.value,
+        lastName: e.target.lastName.value,
+        age: e.target.age.value,
+        dateOfBirth: e.target.dob.value,
+        contactNumber: e.target.contactNumber.value,
+        password: e.target.password.value,
+      }
       await axios.put(
         `${import.meta.env.VITE_DEV_BACKEND_URL}/users/${userId}`,
-        updatedUserData
+        updateData
       )
-      alert('User updated successfully!')
+      toast.success('User updated successfully!')
+
+      // Refetch user data after updating
+      const response = await axios.get(
+        `${import.meta.env.VITE_DEV_BACKEND_URL}/users/${userId}`
+      )
+      setUserData(response.data)
     } catch (err) {
-      setError('Error updating user data')
+      toast.error('Failed to update user data')
+    } finally {
+      setIsUpdating(false)
     }
   }
 
   if (loading) {
     return (
-      <div className='flex justify-center items-center h-screen'>
+      <div className='flex w-full justify-center items-center h-screen'>
         <div className='flex flex-col gap-4'>
           <div className='skeleton h-32 w-full'></div>
           <div className='skeleton h-4 w-28'></div>
@@ -70,7 +83,7 @@ const UserInfo = () => {
       <h2 className='text-3xl font-bold'>My Details</h2>
       <p className='mt-10'>Personal Information</p>
       <hr />
-      <form onSubmit={handleSubmit} className='p-3 space-y-4'>
+      <form className='p-3 space-y-4' onSubmit={handleUpdate}>
         <div>
           <label
             htmlFor='first-name'
@@ -84,7 +97,7 @@ const UserInfo = () => {
             id='first-name'
             className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5'
             placeholder='John'
-            defaultValue={userData.firstName}
+            defaultValue={userData?.firstName || ''}
             required
           />
         </div>
@@ -102,7 +115,7 @@ const UserInfo = () => {
             id='last-name'
             className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5'
             placeholder='Doe'
-            defaultValue={userData.lastName}
+            defaultValue={userData?.lastName || ''}
             required
           />
         </div>
@@ -123,7 +136,7 @@ const UserInfo = () => {
             min='1'
             className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5'
             placeholder='25'
-            defaultValue={userData.age}
+            defaultValue={userData?.age || ''}
             required
           />
         </div>
@@ -140,7 +153,9 @@ const UserInfo = () => {
             name='dob'
             id='dob'
             className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5'
-            defaultValue={userData.dateOfBirth.split('T')[0]} // Format date to match input
+            defaultValue={
+              userData?.dateOfBirth ? userData.dateOfBirth.split('T')[0] : ''
+            }
             required
           />
         </div>
@@ -158,7 +173,7 @@ const UserInfo = () => {
             id='contact-number'
             className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5'
             placeholder='123-456-7890'
-            defaultValue={userData.contactNumber}
+            defaultValue={userData?.contactNumber || ''}
             required
           />
         </div>
@@ -176,15 +191,18 @@ const UserInfo = () => {
             id='password'
             className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5'
             placeholder='••••••••'
-            required
           />
+          <p className='text-sm text-gray-500 mt-1'>
+            If you don't want to change your password, leave this field empty.
+          </p>
         </div>
 
         <button
           type='submit'
-          className='w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center'
+          className='w-full text-white bg-main focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center'
+          disabled={isUpdating}
         >
-          Update User
+          {isUpdating ? 'Updating...' : 'Update User'}
         </button>
       </form>
     </div>
