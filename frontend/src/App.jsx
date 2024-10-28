@@ -12,8 +12,7 @@ import Profile from './Pages/UserProfile/Profile'
 
 import PrivateRoute from './components/PrivateRoute'
 import ProtectedRoute from './components/ProtectedRoute'
-
-import PostProduct from './components/PostProduct'
+import PostProduct from './Pages/PostProduct'
 
 const App = () => {
   return (

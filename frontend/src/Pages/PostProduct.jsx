@@ -59,7 +59,7 @@ const PostProduct = () => {
   }
 
   return (
-    <div className='max-w-lg mx-auto p-4 border rounded-lg shadow-md bg-white'>
+    <div className='max-w-lg mx-auto p-4 border rounded-lg shadow-md bg-white my-10'>
       <h2 className='text-xl font-bold mb-4'>Post Your Product</h2>
       <form className='space-y-4' onSubmit={handleSubmit}>
         <div>
@@ -116,40 +116,42 @@ const PostProduct = () => {
           </select>
         </div>
 
-        <div>
-          <label
-            htmlFor='stock'
-            className='block mb-2 text-sm font-medium text-gray-900'
-          >
-            Stock
-          </label>
-          <input
-            type='number'
-            id='stock'
-            className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5'
-            value={stock}
-            onChange={(e) => setStock(Number(e.target.value))}
-            placeholder='Enter stock amount'
-            required
-          />
-        </div>
+        <div className='grid grid-cols-2 gap-3'>
+          <div>
+            <label
+              htmlFor='stock'
+              className='block mb-2 text-sm font-medium text-gray-900'
+            >
+              Stock
+            </label>
+            <input
+              type='number'
+              id='stock'
+              className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5'
+              value={stock}
+              onChange={(e) => setStock(Number(e.target.value))}
+              placeholder='Enter stock amount'
+              required
+            />
+          </div>
 
-        <div>
-          <label
-            htmlFor='price'
-            className='block mb-2 text-sm font-medium text-gray-900'
-          >
-            Price
-          </label>
-          <input
-            type='number'
-            id='price'
-            className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5'
-            value={price}
-            onChange={(e) => setPrice(Number(e.target.value))}
-            placeholder='Enter price'
-            required
-          />
+          <div>
+            <label
+              htmlFor='price'
+              className='block mb-2 text-sm font-medium text-gray-900'
+            >
+              Price
+            </label>
+            <input
+              type='number'
+              id='price'
+              className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5'
+              value={price}
+              onChange={(e) => setPrice(Number(e.target.value))}
+              placeholder='Enter price'
+              required
+            />
+          </div>
         </div>
 
         <div>

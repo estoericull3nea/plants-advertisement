@@ -1,0 +1,51 @@
+import React, { useEffect, useState } from 'react'
+import axios from 'axios'
+import { Link } from 'react-router-dom'
+
+const ProductList = () => {
+  const [products, setProducts] = useState([])
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_DEV_BACKEND_URL}/products`
+        ) // Adjust the endpoint as necessary
+        setProducts(response.data)
+      } catch (error) {
+        console.error('Error fetching products:', error)
+      }
+    }
+
+    fetchProducts()
+  }, [])
+
+  return (
+    <div className='container mx-auto p-4'>
+      <h1 className='text-2xl font-bold mb-4'>Marketplace</h1>
+      <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
+        {products.map((product) => (
+          <div
+            key={product._id}
+            className='border rounded-lg overflow-hidden shadow-lg'
+          >
+            <Link to={`/products/${product._id}`}>
+              <img
+                src={`http://localhost:5000/uploads/${product.images[0]}`} // Assuming images[0] is the main image
+                alt={product.title}
+                className='w-full h-48 object-cover'
+              />
+              <div className='p-4'>
+                <h2 className='text-lg font-semibold'>{product.title}</h2>
+                <p className='text-gray-700'>{product.caption}</p>
+                <p className='font-bold'>${product.price}</p>
+              </div>
+            </Link>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+export default ProductList

@@ -95,19 +95,6 @@ const ProductTable = () => {
     </div>
   )
 
-  const imageTemplate = (rowData) => (
-    <div className='flex gap-2'>
-      {rowData.images.map((image, index) => (
-        <img
-          key={index}
-          src={`http://localhost:5000/${image}`}
-          alt={`Product Image ${index + 1}`}
-          className='h-20 w-20 object-cover'
-        />
-      ))}
-    </div>
-  )
-
   const viewImages = (images) => {
     setSelectedProduct(images)
     setViewImagesDialogVisible(true)
@@ -228,7 +215,7 @@ const ProductTable = () => {
         }
       >
         <div className='flex gap-2 flex-wrap'>
-          {selectedProduct &&
+          {Array.isArray(selectedProduct) ? (
             selectedProduct.map((image, index) => (
               <img
                 key={index}
@@ -236,7 +223,14 @@ const ProductTable = () => {
                 alt={`Product Image ${index + 1}`}
                 className='h-40 w-40 object-cover'
               />
-            ))}
+            ))
+          ) : (
+            <img
+              src={`http://localhost:5000/${selectedProduct}`}
+              alt='Product Image'
+              className='h-40 w-40 object-cover'
+            />
+          )}
         </div>
       </Dialog>
     </div>
