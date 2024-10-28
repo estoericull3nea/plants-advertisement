@@ -4,7 +4,7 @@ import { DataTable } from 'primereact/datatable'
 import { Column } from 'primereact/column'
 import { Button } from 'primereact/button'
 import { Dialog } from 'primereact/dialog'
-import { InputText } from 'primereact/inputtext'
+import { toast } from 'react-hot-toast'
 
 import 'primereact/resources/themes/saga-blue/theme.css'
 import 'primereact/resources/primereact.min.css'
@@ -68,8 +68,10 @@ const ProductTable = () => {
       )
       fetchProducts()
       setDialogVisible(false)
+      toast.success('Product updated successfully!') // Success toast
     } catch (error) {
       console.error('Error updating product:', error)
+      toast.error('Failed to update product.') // Error toast
     }
   }
 
@@ -80,8 +82,10 @@ const ProductTable = () => {
           `${import.meta.env.VITE_DEV_BACKEND_URL}/products/${id}`
         )
         fetchProducts()
+        toast.success('Product deleted successfully!') // Success toast
       } catch (error) {
         console.error('Error deleting product:', error)
+        toast.error('Failed to delete product.') // Error toast
       }
     }
   }
@@ -92,6 +96,19 @@ const ProductTable = () => {
       <div className='skeleton h-4 w-28'></div>
       <div className='skeleton h-4 w-full'></div>
       <div className='skeleton h-4 w-full'></div>
+    </div>
+  )
+
+  const imageTemplate = (rowData) => (
+    <div className='flex gap-2'>
+      {rowData.images.map((image, index) => (
+        <img
+          key={index}
+          src={`http://localhost:5000/${image}`}
+          alt={`Product Image ${index + 1}`}
+          className='h-20 w-20 object-cover'
+        />
+      ))}
     </div>
   )
 
@@ -150,55 +167,95 @@ const ProductTable = () => {
         visible={dialogVisible}
         onHide={() => setDialogVisible(false)}
         footer={
-          <div>
+          <div className='flex items-center gap-3'>
             <Button label='Cancel' onClick={() => setDialogVisible(false)} />
             <Button label='Save' onClick={updateProduct} />
           </div>
         }
       >
-        <div className='field'>
-          <label htmlFor='title'>Title</label>
-          <InputText
-            id='title'
+        <div>
+          <label
+            htmlFor='title'
+            className='block mb-2 text-sm font-medium text-gray-900'
+          >
+            Title
+          </label>
+          <input
+            type='text'
             name='title'
+            id='title'
+            className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5'
             value={formData.title}
             onChange={handleInputChange}
+            required
           />
         </div>
-        <div className='field'>
-          <label htmlFor='caption'>Caption</label>
-          <InputText
-            id='caption'
+        <div>
+          <label
+            htmlFor='caption'
+            className='block mb-2 text-sm font-medium text-gray-900'
+          >
+            Caption
+          </label>
+          <input
+            type='text'
             name='caption'
+            id='caption'
+            className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5'
             value={formData.caption}
             onChange={handleInputChange}
+            required
           />
         </div>
-        <div className='field'>
-          <label htmlFor='stock'>Stock</label>
-          <InputText
-            id='stock'
+        <div>
+          <label
+            htmlFor='stock'
+            className='block mb-2 text-sm font-medium text-gray-900'
+          >
+            Stock
+          </label>
+          <input
+            type='number'
             name='stock'
+            id='stock'
+            className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5'
             value={formData.stock}
             onChange={handleInputChange}
+            required
           />
         </div>
-        <div className='field'>
-          <label htmlFor='price'>Price</label>
-          <InputText
-            id='price'
+        <div>
+          <label
+            htmlFor='price'
+            className='block mb-2 text-sm font-medium text-gray-900'
+          >
+            Price
+          </label>
+          <input
+            type='number'
             name='price'
+            id='price'
+            className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5'
             value={formData.price}
             onChange={handleInputChange}
+            required
           />
         </div>
-        <div className='field'>
-          <label htmlFor='address'>Address</label>
-          <InputText
-            id='address'
+        <div>
+          <label
+            htmlFor='address'
+            className='block mb-2 text-sm font-medium text-gray-900'
+          >
+            Address
+          </label>
+          <input
+            type='text'
             name='address'
+            id='address'
+            className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5'
             value={formData.address}
             onChange={handleInputChange}
+            required
           />
         </div>
       </Dialog>
