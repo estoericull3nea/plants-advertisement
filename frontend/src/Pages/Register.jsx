@@ -138,9 +138,66 @@ const Register = () => {
       setIsSubmitting(false)
     }
   }
-
   if (loading) {
-    return <div className='container'>Loading...</div>
+    return (
+      <div className='bg-gray-50 py-10'>
+        <div className='flex flex-col items-center justify-center px-6 py-8 mx-auto lg:py-0'>
+          <div className='w-full bg-white  shadow md:mt-0 sm:max-w-md xl:p-0'>
+            <div className='p-6 space-y-4 md:space-y-6 sm:p-8'>
+              <h1 className='skeleton h-8 w-48'></h1> {/* Title Skeleton */}
+              <div className='grid grid-cols-1 md:grid-cols-2 gap-3'>
+                <div>
+                  <div className='skeleton h-10 w-full'></div>{' '}
+                  {/* First Name Skeleton */}
+                </div>
+                <div>
+                  <div className='skeleton h-10 w-full'></div>{' '}
+                  {/* Last Name Skeleton */}
+                </div>
+              </div>
+              <div>
+                <div className='skeleton h-10 w-full'></div>{' '}
+                {/* Email Skeleton */}
+              </div>
+              <div>
+                <div className='skeleton h-10 w-full'></div>{' '}
+                {/* Contact Number Skeleton */}
+              </div>
+              <div>
+                <div className='skeleton h-10 w-full'></div>{' '}
+                {/* ID Image Skeleton */}
+              </div>
+              <div className='grid grid-cols-1 md:grid-cols-2 gap-3'>
+                <div>
+                  <div className='skeleton h-10 w-full'></div>{' '}
+                  {/* Municipality Skeleton */}
+                </div>
+                <div>
+                  <div className='skeleton h-10 w-full'></div>{' '}
+                  {/* Barangay Skeleton */}
+                </div>
+              </div>
+              <div>
+                <div className='skeleton h-10 w-full'></div>{' '}
+                {/* Password Skeleton */}
+              </div>
+              <div>
+                <div className='skeleton h-10 w-full'></div>{' '}
+                {/* Confirm Password Skeleton */}
+              </div>
+              <div className='text-end'>
+                <div className='skeleton h-4 w-32'></div>{' '}
+                {/* Forgot Password Skeleton */}
+              </div>
+              <div className='skeleton h-12 w-full'></div>{' '}
+              {/* Submit Button Skeleton */}
+              <p className='skeleton h-4 w-60'></p>{' '}
+              {/* Account Check Skeleton */}
+            </div>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   return (
