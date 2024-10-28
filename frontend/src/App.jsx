@@ -1,18 +1,23 @@
 import React from 'react'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+
 import Navbar from './components/Navbar'
-import Hero from './components/Hero'
 import Footer from './components/Footer'
-import HowItWords from './components/HowItWords'
-import JoinTheFarmMart from './components/JoinTheFarmMart'
+
+import Home from './Pages/Home'
+import Register from './Pages/Register'
 
 const App = () => {
   return (
     <div className=''>
-      <Navbar />
-      <Hero />
-      <HowItWords />
-      <JoinTheFarmMart />
-      <Footer />
+      <Router>
+        <Navbar />
+        <Routes>
+          <Route path='/' element={<Home />} />
+          <Route path='/register' element={<Register />} />
+        </Routes>
+        <Footer />
+      </Router>
     </div>
   )
 }

@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 export default function JoinTheFarmMart() {
   return React.createElement(
@@ -27,18 +28,17 @@ export default function JoinTheFarmMart() {
         'div',
         { className: 'space-x-4 flex items-center' },
         React.createElement(
-          'button',
+          Link,
           {
-            type: 'button',
-            className:
-              'px-4 py-2 text-white bg-main rounded-full duration-150 ',
+            to: '/register',
+            className: 'px-4 py-2 text-white bg-main rounded-full duration-150',
           },
           'Sign Up'
         ),
         React.createElement(
-          'button',
+          Link,
           {
-            type: 'button',
+            to: '/contact',
             className:
               'px-4 py-2 text-black bg-orange-50 rounded-full duration-150 hover:bg-orange-100 active:bg-orange-200',
           },

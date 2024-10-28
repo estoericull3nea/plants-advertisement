@@ -1,1 +1,3 @@
 https://github.com/estoericull3nea/plants-advertisement.git
+
+https://psgc.cloud/docs/psgc-regions-api-documentation/ (api for location)

@@ -6,7 +6,7 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 import connectDB from './api/utils/connectDB.js'
 
-const allowedOrigins = ['http://localhost:5173']
+const allowedOrigins = [process.env.VITE_DEV_FRONTEND_URL]
 
 dotenv.config()
 
