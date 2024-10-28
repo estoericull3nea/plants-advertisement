@@ -18,6 +18,7 @@ const Sidebar = () => {
           <li className='menu-title'>Menu</li>
           <li>
             <NavLink to={`/profile/${userId}/user-info`}>My Details</NavLink>
+            <NavLink to={`/profile/${userId}/all-posts`}>All Posts</NavLink>
           </li>
         </ul>
       </aside>

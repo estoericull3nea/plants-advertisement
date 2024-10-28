@@ -4,7 +4,10 @@ import multer from 'multer'
 import path from 'path'
 import {
   createProduct,
+  deleteProduct,
   getAllProducts,
+  getProductById,
+  updateProduct,
 } from '../controllers/product.controller.js'
 
 // Set up multer storage
@@ -30,5 +33,9 @@ const router = express.Router()
 
 router.post('/', verifyToken, upload.array('images', 5), createProduct)
 router.get('/', getAllProducts)
+
+router.get('/:id', getProductById)
+router.put('/:id', updateProduct)
+router.delete('/:id', deleteProduct)
 
 export default router

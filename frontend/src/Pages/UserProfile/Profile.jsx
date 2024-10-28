@@ -2,6 +2,7 @@ import React from 'react'
 import Sidebar from './Sidebar'
 import { useParams, Routes, Route, useNavigate } from 'react-router-dom'
 import UserInfo from './UserInfo'
+import ProductTable from './ProductTable'
 
 const Profile = () => {
   return (
@@ -11,6 +12,7 @@ const Profile = () => {
         <div className='main-content overflow-hidden w-full'>
           <Routes>
             <Route path='/user-info' element={<UserInfo />} />
+            <Route path='/all-posts' element={<ProductTable />} />
           </Routes>
         </div>
       </div>
