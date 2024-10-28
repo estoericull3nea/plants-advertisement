@@ -13,6 +13,8 @@ import Profile from './Pages/UserProfile/Profile'
 import PrivateRoute from './components/PrivateRoute'
 import ProtectedRoute from './components/ProtectedRoute'
 
+import PostProduct from './components/PostProduct'
+
 const App = () => {
   return (
     <div className=''>
@@ -48,6 +50,15 @@ const App = () => {
             element={
               <PrivateRoute>
                 <Profile />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path='/posts'
+            element={
+              <PrivateRoute>
+                <PostProduct />
               </PrivateRoute>
             }
           />
