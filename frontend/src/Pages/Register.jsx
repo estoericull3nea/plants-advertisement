@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Logo from '../../src/assets/logo/logo.png'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-hot-toast'
 
 const Register = () => {
@@ -9,6 +9,7 @@ const Register = () => {
   const [municipalities, setMunicipalities] = useState([])
   const [loading, setLoading] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const navigate = useNavigate()
 
   const [formData, setFormData] = useState({
     firstName: '',
@@ -119,6 +120,7 @@ const Register = () => {
         }))
 
         toast.success('User Registered')
+        navigate('/login')
       } else {
         // Display error messages
         if (result.errors) {
