@@ -10,6 +10,8 @@ import Register from './Pages/Register'
 import Login from './Pages/Login'
 import Profile from './Pages/UserProfile/Profile'
 
+import PrivateRoute from './components/PrivateRoute'
+
 const App = () => {
   return (
     <div className=''>
@@ -25,7 +27,14 @@ const App = () => {
           <Route path='/register' element={<Register />} />
           <Route path='/login' element={<Login />} />
 
-          <Route path='/profile/:userId/*' element={<Profile />} />
+          <Route
+            path='/profile/:userId/*'
+            element={
+              <PrivateRoute>
+                <Profile />
+              </PrivateRoute>
+            }
+          />
         </Routes>
         <Footer />
       </Router>

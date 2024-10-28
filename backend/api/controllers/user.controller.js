@@ -18,14 +18,12 @@ export const getAllUsers = async (req, res) => {
 
 export const updateUserById = async (req, res) => {
   const { userId } = req.params
-  const updateData = { ...req.body } // Copy the request body
+  const updateData = { ...req.body }
 
-  // If the password is being updated, hash it
   if (updateData.password) {
     const saltRounds = 10 // Adjust the salt rounds as necessary
     updateData.password = await bcrypt.hash(updateData.password, saltRounds)
   } else {
-    // If password is not being updated, remove it from the updateData
     delete updateData.password
   }
 
