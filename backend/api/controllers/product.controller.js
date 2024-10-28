@@ -33,7 +33,10 @@ export const getAllProducts = async (req, res) => {
 }
 
 export const getProductById = async (req, res) => {
-  const product = await Product.findById(req.params.id)
+  const product = await Product.findById(req.params.id).populate(
+    'userId',
+    '-password'
+  )
   if (!product) {
     return res.status(404).json({ message: 'Product not found' })
   }

@@ -13,6 +13,7 @@ import Profile from './Pages/UserProfile/Profile'
 import PrivateRoute from './components/PrivateRoute'
 import ProtectedRoute from './components/ProtectedRoute'
 import PostProduct from './Pages/PostProduct'
+import ProductDetail from './components/ProductDetail'
 
 const App = () => {
   return (
@@ -26,7 +27,6 @@ const App = () => {
         <Navbar />
         <Routes>
           <Route path='/' element={<Home />} />
-
           <Route
             path='/register'
             element={
@@ -43,12 +43,19 @@ const App = () => {
               </ProtectedRoute>
             }
           />
-
           <Route
             path='/profile/:userId/*'
             element={
               <PrivateRoute>
                 <Profile />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path='/products/:id'
+            element={
+              <PrivateRoute>
+                <ProductDetail />
               </PrivateRoute>
             }
           />

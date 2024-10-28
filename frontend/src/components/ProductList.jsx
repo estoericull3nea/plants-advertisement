@@ -56,7 +56,6 @@ const ProductList = () => {
           <option value='crops'>Crops</option>
           <option value='fisheries'>Fisheries</option>
           <option value='livestock'>Livestock</option>
-          <option value='uncategorized'>Uncategorized</option>
         </select>
       </div>
 
