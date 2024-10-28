@@ -13,6 +13,8 @@ dotenv.config()
 const PORT = process.env.PORT || 5000
 const app = express()
 
+import userRouter from './api/routes/auth.route.js'
+
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
@@ -31,6 +33,8 @@ app.use(
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+
+app.use('/api/v1/users', userRouter)
 
 // ================================== Connection to MongoDB ==================================
 connectDB()

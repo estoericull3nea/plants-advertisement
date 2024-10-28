@@ -4,9 +4,20 @@ import { Link } from 'react-router-dom'
 
 const Register = () => {
   const [barangays, setBarangays] = useState([])
+  const [filteredBarangays, setFilteredBarangays] = useState([])
   const [municipalities, setMunicipalities] = useState([])
-  const [selectedMunicipality, setSelectedMunicipality] = useState('')
   const [loading, setLoading] = useState(true)
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    contactNumber: '',
+    municipality: '',
+    barangay: '',
+    password: '',
+    confirmPassword: '',
+    idImage: null,
+  })
 
   useEffect(() => {
     const fetchMunicipalities = async () => {
@@ -27,17 +38,66 @@ const Register = () => {
   }, [])
 
   const handleMunicipalityChange = async (e) => {
-    const selected = e.target.value
-    setSelectedMunicipality(selected)
-    setBarangays([]) // Clear barangays when municipality changes
+    const { value } = e.target
+
+    // Update formData for municipality
+    setFormData((prevData) => ({
+      ...prevData,
+      municipality: value,
+      barangay: '', // Reset barangay when municipality changes
+    }))
+
+    // Fetch barangays based on selected municipality
     try {
       const response = await fetch(
-        `https://psgc.cloud/api/municipalities/${selected}/barangays`
+        ` https://psgc.cloud/api/municipalities/${value}/barangays`
       )
+
       const data = await response.json()
-      setBarangays(data)
+      setFilteredBarangays(data)
     } catch (error) {
       console.error('Error fetching barangays:', error)
+    }
+  }
+
+  const handleChange = (e) => {
+    const { name, value } = e.target
+
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }))
+  }
+
+  const handleFileChange = (e) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      idImage: e.target.files[0],
+    }))
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    const form = new FormData()
+
+    for (const key in formData) {
+      form.append(key, formData[key])
+    }
+
+    try {
+      const response = await fetch('http://localhost:5000/api/users/register', {
+        method: 'POST',
+        body: form,
+      })
+
+      const result = await response.json()
+      if (response.ok) {
+        console.log('User registered successfully:', result)
+      } else {
+        console.error('Error registering user:', result)
+      }
+    } catch (error) {
+      console.error('Error:', error)
     }
   }
 
@@ -61,7 +121,7 @@ const Register = () => {
               <h1 className='text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl'>
                 Create an account
               </h1>
-              <form className='space-y-4 md:space-y-6' action='#'>
+              <form className='space-y-4 md:space-y-6' onSubmit={handleSubmit}>
                 <div className='grid grid-cols-1 md:grid-cols-2 gap-3'>
                   <div>
                     <label
@@ -72,11 +132,12 @@ const Register = () => {
                     </label>
                     <input
                       type='text'
-                      name='first-name'
+                      name='firstName'
                       id='first-name'
                       className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5'
                       placeholder='John'
                       required
+                      onChange={handleChange}
                     />
                   </div>
                   <div>
@@ -88,11 +149,12 @@ const Register = () => {
                     </label>
                     <input
                       type='text'
-                      name='last-name'
+                      name='lastName'
                       id='last-name'
                       className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5'
                       placeholder='Doe'
                       required
+                      onChange={handleChange}
                     />
                   </div>
                 </div>
@@ -111,6 +173,7 @@ const Register = () => {
                     className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5'
                     placeholder='name@company.com'
                     required
+                    onChange={handleChange}
                   />
                 </div>
 
@@ -123,11 +186,12 @@ const Register = () => {
                   </label>
                   <input
                     type='tel'
-                    name='contact-number'
+                    name='contactNumber'
                     id='contact-number'
                     className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5'
                     placeholder='09151341234 or 9151341234'
                     required
+                    onChange={handleChange}
                   />
                 </div>
 
@@ -140,11 +204,12 @@ const Register = () => {
                   </label>
                   <input
                     type='file'
-                    name='id-image'
+                    name='idImage'
                     id='id-image'
                     accept='image/*'
                     className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5'
                     required
+                    onChange={handleFileChange}
                   />
                 </div>
 
@@ -159,13 +224,13 @@ const Register = () => {
                     <select
                       name='municipality'
                       id='municipality'
-                      onChange={handleMunicipalityChange}
                       className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5'
                       required
+                      onChange={handleMunicipalityChange} // Using the updated function
                     >
                       <option value=''>Select Municipality</option>
                       {municipalities.map((municipality, index) => (
-                        <option key={index} value={municipality.code}>
+                        <option key={index} value={municipality.name}>
                           {municipality.name}
                         </option>
                       ))}
@@ -183,10 +248,11 @@ const Register = () => {
                       id='barangay'
                       className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5'
                       required
+                      onChange={handleChange}
                     >
                       <option value=''>Select Barangay</option>
-                      {barangays.map((barangay, index) => (
-                        <option key={index} value={barangay.code}>
+                      {filteredBarangays.map((barangay, index) => (
+                        <option key={index} value={barangay.name}>
                           {barangay.name}
                         </option>
                       ))}
@@ -208,6 +274,7 @@ const Register = () => {
                     placeholder='••••••••'
                     className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5'
                     required
+                    onChange={handleChange}
                   />
                 </div>
 
@@ -220,11 +287,12 @@ const Register = () => {
                   </label>
                   <input
                     type='password'
-                    name='confirm-password'
+                    name='confirmPassword'
                     id='confirm-password'
                     placeholder='••••••••'
                     className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5'
                     required
+                    onChange={handleChange}
                   />
                 </div>
 
