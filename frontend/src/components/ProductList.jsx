@@ -75,6 +75,11 @@ const ProductList = () => {
                 <h2 className='text-lg font-semibold'>{product.title}</h2>
                 <p className='text-gray-700'>{product.caption}</p>
                 <p className='font-bold'>₱ {product.price}</p>
+                <p className='text-gray-500'>
+                  Posted by: {product.userId.firstName}{' '}
+                  {product.userId.lastName}
+                </p>{' '}
+                {/* Display the user's full name */}
               </div>
             </Link>
           </div>
