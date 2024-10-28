@@ -11,6 +11,7 @@ import Login from './Pages/Login'
 import Profile from './Pages/UserProfile/Profile'
 
 import PrivateRoute from './components/PrivateRoute'
+import ProtectedRoute from './components/ProtectedRoute'
 
 const App = () => {
   return (
@@ -24,8 +25,23 @@ const App = () => {
         <Navbar />
         <Routes>
           <Route path='/' element={<Home />} />
-          <Route path='/register' element={<Register />} />
-          <Route path='/login' element={<Login />} />
+
+          <Route
+            path='/register'
+            element={
+              <ProtectedRoute>
+                <Register />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path='/login'
+            element={
+              <ProtectedRoute>
+                <Login />
+              </ProtectedRoute>
+            }
+          />
 
           <Route
             path='/profile/:userId/*'

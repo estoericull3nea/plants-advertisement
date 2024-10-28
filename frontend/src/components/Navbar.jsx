@@ -3,7 +3,8 @@ import { motion } from 'framer-motion'
 import 'react-modern-drawer/dist/index.css'
 import { Icon } from '@iconify/react/dist/iconify.js'
 import Logo from '../../src/assets/logo/logo.png'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { jwtDecode } from 'jwt-decode' // Import jwt-decode
 
 const navItems = [
   { title: 'Home', href: '/' },
@@ -14,6 +15,25 @@ const navItems = [
 
 function Navbar() {
   const [open, setOpen] = useState(false)
+  const navigate = useNavigate() // To use for navigation
+  const token = localStorage.getItem('token')
+  let isAuthenticated = false
+
+  if (token) {
+    try {
+      const decoded = jwtDecode(token)
+      const currentTime = Date.now() / 1000
+      isAuthenticated = decoded.exp > currentTime // Check if token is not expired
+    } catch (error) {
+      console.error('Token decode error:', error)
+    }
+  }
+
+  const handleLogout = () => {
+    localStorage.removeItem('token') // Clear the token
+    navigate('/login') // Redirect to login page
+  }
+
   const listVariants = {
     closed: { x: '100vh' },
     opened: {
@@ -51,12 +71,21 @@ function Navbar() {
             ))}
           </div>
           <div>
-            <Link
-              to='/register'
-              className='bg-gradient-to-l from-[#202752] to-main hover:bg-[#1d20e4] py-2 px-6 rounded-3xl flex items-center text-white'
-            >
-              Get Started
-            </Link>
+            {isAuthenticated ? (
+              <button
+                onClick={handleLogout}
+                className='bg-gradient-to-l from-[#202752] to-main hover:bg-[#1d20e4] py-2 px-6 rounded-3xl flex items-center text-white'
+              >
+                Logout
+              </button>
+            ) : (
+              <Link
+                to='/register'
+                className='bg-gradient-to-l from-[#202752] to-main hover:bg-[#1d20e4] py-2 px-6 rounded-3xl flex items-center text-white'
+              >
+                Get Started
+              </Link>
+            )}
           </div>
         </div>
         <div className='md:hidden'>
@@ -92,12 +121,21 @@ function Navbar() {
                 </motion.div>
               ))}
               <motion.div variants={listItemVariants}>
-                <Link
-                  to='/register'
-                  className='text-xl whitespace-nowrap bg-gradient-to-l from-[#091C82] to-[#182046] hover:bg-[#393baf] text-black font-semibold px-6 py-2 rounded-full text-thin'
-                >
-                  Get Started
-                </Link>
+                {isAuthenticated ? (
+                  <button
+                    onClick={handleLogout}
+                    className='text-xl whitespace-nowrap bg-gradient-to-l from-[#091C82] to-[#182046] hover:bg-[#393baf] text-black font-semibold px-6 py-2 rounded-full text-thin'
+                  >
+                    Logout
+                  </button>
+                ) : (
+                  <Link
+                    to='/register'
+                    className='text-xl whitespace-nowrap bg-gradient-to-l from-[#091C82] to-[#182046] hover:bg-[#393baf] text-black font-semibold px-6 py-2 rounded-full text-thin'
+                  >
+                    Get Started
+                  </Link>
+                )}
               </motion.div>
             </motion.div>
           )}
