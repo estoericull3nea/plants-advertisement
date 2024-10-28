@@ -15,6 +15,7 @@ const app = express()
 
 import authRouter from './api/routes/auth.route.js'
 import userRouter from './api/routes/user.route.js'
+import productRouter from './api/routes/product.route.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -37,6 +38,7 @@ app.use(express.urlencoded({ extended: true }))
 
 app.use('/api/v1/auth', authRouter)
 app.use('/api/v1/users', userRouter)
+app.use('/api/v1/products', productRouter)
 
 // ================================== Connection to MongoDB ==================================
 connectDB()
