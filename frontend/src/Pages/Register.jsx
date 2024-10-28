@@ -8,6 +8,8 @@ const Register = () => {
   const [filteredBarangays, setFilteredBarangays] = useState([])
   const [municipalities, setMunicipalities] = useState([])
   const [loading, setLoading] = useState(true)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -78,8 +80,14 @@ const Register = () => {
   }
 
   const handleSubmit = async (e) => {
+    setIsSubmitting(true)
     e.preventDefault()
     const form = new FormData()
+
+    if (formData.password !== formData.confirmPassword) {
+      toast.error('Passwords do not match.')
+      return
+    }
 
     for (const key in formData) {
       form.append(key, formData[key])
@@ -95,10 +103,10 @@ const Register = () => {
       )
 
       const result = await response.json()
-      if (response.ok) {
-        toast.success('User Registered')
 
-        setFormData({
+      if (response.ok) {
+        setFormData((prevData) => ({
+          ...prevData,
           firstName: '',
           lastName: '',
           email: '',
@@ -108,12 +116,26 @@ const Register = () => {
           password: '',
           confirmPassword: '',
           idImage: null,
-        })
+        }))
+
+        toast.success('User Registered')
       } else {
-        console.error('Error registering user:', result)
+        // Display error messages
+        if (result.errors) {
+          // Assuming `result.errors` is an array of error messages
+          result.errors.forEach((error) => {
+            toast.error(error.msg) // Display each error message
+          })
+        } else {
+          // Handle generic error
+          toast.error('An error occurred. Please try again.')
+        }
       }
     } catch (error) {
       console.error('Error:', error)
+      toast.error('Network error. Please try again later.')
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -322,9 +344,14 @@ const Register = () => {
 
                 <button
                   type='submit'
-                  className='w-full border border-black text-black bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center'
+                  className={`w-full border border-black text-black ${
+                    isSubmitting
+                      ? 'bg-gray-400'
+                      : 'bg-primary-600 hover:bg-primary-700'
+                  } focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center`}
+                  disabled={isSubmitting}
                 >
-                  Create an account
+                  {isSubmitting ? 'Creating account...' : 'Create an account'}
                 </button>
 
                 <p className='text-sm font-light text-gray-500'>
