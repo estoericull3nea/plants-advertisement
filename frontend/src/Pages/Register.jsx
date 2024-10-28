@@ -87,7 +87,7 @@ const Register = () => {
 
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_DEV_BACKEND_URL}/users/register`,
+        `${import.meta.env.VITE_DEV_BACKEND_URL}/auth/register`,
         {
           method: 'POST',
           body: form,
@@ -118,7 +118,7 @@ const Register = () => {
   }
 
   if (loading) {
-    return <div>Loading...</div>
+    return <div className='container'>Loading...</div>
   }
 
   return (

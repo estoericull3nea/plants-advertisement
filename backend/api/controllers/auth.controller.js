@@ -1,3 +1,6 @@
+import bcrypt from 'bcryptjs'
+import User from '../models/user.model.js'
+
 export const registerUser = async (req, res) => {
   const {
     firstName,
@@ -9,9 +12,8 @@ export const registerUser = async (req, res) => {
     password,
   } = req.body
 
-  const idImage = req.file ? req.file.path : null // Ensure idImage is set if file exists
+  const idImage = req.file ? req.file.path : null
 
-  // Manual validations
   const errors = []
 
   if (!firstName) {
@@ -24,7 +26,6 @@ export const registerUser = async (req, res) => {
     errors.push({ msg: 'Invalid email format' })
   }
   if (!contactNumber || !/^09\d{9}$/.test(contactNumber)) {
-    // Validate contact number: must start with '09' and followed by 9 digits
     errors.push({
       msg: 'Invalid contact number. Must start with "09" and have 11 digits.',
     })
@@ -35,29 +36,36 @@ export const registerUser = async (req, res) => {
   if (!barangay) {
     errors.push({ msg: 'Barangay is required' })
   }
-  if (!password || password.length < 6) {
-    errors.push({ msg: 'Password must be at least 6 characters' })
+  if (!password || password.length < 8) {
+    errors.push({ msg: 'Password must be at least 8 characters' })
   }
 
   if (errors.length > 0) {
     return res.status(400).json({ errors })
   }
 
-  try {
-    const newUser = new User({
-      firstName,
-      lastName,
-      email,
-      contactNumber,
-      idImage,
-      municipality,
-      barangay,
-      password,
-    })
-    await newUser.save()
-    res.status(201).json({ message: 'User registered successfully' })
-  } catch (error) {
-    console.error('Error registering user:', error)
-    res.status(500).json({ message: 'Error registering user', error })
+  const existingUser = await User.findOne({ email })
+  if (existingUser) {
+    return res
+      .status(400)
+      .json({ errors: [{ msg: 'Email already registered' }] })
   }
+
+  const hashedPassword = await bcrypt.hash(password, 10)
+
+  const newUser = new User({
+    firstName,
+    lastName,
+    email,
+    contactNumber,
+    idImage,
+    municipality,
+    barangay,
+    password: hashedPassword,
+  })
+
+  await newUser.save()
+  res
+    .status(201)
+    .json({ message: 'User registered successfully', user: newUser })
 }

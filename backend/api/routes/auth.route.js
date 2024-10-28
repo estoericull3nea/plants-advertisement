@@ -20,6 +20,5 @@ const storage = multer.diskStorage({
 const upload = multer({ storage })
 
 router.post('/register', upload.single('idImage'), registerUser)
-router.delete('/', deleteAllUsers)
 
 export default router
