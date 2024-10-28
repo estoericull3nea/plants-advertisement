@@ -15,6 +15,7 @@ const ProductTable = () => {
   const [loading, setLoading] = useState(true)
   const [selectedProduct, setSelectedProduct] = useState(null)
   const [dialogVisible, setDialogVisible] = useState(false)
+  const [viewImagesDialogVisible, setViewImagesDialogVisible] = useState(false)
   const [formData, setFormData] = useState({
     title: '',
     caption: '',
@@ -107,6 +108,11 @@ const ProductTable = () => {
     </div>
   )
 
+  const viewImages = (images) => {
+    setSelectedProduct(images)
+    setViewImagesDialogVisible(true)
+  }
+
   return (
     <div className='p-4'>
       {loading ? (
@@ -125,10 +131,15 @@ const ProductTable = () => {
           <Column field='stock' header='Stock' />
           <Column field='price' header='Price' />
           <Column field='address' header='Address' />
-          <Column body={imageTemplate} header='Images' />
           <Column
             body={(rowData) => (
               <div>
+                <Button
+                  label='View Images'
+                  icon='pi pi-eye'
+                  className='mr-2'
+                  onClick={() => viewImages(rowData.images)}
+                />
                 <Button
                   label='Edit'
                   icon='pi pi-pencil'
@@ -202,6 +213,30 @@ const ProductTable = () => {
             value={formData.address}
             onChange={handleInputChange}
           />
+        </div>
+      </Dialog>
+
+      <Dialog
+        header='Product Images'
+        visible={viewImagesDialogVisible}
+        onHide={() => setViewImagesDialogVisible(false)}
+        footer={
+          <Button
+            label='Close'
+            onClick={() => setViewImagesDialogVisible(false)}
+          />
+        }
+      >
+        <div className='flex gap-2 flex-wrap'>
+          {selectedProduct &&
+            selectedProduct.map((image, index) => (
+              <img
+                key={index}
+                src={`http://localhost:5000/${image}`}
+                alt={`Product Image ${index + 1}`}
+                className='h-40 w-40 object-cover'
+              />
+            ))}
         </div>
       </Dialog>
     </div>

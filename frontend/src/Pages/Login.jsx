@@ -23,6 +23,7 @@ const Login = () => {
 
       localStorage.setItem('token', response.data.token)
       const { id: userId } = jwtDecode(response.data.token)
+      localStorage.setItem('userId', userId)
       toast.success('Login successful')
       navigate(`/profile/${userId}`)
     } catch (error) {

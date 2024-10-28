@@ -72,12 +72,20 @@ function Navbar() {
           </div>
           <div>
             {isAuthenticated ? (
-              <button
-                onClick={handleLogout}
-                className='bg-gradient-to-l from-[#202752] to-main hover:bg-[#1d20e4] py-2 px-6 rounded-3xl flex items-center text-white'
-              >
-                Logout
-              </button>
+              <div className='flex items-center justify-center gap-3'>
+                <button
+                  onClick={handleLogout}
+                  className='text-xl whitespace-nowrap bg-gradient-to-l from-[#091C82] to-[#182046] hover:bg-[#393baf] text-black font-semibold px-6 py-2 rounded-full text-thin'
+                >
+                  Logout
+                </button>
+                <Link
+                  to={`/profile/${localStorage.getItem('userId')}`}
+                  className='text-xl whitespace-nowrap bg-gradient-to-l from-main to-[#182046]  text-white font-semibold px-6 py-2 rounded-full text-thin'
+                >
+                  Profile
+                </Link>
+              </div>
             ) : (
               <Link
                 to='/register'
@@ -122,12 +130,20 @@ function Navbar() {
               ))}
               <motion.div variants={listItemVariants}>
                 {isAuthenticated ? (
-                  <button
-                    onClick={handleLogout}
-                    className='text-xl whitespace-nowrap bg-gradient-to-l from-[#091C82] to-[#182046] hover:bg-[#393baf] text-black font-semibold px-6 py-2 rounded-full text-thin'
-                  >
-                    Logout
-                  </button>
+                  <div className='flex items-center'>
+                    <Link
+                      to={`/profile/${localStorage.getItem('userId')}`}
+                      className='text-xl whitespace-nowrap bg-gradient-to-l from-[#091C82] to-[#182046] hover:bg-[#393baf] text-black font-semibold px-6 py-2 rounded-full text-thin mb-2'
+                    >
+                      Profile
+                    </Link>
+                    <button
+                      onClick={handleLogout}
+                      className='text-xl whitespace-nowrap bg-gradient-to-l from-[#091C82] to-[#182046] hover:bg-[#393baf] text-black font-semibold px-6 py-2 rounded-full text-thin'
+                    >
+                      Logout
+                    </button>
+                  </div>
                 ) : (
                   <Link
                     to='/register'

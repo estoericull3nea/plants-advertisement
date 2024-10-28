@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import axios from 'axios'
+import { toast } from 'react-hot-toast'
 
 const PostProduct = () => {
   const [title, setTitle] = useState('')
@@ -44,7 +45,7 @@ const PostProduct = () => {
           },
         }
       )
-      setMessage('Product posted successfully!')
+      toast.success('Product posted successfully!')
       // Reset the form fields
       setTitle('')
       setCaption('')
@@ -60,7 +61,6 @@ const PostProduct = () => {
   return (
     <div className='max-w-lg mx-auto p-4 border rounded-lg shadow-md bg-white'>
       <h2 className='text-xl font-bold mb-4'>Post Your Product</h2>
-      {message && <p className='text-green-500'>{message}</p>}
       <form className='space-y-4' onSubmit={handleSubmit}>
         <div>
           <label
