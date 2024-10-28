@@ -4,7 +4,7 @@ import 'react-modern-drawer/dist/index.css'
 import { Icon } from '@iconify/react/dist/iconify.js'
 import Logo from '../../src/assets/logo/logo.png'
 import { Link, useNavigate } from 'react-router-dom'
-import { jwtDecode } from 'jwt-decode' // Import jwt-decode
+import { jwtDecode } from 'jwt-decode'
 
 const navItems = [
   { title: 'Home', href: '/' },
@@ -15,7 +15,7 @@ const navItems = [
 
 function Navbar() {
   const [open, setOpen] = useState(false)
-  const navigate = useNavigate() // To use for navigation
+  const navigate = useNavigate()
   const token = localStorage.getItem('token')
   let isAuthenticated = false
 
@@ -23,15 +23,15 @@ function Navbar() {
     try {
       const decoded = jwtDecode(token)
       const currentTime = Date.now() / 1000
-      isAuthenticated = decoded.exp > currentTime // Check if token is not expired
+      isAuthenticated = decoded.exp > currentTime
     } catch (error) {
       console.error('Token decode error:', error)
     }
   }
 
   const handleLogout = () => {
-    localStorage.removeItem('token') // Clear the token
-    navigate('/login') // Redirect to login page
+    localStorage.removeItem('token')
+    navigate('/login')
   }
 
   const listVariants = {
