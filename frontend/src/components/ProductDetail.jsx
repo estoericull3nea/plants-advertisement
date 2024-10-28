@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useParams } from 'react-router-dom'
+import { toast } from 'react-hot-toast'
 
 const ProductDetail = () => {
   const { id } = useParams()
   const [product, setProduct] = useState(null)
+  const [quantity, setQuantity] = useState(1) // State for quantity
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
         const response = await axios.get(
           `${import.meta.env.VITE_DEV_BACKEND_URL}/products/${id}`
-        ) // Adjust the endpoint as necessary
+        )
         setProduct(response.data)
       } catch (error) {
         console.error('Error fetching product:', error)
@@ -20,6 +22,21 @@ const ProductDetail = () => {
 
     fetchProduct()
   }, [id])
+
+  const handleAddToCart = async () => {
+    try {
+      const userId = localStorage.getItem('userId')
+      const response = await axios.post(
+        `${import.meta.env.VITE_DEV_BACKEND_URL}/carts/add`,
+        { productId: product._id, userId, quantity }
+      )
+      toast.success('Added to cart') // Alert the user
+      setQuantity(1)
+    } catch (error) {
+      console.error('Error adding to cart:', error)
+      alert('Error adding to cart')
+    }
+  }
 
   if (!product) {
     return <div>Loading...</div>
@@ -40,6 +57,24 @@ const ProductDetail = () => {
           <p className='mt-2'>Stock: {product.stock}</p>
           <p className='mt-2'>Category: {product.category}</p>
           <p className='mt-2'>Address: {product.address}</p>
+
+          {/* Quantity Input and Add to Cart Button */}
+          <div className='mt-4'>
+            <input
+              type='number'
+              value={quantity}
+              onChange={(e) => setQuantity(e.target.value)}
+              className='border rounded p-2 mr-2'
+              min='1'
+              max={product.stock} // Ensure quantity does not exceed stock
+            />
+            <button
+              onClick={handleAddToCart}
+              className='bg-blue-500 text-white rounded px-4 py-2'
+            >
+              Add to Cart
+            </button>
+          </div>
 
           <h2 className='text-2xl font-bold mt-8'>User Information</h2>
           <div className='mt-4'>
