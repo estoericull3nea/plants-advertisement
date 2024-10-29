@@ -33,8 +33,7 @@ const ProductDetail = () => {
       toast.success('Added to cart') // Alert the user
       setQuantity(1)
     } catch (error) {
-      console.error('Error adding to cart:', error)
-      alert('Error adding to cart')
+      toast.error(error.response.data.message)
     }
   }
 
