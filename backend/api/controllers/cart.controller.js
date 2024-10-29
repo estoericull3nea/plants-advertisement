@@ -16,7 +16,13 @@ export const addToCart = async (req, res) => {
   let cartItem = await Cart.findOne({ productId, userId })
 
   if (cartItem) {
-    cartItem.quantity += quantity
+    const newQ = cartItem.quantity + quantity
+    console.log('comming q:', quantity)
+    console.log('new q:', newQ)
+    console.log('prev q:', cartItem.quantity)
+
+    cartItem.quantity = newQ
+
     await cartItem.save()
   } else {
     cartItem = new Cart({ productId, userId, quantity })
@@ -25,6 +31,7 @@ export const addToCart = async (req, res) => {
 
   product.stock -= quantity
   await product.save()
+
   res.status(200).json({ message: 'Item added to cart', cartItem })
 }
 
@@ -54,6 +61,8 @@ export const deleteCartItem = async (req, res) => {
 
 export const getCartItems = async (req, res) => {
   const { userId } = req.params
-  const cartItems = await Cart.find({ userId }).populate('productId')
+  const cartItems = await Cart.find({ userId })
+    .populate('productId')
+    .populate('userId')
   res.status(200).json(cartItems)
 }
