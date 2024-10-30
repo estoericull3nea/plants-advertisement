@@ -12,26 +12,28 @@ const ProductDetail = () => {
   const [product, setProduct] = useState(null)
   const [quantity, setQuantity] = useState(1)
   const [loading, setLoading] = useState(true)
+  const [addingToCart, setAddingToCart] = useState(false)
+
+  const fetchProduct = async () => {
+    setLoading(true)
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_DEV_BACKEND_URL}/products/${id}`
+      )
+      setProduct(response.data)
+    } catch (error) {
+      console.error('Error fetching product:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   useEffect(() => {
-    const fetchProduct = async () => {
-      setLoading(true) // Start loading
-      try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_DEV_BACKEND_URL}/products/${id}`
-        )
-        setProduct(response.data)
-      } catch (error) {
-        console.error('Error fetching product:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
-
     fetchProduct()
   }, [id])
 
   const handleAddToCart = async () => {
+    setAddingToCart(true)
     try {
       const userId = localStorage.getItem('userId')
       await axios.post(`${import.meta.env.VITE_DEV_BACKEND_URL}/carts/add`, {
@@ -40,9 +42,17 @@ const ProductDetail = () => {
         quantity,
       })
       toast.success('Added to cart')
+
+      setProduct((prevProduct) => ({
+        ...prevProduct,
+        stock: prevProduct.stock - quantity,
+      }))
+
       setQuantity(1)
     } catch (error) {
       toast.error(error.response.data.message)
+    } finally {
+      setAddingToCart(false)
     }
   }
 
@@ -70,13 +80,15 @@ const ProductDetail = () => {
     return <div>Product not found</div>
   }
 
+  const totalPrice = product.price * quantity
+
   return (
     <div className='container mx-auto p-4'>
       <div className='flex flex-col md:flex-row'>
         <div className='w-full md:w-1/2 pr-4 mb-4 md:mb-0'>
           <Swiper
             modules={[Pagination, Autoplay]}
-            pagination={{ clickable: true }} // Enable pagination
+            pagination={{ clickable: true }}
             autoplay={{
               delay: 3500,
               disableOnInteraction: false,
@@ -86,8 +98,8 @@ const ProductDetail = () => {
             {product.images.map((image, index) => (
               <SwiperSlide key={index}>
                 <img
-                  src={`http://localhost:5000/${image}`} // Assuming the images are stored as relative paths
-                  className='rounded-box w-full h-full object-cover'
+                  src={`http://localhost:5000/${image}`}
+                  className='rounded-box w-full h-full object-fit '
                   alt={`Product Image ${index + 1}`}
                 />
               </SwiperSlide>
@@ -98,7 +110,9 @@ const ProductDetail = () => {
         <div className='w-full md:w-1/2 border p-3 shadow-lg rounded-lg text-sm'>
           <h1 className='text-xl font-bold mb-4'>{product.title}</h1>
           <p className='text-lg mb-2'>{product.caption}</p>
-          <p className='font-bold text-xl mb-2'>₱ {product.price}</p>
+          <p className='font-bold text-xl mb-2'>
+            ₱ {product.price.toLocaleString()}
+          </p>
           <p className='mt-2'>Stock: {product.stock}</p>
           <p className='mt-2'>Category: {product.category}</p>
           <p className='mt-2'>Address: {product.address}</p>
@@ -115,10 +129,15 @@ const ProductDetail = () => {
             <button
               onClick={handleAddToCart}
               className='bg-main text-white rounded px-4 py-2'
+              disabled={addingToCart}
             >
-              Add to Cart
+              {addingToCart ? 'Adding...' : 'Add to Cart'}
             </button>
           </div>
+
+          <p className='font-bold mt-4'>
+            Total Price: ₱ {totalPrice.toLocaleString()}
+          </p>
 
           <h2 className='text-2xl font-bold mt-8'>User Information</h2>
           <div className='mt-4'>
