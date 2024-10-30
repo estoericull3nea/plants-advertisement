@@ -2,6 +2,7 @@
 import express from 'express'
 import {
   deleteAllUsers,
+  deleteUserById,
   getAllUsers,
   getUserById,
   updateUserById,
@@ -13,5 +14,6 @@ router.delete('/', deleteAllUsers)
 router.get('/', getAllUsers)
 router.put('/:userId', updateUserById)
 router.get('/:userId', getUserById)
+router.delete('/:userId', deleteUserById)
 
 export default router
