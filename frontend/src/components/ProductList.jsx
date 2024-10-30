@@ -22,7 +22,7 @@ const ProductList = ({ trigger }) => {
           }
         )
         setProducts(response.data)
-        setFilteredProducts(response.data)
+        applyFilter(response.data)
       } catch (error) {
         console.error('Error fetching products:', error)
       } finally {
@@ -32,6 +32,21 @@ const ProductList = ({ trigger }) => {
 
     fetchProducts()
   }, [trigger])
+
+  const applyFilter = (products) => {
+    const token = localStorage.getItem('token')
+    let userIdToExclude = null
+
+    if (token) {
+      const decodedToken = jwtDecode(token)
+      userIdToExclude = decodedToken.id
+    }
+
+    const filtered = products.filter(
+      (product) => product.userId._id !== userIdToExclude
+    )
+    setFilteredProducts(filtered)
+  }
 
   const handleCategoryChange = (event) => {
     const category = event.target.value
@@ -46,9 +61,7 @@ const ProductList = ({ trigger }) => {
     }
 
     if (category === 'all') {
-      setFilteredProducts(
-        products.filter((product) => product.userId._id !== userIdToExclude)
-      )
+      applyFilter(products)
     } else {
       const filtered = products.filter(
         (product) =>
@@ -63,7 +76,6 @@ const ProductList = ({ trigger }) => {
     <div className='container mx-auto p-4'>
       <h1 className='text-2xl font-bold mb-4'>Marketplace</h1>
 
-      {/* Category Filter */}
       <div className='mb-4'>
         <label htmlFor='category' className='block text-sm font-medium mb-2'>
           Filter by Category:
@@ -103,7 +115,7 @@ const ProductList = ({ trigger }) => {
             >
               <Link to={`/products/${product._id}`}>
                 <img
-                  src={`http://localhost:5000/${product.images[0]}`} // Assuming images[0] is the main image
+                  src={`http://localhost:5000/${product.images[0]}`}
                   alt={product.title}
                   className='w-full h-48 object-cover'
                 />
