@@ -75,13 +75,13 @@ function Navbar() {
               <div className='flex items-center justify-center gap-3'>
                 <button
                   onClick={handleLogout}
-                  className='text-xl whitespace-nowrap bg-gradient-to-l from-[#091C82] to-[#182046] hover:bg-[#393baf] text-black font-semibold px-6 py-2 rounded-full text-thin'
+                  className='text-sm whitespace-nowrap bg-gradient-to-l border border-main text-black hover:bg-main hover:text-white font-semibold px-6 py-2 rounded-full text-thin'
                 >
                   Logout
                 </button>
                 <Link
                   to={`/profile/${localStorage.getItem('userId')}`}
-                  className='text-xl whitespace-nowrap bg-gradient-to-l from-main to-[#182046]  text-white font-semibold px-6 py-2 rounded-full text-thin'
+                  className='text-sm whitespace-nowrap bg-gradient-to-l from-main to-[#182046]  text-white font-semibold px-6 py-2 rounded-full text-thin'
                 >
                   Profile
                 </Link>

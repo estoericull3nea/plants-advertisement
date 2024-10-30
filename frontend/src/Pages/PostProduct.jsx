@@ -12,6 +12,7 @@ const PostProduct = () => {
   const [images, setImages] = useState([])
   const [address, setAddress] = useState('')
   const [message, setMessage] = useState('')
+  const [trigger, setTrigger] = useState(1)
 
   const handleImageChange = (e) => {
     setImages(Array.from(e.target.files))
@@ -28,7 +29,6 @@ const PostProduct = () => {
     productData.append('price', price)
     productData.append('address', address)
 
-    // Append all images to the FormData
     images.forEach((image) => {
       productData.append('images', image)
     })
@@ -47,7 +47,7 @@ const PostProduct = () => {
         }
       )
       toast.success('Product posted successfully!')
-      // Reset the form fields
+      setTrigger((prevState) => prevState + 1)
       setTitle('')
       setCaption('')
       setStock(0)
@@ -197,7 +197,7 @@ const PostProduct = () => {
         </form>
       </div>
 
-      <ProductList />
+      <ProductList trigger={trigger} />
     </div>
   )
 }

@@ -118,7 +118,7 @@ const ProductTable = () => {
   }
 
   return (
-    <div className='p-4'>
+    <div className='p-4 shadow-2xl bg-white rounded-lg'>
       {loading ? (
         <div className='flex flex-wrap gap-4'>
           {Array.from({ length: 5 }).map((_, index) => (
@@ -128,7 +128,13 @@ const ProductTable = () => {
           ))}
         </div>
       ) : (
-        <DataTable value={products} paginator rows={10} header='Product List'>
+        <DataTable
+          value={products}
+          paginator
+          rows={10}
+          header='Product List'
+          className='text-sm'
+        >
           <Column field='title' header='Title' sortable />
           <Column field='caption' header='Caption' />
           <Column field='category' header='Category' />

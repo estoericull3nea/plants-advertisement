@@ -11,8 +11,8 @@ const UserSchema = new mongoose.Schema(
     municipality: { type: String, required: true },
     barangay: { type: String, required: true },
     password: { type: String, required: true },
-    dateOfBirth: { type: Date, required: true },
-    age: { type: Number, required: true },
+    dateOfBirth: { type: Date, required: false },
+    age: { type: Number, required: false },
   },
   { timestamps: true }
 )

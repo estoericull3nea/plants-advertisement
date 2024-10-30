@@ -32,7 +32,7 @@ import verifyToken from '../middlewares/verifyToken.js'
 const router = express.Router()
 
 router.post('/', verifyToken, upload.array('images', 5), createProduct)
-router.get('/', getAllProducts)
+router.get('/', verifyToken, getAllProducts)
 
 router.get('/:id', getProductById)
 router.put('/:id', updateProduct)
