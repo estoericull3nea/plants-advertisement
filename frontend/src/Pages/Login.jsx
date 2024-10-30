@@ -25,7 +25,7 @@ const Login = () => {
       const { id: userId } = jwtDecode(response.data.token)
       localStorage.setItem('userId', userId)
       toast.success('Login successful')
-      navigate(`/profile/${userId}`)
+      navigate(`/profile/${userId}/user-info`)
     } catch (error) {
       if (error.response && error.response.data) {
         toast.error(error.response.data.message || 'Login failed')

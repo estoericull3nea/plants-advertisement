@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 import 'react-modern-drawer/dist/index.css'
 import { Icon } from '@iconify/react/dist/iconify.js'
 import Logo from '../../src/assets/logo/logo.png'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { jwtDecode } from 'jwt-decode'
 
 const navItems = [
@@ -45,6 +45,7 @@ function Navbar() {
       },
     },
   }
+
   const listItemVariants = {
     closed: { x: -10, opacity: 0 },
     opened: { x: 0, opacity: 1 },
@@ -65,9 +66,15 @@ function Navbar() {
         <div className='hidden md:flex items-center gap-14'>
           <div className='flex gap-12 md:gap-14'>
             {navItems.map((item, index) => (
-              <Link to={item.href} key={index} className={`text-sm`}>
+              <NavLink
+                to={item.href}
+                key={index}
+                className={({ isActive }) =>
+                  `text-sm ${isActive ? 'font-bold text-main' : ''}`
+                }
+              >
                 {item.title}
-              </Link>
+              </NavLink>
             ))}
           </div>
           <div>
@@ -81,7 +88,7 @@ function Navbar() {
                 </button>
                 <Link
                   to={`/profile/${localStorage.getItem('userId')}/user-info`}
-                  className='text-sm whitespace-nowrap bg-gradient-to-l from-main to-[#182046]  text-white font-semibold px-6 py-2 rounded-full text-thin'
+                  className='text-sm whitespace-nowrap bg-gradient-to-l from-main to-[#182046] text-white font-semibold px-6 py-2 rounded-full text-thin'
                 >
                   Profile
                 </Link>
@@ -119,13 +126,17 @@ function Navbar() {
             >
               {navItems.map((item, index) => (
                 <motion.div variants={listItemVariants} key={index}>
-                  <a
-                    href={item.href}
-                    className='text-white whitespace-nowrap'
+                  <NavLink
+                    to={item.href}
+                    className={({ isActive }) =>
+                      `text-white whitespace-nowrap ${
+                        isActive ? 'font-bold' : ''
+                      }`
+                    }
                     onClick={() => setOpen(false)}
                   >
                     {item.title}
-                  </a>
+                  </NavLink>
                 </motion.div>
               ))}
               <motion.div variants={listItemVariants}>

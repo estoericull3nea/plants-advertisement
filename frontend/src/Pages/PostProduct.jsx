@@ -191,7 +191,10 @@ const PostProduct = () => {
             />
           </div>
 
-          <button type='submit' className='btn btn-primary w-full'>
+          <button
+            type='submit'
+            className='btn bg-main text-white hover:bg-transparent hover:text-black hover:border-main w-full'
+          >
             Post Product
           </button>
         </form>
