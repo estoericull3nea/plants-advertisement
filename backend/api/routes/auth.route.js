@@ -7,13 +7,12 @@ import { deleteAllUsers } from '../controllers/user.controller.js'
 
 const router = express.Router()
 
-// Set up storage to preserve original filenames
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/') // Set the upload directory
+    cb(null, 'uploads/')
   },
   filename: (req, file, cb) => {
-    cb(null, file.originalname) // Save the file with its original name
+    cb(null, file.originalname)
   },
 })
 

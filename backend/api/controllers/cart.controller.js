@@ -19,11 +19,9 @@ export const addToCart = async (req, res) => {
     const newQuantity = cartItem.quantity + parseInt(quantity)
 
     if (product.stock < newQuantity) {
-      return res
-        .status(400)
-        .json({
-          message: 'Not enough stock available for the updated quantity',
-        })
+      return res.status(400).json({
+        message: 'Not enough stock available for the updated quantity',
+      })
     }
 
     cartItem.quantity = newQuantity
@@ -75,4 +73,11 @@ export const getCartItems = async (req, res) => {
     .populate('productId')
     .populate('userId')
   res.status(200).json(cartItems)
+}
+
+export const getCartCount = async (req, res) => {
+  const { userId } = req.params
+
+  const count = await Cart.countDocuments({ userId })
+  res.status(200).json({ count })
 }

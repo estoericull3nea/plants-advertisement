@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import 'react-modern-drawer/dist/index.css'
 import { Icon } from '@iconify/react/dist/iconify.js'
+import { FaShoppingCart } from 'react-icons/fa'
 import Logo from '../../src/assets/logo/logo.png'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { jwtDecode } from 'jwt-decode'
@@ -15,6 +16,7 @@ const navItems = [
 
 function Navbar() {
   const [open, setOpen] = useState(false)
+  const [cartCount, setCartCount] = useState(0)
   const navigate = useNavigate()
   const token = localStorage.getItem('token')
   let isAuthenticated = false
@@ -28,6 +30,26 @@ function Navbar() {
       console.error('Token decode error:', error)
     }
   }
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      const decoded = jwtDecode(token)
+      const fetchCartCount = async () => {
+        const response = await fetch(
+          `${import.meta.env.VITE_DEV_BACKEND_URL}/carts/count/${decoded.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        const data = await response.json()
+        setCartCount(data.count)
+      }
+
+      fetchCartCount()
+    }
+  }, [isAuthenticated, token])
 
   const handleLogout = () => {
     localStorage.removeItem('token')
@@ -77,7 +99,20 @@ function Navbar() {
               </NavLink>
             ))}
           </div>
-          <div>
+          <div className='flex items-center gap-4'>
+            {isAuthenticated && (
+              <Link
+                to='/cart'
+                className='relative flex items-center text-sm text-black'
+              >
+                <FaShoppingCart className='text-xl' />
+                {cartCount > 0 && (
+                  <span className='absolute -top-1 -right-2 bg-red-500 text-white text-xs rounded-full px-1'>
+                    {cartCount}
+                  </span>
+                )}
+              </Link>
+            )}
             {isAuthenticated ? (
               <div className='flex items-center justify-center gap-3'>
                 <button
@@ -156,6 +191,17 @@ function Navbar() {
                     >
                       Logout
                     </button>
+                    <Link
+                      to='/cart'
+                      className='relative text-xl whitespace-nowrap text-white'
+                    >
+                      <FaShoppingCart className='text-2xl' />
+                      {cartCount > 0 && (
+                        <span className='absolute -top-1 -right-2 bg-red-500 text-white text-xs rounded-full px-1'>
+                          {cartCount}
+                        </span>
+                      )}
+                    </Link>
                   </div>
                 ) : (
                   <Link
