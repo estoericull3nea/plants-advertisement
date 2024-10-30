@@ -80,7 +80,7 @@ function Navbar() {
                   Logout
                 </button>
                 <Link
-                  to={`/profile/${localStorage.getItem('userId')}`}
+                  to={`/profile/${localStorage.getItem('userId')}/user-info`}
                   className='text-sm whitespace-nowrap bg-gradient-to-l from-main to-[#182046]  text-white font-semibold px-6 py-2 rounded-full text-thin'
                 >
                   Profile
@@ -132,7 +132,9 @@ function Navbar() {
                 {isAuthenticated ? (
                   <div className='flex items-center'>
                     <Link
-                      to={`/profile/${localStorage.getItem('userId')}`}
+                      to={`/profile/${localStorage.getItem(
+                        'userId'
+                      )}/user-info`}
                       className='text-xl whitespace-nowrap bg-gradient-to-l from-[#091C82] to-[#182046] hover:bg-[#393baf] text-black font-semibold px-6 py-2 rounded-full text-thin mb-2'
                     >
                       Profile
