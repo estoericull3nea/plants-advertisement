@@ -28,6 +28,39 @@ const Cart = () => {
     fetchCartItems()
   }, [userId])
 
+  const updateQuantity = async (itemId, newQuantity) => {
+    try {
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_DEV_BACKEND_URL
+        }/carts/${userId}/update-quantity`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            productId: itemId,
+            quantity: newQuantity,
+          }),
+        }
+      )
+
+      if (!response.ok) {
+        throw new Error('Failed to update quantity')
+      }
+
+      const updatedItem = await response.json()
+      setCartItems((prevItems) =>
+        prevItems.map((item) =>
+          item._id === updatedItem._id ? updatedItem : item
+        )
+      )
+    } catch (err) {
+      setError(err.message)
+    }
+  }
+
   if (loading) {
     return (
       <div className='flex justify-center'>
@@ -51,6 +84,7 @@ const Cart = () => {
             <thead>
               <tr>
                 <th>Product</th>
+                <th>Price</th>
                 <th>Quantity</th>
                 <th>Total</th>
                 <th>Action</th>
@@ -67,7 +101,24 @@ const Cart = () => {
                     />
                     {item.productId.title}
                   </td>
-                  <td>{item.quantity}</td>
+                  <td className='font-bold'>
+                    ₱ {item.productId.price.toLocaleString()}
+                  </td>
+                  <td>
+                    <input
+                      type='number'
+                      min='1'
+                      value={item.quantity}
+                      onChange={(e) => {
+                        const newQuantity = Math.max(
+                          1,
+                          parseInt(e.target.value)
+                        )
+                        updateQuantity(item.productId._id, newQuantity)
+                      }}
+                      className='input input-bordered w-20'
+                    />
+                  </td>
                   <td className='font-bold'>₱ {item.total.toLocaleString()}</td>
                   <td>
                     <button className='btn btn-primary'>Remove</button>
