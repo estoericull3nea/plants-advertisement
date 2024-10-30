@@ -81,3 +81,25 @@ export const getCartCount = async (req, res) => {
   const count = await Cart.countDocuments({ userId })
   res.status(200).json({ count })
 }
+
+export const updateCartItemQuantity = async (req, res) => {
+  const { userId } = req.params
+  const { productId, quantity } = req.body
+
+  const cartItem = await Cart.findOne({ userId, productId })
+
+  if (!cartItem) {
+    return res.status(404).json({ message: 'Cart item not found' })
+  }
+
+  cartItem.quantity = quantity
+
+  const product = await Product.findById(productId)
+  if (product) {
+    cartItem.total = product.price * quantity
+  }
+
+  await cartItem.save()
+
+  return res.status(200).json(cartItem)
+}

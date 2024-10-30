@@ -17,5 +17,6 @@ router.get('/:userId', getCartItems)
 router.put('/:id', updateCartItem)
 router.delete('/:id', deleteCartItem)
 router.get('/count/:userId', verifyToken, getCartCount)
+router.put('/:userId/update-quantity', updateCartItem)
 
 export default router

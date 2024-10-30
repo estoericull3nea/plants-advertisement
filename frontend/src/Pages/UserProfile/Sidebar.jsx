@@ -19,6 +19,7 @@ const Sidebar = () => {
           <li>
             <NavLink to={`/profile/${userId}/user-info`}>My Details</NavLink>
             <NavLink to={`/profile/${userId}/all-posts`}>All Posts</NavLink>
+            <NavLink to={`/profile/${userId}/cart`}>Cart</NavLink>
           </li>
         </ul>
       </aside>

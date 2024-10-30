@@ -3,6 +3,7 @@ import Sidebar from './Sidebar'
 import { useParams, Routes, Route, useNavigate } from 'react-router-dom'
 import UserInfo from './UserInfo'
 import ProductTable from './ProductTable'
+import Cart from './Cart'
 
 const Profile = () => {
   return (
@@ -13,6 +14,7 @@ const Profile = () => {
           <Routes>
             <Route path='/user-info' element={<UserInfo />} />
             <Route path='/all-posts' element={<ProductTable />} />
+            <Route path='/cart' element={<Cart />} />
           </Routes>
         </div>
       </div>
