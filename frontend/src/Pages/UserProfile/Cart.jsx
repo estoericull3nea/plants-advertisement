@@ -5,7 +5,7 @@ const Cart = () => {
   const { userId } = useParams()
   const [cartItems, setCartItems] = useState([])
   const [loading, setLoading] = useState(true)
-  const [updating, setUpdating] = useState(false) // New state for updating quantity
+  const [updating, setUpdating] = useState(false) // State for updating quantity
   const [error, setError] = useState(null)
 
   useEffect(() => {
@@ -133,10 +133,8 @@ const Cart = () => {
                       min='1'
                       value={item.quantity}
                       onChange={(e) => {
-                        const newQuantity = Math.max(
-                          1,
-                          parseInt(e.target.value)
-                        )
+                        const newQuantity = parseInt(e.target.value) || 1 // Default to 1 if NaN
+                        if (newQuantity < 1) return // Prevent setting less than 1
                         updateQuantity(item.productId._id, newQuantity)
                       }}
                       className='input input-bordered w-20'
