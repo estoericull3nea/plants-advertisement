@@ -1,36 +1,42 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import { io } from 'socket.io-client'
+const socket = io('http://localhost:5000')
 
 const Cart = () => {
   const { userId } = useParams()
   const [cartItems, setCartItems] = useState([])
   const [loading, setLoading] = useState(true)
-  const [updating, setUpdating] = useState(false) // State for updating quantity
+  const [updating, setUpdating] = useState(false)
+  const [deleting, setDeleting] = useState(false)
+  const [confirmDeleteId, setConfirmDeleteId] = useState(null)
   const [error, setError] = useState(null)
+  const [editableItemId, setEditableItemId] = useState(null)
+
+  const fetchCartItems = async () => {
+    setLoading(true)
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_DEV_BACKEND_URL}/carts/${userId}`
+      )
+      if (!response.ok) {
+        throw new Error('Failed to fetch cart items')
+      }
+      const data = await response.json()
+      setCartItems(data)
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   useEffect(() => {
-    const fetchCartItems = async () => {
-      try {
-        const response = await fetch(
-          `${import.meta.env.VITE_DEV_BACKEND_URL}/carts/${userId}`
-        )
-        if (!response.ok) {
-          throw new Error('Failed to fetch cart items')
-        }
-        const data = await response.json()
-        setCartItems(data)
-      } catch (err) {
-        setError(err.message)
-      } finally {
-        setLoading(false)
-      }
-    }
-
     fetchCartItems()
   }, [userId])
 
   const updateQuantity = async (itemId, newQuantity) => {
-    setUpdating(true) // Set updating to true when starting the update
+    setUpdating(true)
     try {
       const response = await fetch(
         `${
@@ -52,27 +58,64 @@ const Cart = () => {
         throw new Error('Failed to update quantity')
       }
 
-      // Refetch cart items after updating
       await fetchCartItems()
     } catch (err) {
       setError(err.message)
     } finally {
-      setUpdating(false) // Reset updating state after the update is done
+      setUpdating(false)
+      setEditableItemId(null)
     }
   }
 
-  const fetchCartItems = async () => {
+  const deleteCartItem = async (itemId) => {
+    setDeleting(true)
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_DEV_BACKEND_URL}/carts/${userId}`
+        `${import.meta.env.VITE_DEV_BACKEND_URL}/carts/${itemId}`,
+        {
+          method: 'DELETE',
+        }
       )
+
       if (!response.ok) {
-        throw new Error('Failed to fetch cart items')
+        throw new Error('Failed to delete cart item')
       }
-      const data = await response.json()
-      setCartItems(data)
+
+      await fetchCartItems()
+      setConfirmDeleteId(null)
+      socket.emit('updateCartCount', 'cartCount')
     } catch (err) {
       setError(err.message)
+    } finally {
+      setDeleting(false)
+    }
+  }
+
+  const openConfirmModal = (itemId) => {
+    setConfirmDeleteId(itemId)
+  }
+
+  const closeConfirmModal = () => {
+    setConfirmDeleteId(null)
+  }
+
+  const handleEditClick = (itemId) => {
+    setEditableItemId(itemId)
+  }
+
+  const handleQuantityChange = (e, itemId) => {
+    const newQuantity = parseInt(e.target.value) || 1
+    if (newQuantity >= 1) {
+      updateQuantity(itemId, newQuantity)
+    }
+  }
+
+  const handleKeyPress = (e, itemId) => {
+    if (e.key === 'Enter') {
+      const newQuantity = parseInt(e.target.value) || 1
+      if (newQuantity >= 1) {
+        updateQuantity(itemId, newQuantity)
+      }
     }
   }
 
@@ -115,7 +158,7 @@ const Cart = () => {
                         item.productId.images.length > 0
                           ? item.productId.images[0]
                           : 'placeholder-image-url.jpg'
-                      }`} // Fallback image
+                      }`}
                       alt={item.productId.title || 'Product Image'}
                       className='h-20 w-20 object-cover rounded-lg mr-4'
                     />
@@ -128,26 +171,40 @@ const Cart = () => {
                       : 'N/A'}
                   </td>
                   <td>
-                    <input
-                      type='number'
-                      min='1'
-                      value={item.quantity}
-                      onChange={(e) => {
-                        const newQuantity = parseInt(e.target.value) || 1 // Default to 1 if NaN
-                        if (newQuantity < 1) return // Prevent setting less than 1
-                        updateQuantity(item.productId._id, newQuantity)
-                      }}
-                      className='input input-bordered w-20'
-                      disabled={updating} // Disable input while updating
-                    />
-                    {updating && (
-                      <span className='loading-spinner'>Loading...</span>
-                    )}{' '}
-                    {/* Loading spinner */}
+                    {editableItemId === item._id ? (
+                      <input
+                        type='number'
+                        min='1'
+                        defaultValue={item.quantity}
+                        onKeyPress={(e) =>
+                          handleKeyPress(e, item.productId._id)
+                        }
+                        onBlur={() => setEditableItemId(null)}
+                        className='input input-bordered w-20'
+                        disabled={updating || deleting}
+                      />
+                    ) : (
+                      <div className='flex items-center'>
+                        <span className='mr-2'>{item.quantity}</span>
+                        <button
+                          className='btn btn-outline btn-sm'
+                          onClick={() => handleEditClick(item._id)}
+                          disabled={updating || deleting}
+                        >
+                          Edit
+                        </button>
+                      </div>
+                    )}
                   </td>
                   <td className='font-bold'>₱ {item.total.toLocaleString()}</td>
                   <td>
-                    <button className='btn btn-primary'>Remove</button>
+                    <button
+                      className='btn bg-red-600 text-white'
+                      onClick={() => openConfirmModal(item._id)}
+                      disabled={updating || deleting}
+                    >
+                      Remove
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -164,6 +221,33 @@ const Cart = () => {
               .reduce((sum, item) => sum + item.total, 0)
               .toLocaleString()}
           </p>
+        </div>
+      )}
+
+      {confirmDeleteId && (
+        <div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50'>
+          <div className='bg-white p-6 rounded-lg shadow-md'>
+            <h2 className='text-lg font-bold'>Confirm Deletion</h2>
+            <p>Are you sure you want to remove this item from your cart?</p>
+            <div className='mt-4 flex justify-end'>
+              <button
+                className='btn btn-secondary mr-2'
+                onClick={closeConfirmModal}
+              >
+                Cancel
+              </button>
+              <button
+                className='btn btn-danger'
+                onClick={() => {
+                  deleteCartItem(confirmDeleteId)
+                  closeConfirmModal()
+                }}
+                disabled={deleting}
+              >
+                {deleting ? 'Removing...' : 'Remove'}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
