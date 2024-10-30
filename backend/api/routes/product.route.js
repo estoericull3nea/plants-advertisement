@@ -31,7 +31,7 @@ import verifyToken from '../middlewares/verifyToken.js'
 
 const router = express.Router()
 
-router.post('/', verifyToken, upload.array('images', 5), createProduct)
+router.post('/', verifyToken, upload.array('images', 30), createProduct)
 router.get('/', verifyToken, getAllProducts)
 
 router.get('/:id', getProductById)
