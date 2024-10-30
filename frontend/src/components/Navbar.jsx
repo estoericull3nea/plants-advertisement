@@ -7,6 +7,9 @@ import Logo from '../../src/assets/logo/logo.png'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { jwtDecode } from 'jwt-decode'
 
+import { io } from 'socket.io-client'
+const socket = io('http://localhost:5000')
+
 const navItems = [
   { title: 'Home', href: '/' },
   { title: 'Posts', href: '/posts' },
@@ -31,23 +34,33 @@ function Navbar() {
     }
   }
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      const decoded = jwtDecode(token)
-      const fetchCartCount = async () => {
-        const response = await fetch(
-          `${import.meta.env.VITE_DEV_BACKEND_URL}/carts/count/${decoded.id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
-        const data = await response.json()
-        setCartCount(data.count)
+  const fetchCartCount = async () => {
+    const decoded = jwtDecode(token)
+    const response = await fetch(
+      `${import.meta.env.VITE_DEV_BACKEND_URL}/carts/count/${decoded.id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       }
+    )
+    const data = await response.json()
+    setCartCount(data.count)
+  }
 
+  useEffect(() => {
+    socket.on('newUpdateCartCount', (data) => {
+      if (isAuthenticated) {
+        fetchCartCount()
+      }
+    })
+
+    if (isAuthenticated) {
       fetchCartCount()
+    }
+
+    return () => {
+      socket.off('newUpdateCartCount')
     }
   }, [isAuthenticated, token])
 

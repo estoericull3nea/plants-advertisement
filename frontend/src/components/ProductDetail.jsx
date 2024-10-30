@@ -7,6 +7,9 @@ import { Pagination, Autoplay } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/pagination'
 
+import { io } from 'socket.io-client'
+const socket = io('http://localhost:5000')
+
 const ProductDetail = () => {
   const { id } = useParams()
   const [product, setProduct] = useState(null)
@@ -49,6 +52,8 @@ const ProductDetail = () => {
       }))
 
       setQuantity(1)
+
+      socket.emit('updateCartCount', 'cartCount')
     } catch (error) {
       toast.error(error.response.data.message)
     } finally {

@@ -6,12 +6,35 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 import connectDB from './api/utils/connectDB.js'
 
+import { Server } from 'socket.io'
+import http from 'http'
+
 const allowedOrigins = [process.env.VITE_DEV_FRONTEND_URL]
 
 dotenv.config()
 
 const PORT = process.env.PORT || 5000
 const app = express()
+
+const server = http.createServer(app)
+const io = new Server(server, {
+  cors: {
+    origin: allowedOrigins,
+  },
+})
+
+io.on('connection', (socket) => {
+  console.log('A client connected:', socket.id)
+
+  socket.on('updateCartCount', (data) => {
+    console.log('updateCartCount received: ', data)
+    io.emit('newUpdateCartCount', data)
+  })
+
+  socket.on('disconnect', () => {
+    console.log('Client disconnected:', socket.id)
+  })
+})
 
 import authRouter from './api/routes/auth.route.js'
 import userRouter from './api/routes/user.route.js'
@@ -45,7 +68,7 @@ app.use('/api/v1/carts', addCartRouter)
 // ================================== Connection to MongoDB ==================================
 connectDB()
   .then(() => {
-    app.listen(PORT, () =>
+    server.listen(PORT, () =>
       console.log(`Server is Running on PORT ${PORT} and Connected to Database`)
     )
   })
