@@ -5,6 +5,7 @@ const Cart = () => {
   const { userId } = useParams()
   const [cartItems, setCartItems] = useState([])
   const [loading, setLoading] = useState(true)
+  const [updating, setUpdating] = useState(false) // New state for updating quantity
   const [error, setError] = useState(null)
 
   useEffect(() => {
@@ -29,6 +30,7 @@ const Cart = () => {
   }, [userId])
 
   const updateQuantity = async (itemId, newQuantity) => {
+    setUpdating(true) // Set updating to true when starting the update
     try {
       const response = await fetch(
         `${
@@ -50,12 +52,25 @@ const Cart = () => {
         throw new Error('Failed to update quantity')
       }
 
-      const updatedItem = await response.json()
-      setCartItems((prevItems) =>
-        prevItems.map((item) =>
-          item._id === updatedItem._id ? updatedItem : item
-        )
+      // Refetch cart items after updating
+      await fetchCartItems()
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setUpdating(false) // Reset updating state after the update is done
+    }
+  }
+
+  const fetchCartItems = async () => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_DEV_BACKEND_URL}/carts/${userId}`
       )
+      if (!response.ok) {
+        throw new Error('Failed to fetch cart items')
+      }
+      const data = await response.json()
+      setCartItems(data)
     } catch (err) {
       setError(err.message)
     }
@@ -95,14 +110,22 @@ const Cart = () => {
                 <tr key={item._id}>
                   <td className='flex items-center'>
                     <img
-                      src={`http://localhost:5000/${item.productId.images[0]}`} // Your image endpoint
-                      alt={item.productId.title}
+                      src={`http://localhost:5000/${
+                        item.productId.images &&
+                        item.productId.images.length > 0
+                          ? item.productId.images[0]
+                          : 'placeholder-image-url.jpg'
+                      }`} // Fallback image
+                      alt={item.productId.title || 'Product Image'}
                       className='h-20 w-20 object-cover rounded-lg mr-4'
                     />
-                    {item.productId.title}
+                    {item.productId.title || 'Untitled Product'}
                   </td>
                   <td className='font-bold'>
-                    ₱ {item.productId.price.toLocaleString()}
+                    ₱{' '}
+                    {item.productId.price
+                      ? item.productId.price.toLocaleString()
+                      : 'N/A'}
                   </td>
                   <td>
                     <input
@@ -117,7 +140,12 @@ const Cart = () => {
                         updateQuantity(item.productId._id, newQuantity)
                       }}
                       className='input input-bordered w-20'
+                      disabled={updating} // Disable input while updating
                     />
+                    {updating && (
+                      <span className='loading-spinner'>Loading...</span>
+                    )}{' '}
+                    {/* Loading spinner */}
                   </td>
                   <td className='font-bold'>₱ {item.total.toLocaleString()}</td>
                   <td>
