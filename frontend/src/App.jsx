@@ -14,6 +14,7 @@ import PrivateRoute from './components/PrivateRoute'
 import ProtectedRoute from './components/ProtectedRoute'
 import PostProduct from './Pages/PostProduct'
 import ProductDetail from './components/ProductDetail'
+import Chatbox from './Pages/Chatbox'
 
 const App = () => {
   return (
@@ -56,6 +57,15 @@ const App = () => {
             element={
               <PrivateRoute>
                 <ProductDetail />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path='/chats'
+            element={
+              <PrivateRoute>
+                <Chatbox />
               </PrivateRoute>
             }
           />

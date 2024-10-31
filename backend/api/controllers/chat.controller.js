@@ -2,6 +2,8 @@ import Message from '../models/chat.model.js'
 
 export const sendMessage = async (req, res) => {
   const { receiverId, text } = req.body
+
+  console.log(req.body)
   const senderId = req.user
   const images =
     req.files && req.files.length > 0
