@@ -48,10 +48,9 @@ const Chatbox = () => {
   const [selectedUserId, setSelectedUserId] = useState(null)
   const [text, setText] = useState('')
   const [images, setImages] = useState([])
-  const [loading, setLoading] = useState(true)
   const [loadingUsers, setLoadingUsers] = useState(true)
   const [selectedImageIndex, setSelectedImageIndex] = useState(null)
-  const [currentUser, setCurrentUser] = useState(null) // State for current user
+  const [currentUser, setCurrentUser] = useState(null)
   const currentUserId = localStorage.getItem('userId')
 
   const fetchCurrentUser = async () => {
@@ -96,7 +95,6 @@ const Chatbox = () => {
 
   const fetchMessages = async (userId) => {
     const token = localStorage.getItem('token')
-    setLoading(true)
     try {
       const response = await axios.get(
         `${import.meta.env.VITE_DEV_BACKEND_URL}/chats/${userId}/messages`,
@@ -110,25 +108,12 @@ const Chatbox = () => {
     } catch (error) {
       toast.error('Error fetching messages')
       console.error(error)
-    } finally {
-      setLoading(false)
     }
   }
 
   const handleSendMessage = async (e) => {
     e.preventDefault()
     if (!text && images.length === 0) return
-
-    const newMessage = {
-      senderId: currentUserId,
-      receiverId: selectedUserId,
-      text: text || '',
-      images: [...images].map((file) => `uploads/${file.name}`),
-      _id: Date.now(),
-    }
-
-    // Optimistically update messages state
-    setMessages((prevMessages) => [...prevMessages, newMessage])
 
     const formData = new FormData()
     formData.append('receiverId', selectedUserId)
@@ -149,10 +134,12 @@ const Chatbox = () => {
         }
       )
 
-      // Refetch messages after sending
-      fetchMessages(selectedUserId)
+      // Reset input fields
       setText('')
       setImages([])
+
+      // Refetch messages after sending
+      fetchMessages(selectedUserId)
     } catch (error) {
       toast.error('Error sending message')
       console.error(error)
@@ -182,7 +169,7 @@ const Chatbox = () => {
   }, [])
 
   return (
-    <div className='flex h-screen container my-10'>
+    <div className='flex h-screen container my-10 gap-3'>
       <div className='w-1/5 border-r p-4'>
         <h2 className='text-xl font-bold'>Users</h2>
         {loadingUsers ? (
@@ -205,82 +192,86 @@ const Chatbox = () => {
         )}
       </div>
 
-      <div className='chat-box w-4/5 border rounded-lg shadow-lg p-4 flex-1 h-full'>
-        {/* Current User Info */}
+      <div className='w-full'>
         {currentUser && (
           <div className='flex items-center mb-4'>
             <div className='text-lg font-bold'>
               {currentUser.firstName} {currentUser.lastName}
             </div>
-            <div className='ml-2 text-gray-600'>{currentUser.email}</div>
           </div>
         )}
 
-        <div className='messages space-y-2 max-h-[700px] overflow-y-auto p-2 border-b'>
-          {loading ? (
-            <div className='flex flex-col gap-4'>
-              <div className='skeleton h-32 w-full'></div>
-              <div className='skeleton h-4 w-28'></div>
-              <div className='skeleton h-4 w-full'></div>
-              <div className='skeleton h-4 w-full'></div>
-            </div>
-          ) : messages.length === 0 ? (
-            <div className='text-center p-4 text-gray-500'>No messages</div>
-          ) : (
-            messages.map((message) => (
-              <div
-                key={message._id}
-                className={`chat ${
-                  message.senderId === currentUserId ? 'chat-end' : 'chat-start'
-                }`}
-              >
-                <div className='chat-bubble'>
-                  {message.text}
-                  {Array.isArray(message.images) &&
-                    message.images.length > 0 && (
-                      <div className='flex space-x-2'>
-                        {message.images.map((image, index) => (
-                          <img
-                            key={image}
-                            src={getFullImageUrl(image)}
-                            alt='Message attachment'
-                            className='w-20 h-20 rounded-md cursor-pointer'
-                            onClick={() => handleImageClick(index)}
-                          />
-                        ))}
-                      </div>
-                    )}
+        <div className='border rounded-lg shadow-lg p-4 flex-1 h-full'>
+          <div className='space-y-2 max-h-[700px] overflow-y-auto p-2 border-b'>
+            {messages.length === 0 ? (
+              <div className='text-center p-4 text-gray-500'>No messages</div>
+            ) : (
+              messages.map((message) => (
+                <div
+                  key={message._id}
+                  className={`flex mb-2 ${
+                    message.senderId._id === currentUserId
+                      ? 'justify-end'
+                      : 'justify-start'
+                  }`}
+                >
+                  <div
+                    className={`max-w-[70%] p-2 rounded-lg ${
+                      message.senderId._id === currentUserId
+                        ? 'bg-green-100 text-black'
+                        : 'bg-gray-200 text-black'
+                    }`}
+                  >
+                    <div className='font-semibold'>
+                      {message.senderId.firstName} {message.senderId.lastName}
+                    </div>
+                    <div>{message.text}</div>
+                    <div className='text-xs text-gray-500'>
+                      {new Date(message.createdAt).toLocaleString()}
+                    </div>
+                    {Array.isArray(message.images) &&
+                      message.images.length > 0 && (
+                        <div className='flex space-x-2 mt-2'>
+                          {message.images.map((image, index) => (
+                            <img
+                              key={image}
+                              src={getFullImageUrl(image)}
+                              alt='Message attachment'
+                              className='w-20 h-20 rounded-md cursor-pointer'
+                              onClick={() => handleImageClick(index)}
+                            />
+                          ))}
+                        </div>
+                      )}
+                  </div>
                 </div>
-              </div>
-            ))
-          )}
+              ))
+            )}
+          </div>
+          <form onSubmit={handleSendMessage} className='flex mt-10 w-full'>
+            <input
+              type='text'
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              placeholder='Type a message...'
+              className='border border-gray-300 rounded-l-lg p-2 flex-1'
+              disabled={!selectedUserId}
+            />
+            <input
+              type='file'
+              multiple
+              onChange={(e) => setImages([...e.target.files])}
+              className='border border-gray-300 rounded-lg mx-2'
+            />
+            <button
+              type='submit'
+              className='bg-blue-500 text-white rounded-lg px-4'
+              disabled={!selectedUserId}
+            >
+              Send
+            </button>
+          </form>
         </div>
-        <form
-          onSubmit={handleSendMessage}
-          className='message-form flex mt-10 w-full'
-        >
-          <input
-            type='text'
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            placeholder='Type a message...'
-            className='border border-gray-300 rounded-l-lg p-2 flex-1'
-            disabled={!selectedUserId}
-          />
-          <input
-            type='file'
-            multiple
-            onChange={(e) => setImages([...e.target.files])}
-            className='border border-gray-300 rounded-lg mx-2'
-          />
-          <button
-            type='submit'
-            className='bg-blue-500 text-white rounded-lg px-4'
-            disabled={!selectedUserId}
-          >
-            Send
-          </button>
-        </form>
       </div>
 
       {/* Image Modal */}

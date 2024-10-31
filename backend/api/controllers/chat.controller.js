@@ -1,9 +1,10 @@
 import Message from '../models/chat.model.js'
+import User from '../models/user.model.js'
 
 export const sendMessage = async (req, res) => {
   const { receiverId, text } = req.body
-
   const senderId = req.user
+
   const images =
     req.files && req.files.length > 0
       ? req.files.map((file) => file.path)
@@ -16,12 +17,13 @@ export const sendMessage = async (req, res) => {
     images,
   })
 
-  try {
-    await message.save()
-    res.status(201).json(message)
-  } catch (error) {
-    res.status(500).json({ message: 'Error sending message', error })
-  }
+  await message.save()
+
+  const populatedMessage = await Message.findById(message._id)
+    .populate('senderId')
+    .populate('receiverId')
+
+  res.status(201).json(populatedMessage)
 }
 
 export const getMessages = async (req, res) => {
@@ -34,8 +36,8 @@ export const getMessages = async (req, res) => {
       { senderId: userId, receiverId: loggedInUserId },
     ],
   })
-    .populate('senderId', 'username')
-    .populate('receiverId', 'username')
+    .populate('senderId')
+    .populate('receiverId')
 
   res.status(200).json(messages)
 }
