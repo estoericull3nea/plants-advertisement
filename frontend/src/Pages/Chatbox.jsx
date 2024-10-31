@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import axios from 'axios'
 import { toast } from 'react-hot-toast'
 import { Swiper, SwiperSlide } from 'swiper/react'
@@ -58,6 +58,8 @@ const Chatbox = () => {
   const currentUserId = localStorage.getItem('userId')
   const navigate = useNavigate()
 
+  const messagesEndRef = useRef(null) // Reference for scrolling
+
   useEffect(() => {
     const socket = io('http://localhost:5000')
 
@@ -66,11 +68,12 @@ const Chatbox = () => {
 
     socket.on('message', (newMessage) => {
       setMessages((prevMessages) => [...prevMessages, newMessage])
+      scrollToBottom() // Scroll to the bottom when a new message arrives
     })
 
     socket.on('connect', () => {
       console.log('Connected to Socket.IO server')
-      socket.emit('join', currentUserId) // Move this here to ensure currentUserId is defined
+      socket.emit('join', currentUserId)
     })
 
     socket.on('disconnect', () => {
@@ -78,10 +81,21 @@ const Chatbox = () => {
     })
 
     return () => {
-      socket.off('message') // Clean up the listener
-      socket.disconnect() // Clean up on unmount
+      socket.off('message')
+      socket.disconnect()
     }
   }, [currentUserId])
+
+  const scrollToBottom = () => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' })
+    }
+  }
+
+  useEffect(() => {
+    // Scroll to the bottom of the messages container when messages change
+    scrollToBottom()
+  }, [messages])
 
   const fetchCurrentUser = async () => {
     try {
@@ -175,14 +189,12 @@ const Chatbox = () => {
         }
       )
 
-      // Emit message to the socket
       socket.emit('message', response.data) // Emit the newly created message
 
       // Reset input fields
       setText('')
       setImages([])
 
-      // Refetch messages after sending
       fetchMessages(selectedUserId)
     } catch (error) {
       if (error.response.data.message === 'Unauthorized! Invalid token.') {
@@ -244,7 +256,7 @@ const Chatbox = () => {
         )}
 
         <div className='border rounded-lg shadow-lg p-4 flex-1 h-full'>
-          <div className='space-y-2 max-h-[700px] overflow-y-auto p-2 border-b'>
+          <div className='space-y-2 h-full overflow-y-auto p-2 border-b'>
             {messages.length === 0 ? (
               <div className='text-center p-4 text-gray-500'>No messages</div>
             ) : (
@@ -289,6 +301,8 @@ const Chatbox = () => {
                 </div>
               ))
             )}
+            <div ref={messagesEndRef} />{' '}
+            {/* Empty div to act as a scroll target */}
           </div>
           <form onSubmit={handleSendMessage} className='flex mt-10 w-full'>
             <input
