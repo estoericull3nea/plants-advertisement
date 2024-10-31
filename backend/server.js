@@ -40,6 +40,7 @@ import authRouter from './api/routes/auth.route.js'
 import userRouter from './api/routes/user.route.js'
 import productRouter from './api/routes/product.route.js'
 import addCartRouter from './api/routes/cart.route.js'
+import chatRouter from './api/routes/chat.route.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -64,6 +65,7 @@ app.use('/api/v1/auth', authRouter)
 app.use('/api/v1/users', userRouter)
 app.use('/api/v1/products', productRouter)
 app.use('/api/v1/carts', addCartRouter)
+app.use('/api/v1/chats', chatRouter)
 
 // ================================== Connection to MongoDB ==================================
 connectDB()
