@@ -104,7 +104,7 @@ const ProductDetail = () => {
               <SwiperSlide key={index}>
                 <img
                   src={`http://localhost:5000/${image}`}
-                  className='rounded-box w-full h-full object-fit '
+                  className='rounded-box w-full h-full object-fit'
                   alt={`Product Image ${index + 1}`}
                 />
               </SwiperSlide>
@@ -118,7 +118,13 @@ const ProductDetail = () => {
           <p className='font-bold text-xl mb-2'>
             ₱ {product.price.toLocaleString()}
           </p>
-          <p className='mt-2'>Stock: {product.stock}</p>
+          <p
+            className={`mt-2 ${
+              product.stock === 0 ? 'text-red-500 font-bold' : ''
+            }`}
+          >
+            Stock: {product.stock}
+          </p>
           <p className='mt-2'>Category: {product.category}</p>
           <p className='mt-2'>Address: {product.address}</p>
 
@@ -126,7 +132,9 @@ const ProductDetail = () => {
             <input
               type='number'
               value={quantity}
-              onChange={(e) => setQuantity(e.target.value)}
+              onChange={(e) =>
+                setQuantity(Math.min(e.target.value, product.stock))
+              }
               className='border rounded p-2 mr-2 mb-2 sm:mb-0 sm:mr-2 flex-1'
               min='1'
               max={product.stock}
@@ -134,7 +142,7 @@ const ProductDetail = () => {
             <button
               onClick={handleAddToCart}
               className='bg-main text-white rounded px-4 py-2'
-              disabled={addingToCart}
+              disabled={addingToCart || product.stock === 0}
             >
               {addingToCart ? 'Adding...' : 'Add to Cart'}
             </button>

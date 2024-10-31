@@ -12,7 +12,7 @@ const socket = io('http://localhost:5000')
 
 const navItems = [
   { title: 'Home', href: '/' },
-  { title: 'Posts', href: '/posts' },
+  { title: 'Marketplace', href: '/posts' },
   { title: 'About', href: '/about' },
   { title: 'Contact', href: '/contact' },
 ]
@@ -115,7 +115,7 @@ function Navbar() {
           <div className='flex items-center gap-4'>
             {isAuthenticated && (
               <Link
-                to='/cart'
+                to={`/profile/${localStorage.getItem('userId')}/cart`}
                 className='relative flex items-center text-sm text-black'
               >
                 <FaShoppingCart className='text-xl' />

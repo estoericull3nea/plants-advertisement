@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { io } from 'socket.io-client'
+import { toast } from 'react-hot-toast'
+
 const socket = io('http://localhost:5000')
 
 const Cart = () => {
@@ -25,6 +27,7 @@ const Cart = () => {
       const data = await response.json()
       setCartItems(data)
     } catch (err) {
+      toast.error(err.message)
       setError(err.message)
     } finally {
       setLoading(false)
@@ -55,12 +58,14 @@ const Cart = () => {
       )
 
       if (!response.ok) {
-        throw new Error('Failed to update quantity')
+        const errorData = await response.json()
+        throw new Error(errorData.message)
       }
 
+      toast.success('Quantity updated successfully!')
       await fetchCartItems()
     } catch (err) {
-      setError(err.message)
+      toast.error(err.message)
     } finally {
       setUpdating(false)
       setEditableItemId(null)
@@ -81,11 +86,12 @@ const Cart = () => {
         throw new Error('Failed to delete cart item')
       }
 
+      toast.success('Item removed from cart!')
       await fetchCartItems()
       setConfirmDeleteId(null)
       socket.emit('updateCartCount', 'cartCount')
     } catch (err) {
-      setError(err.message)
+      toast.error(err.message)
     } finally {
       setDeleting(false)
     }
@@ -127,10 +133,6 @@ const Cart = () => {
     )
   }
 
-  if (error) {
-    return <div>Error: {error}</div>
-  }
-
   return (
     <div className='container mx-auto mt-4 px-4'>
       <h1 className='text-2xl font-bold mb-4'>Your Cart</h1>
@@ -144,6 +146,7 @@ const Cart = () => {
                 <th>Product</th>
                 <th>Price</th>
                 <th>Quantity</th>
+                <th>Stock</th>
                 <th>Total</th>
                 <th>Action</th>
               </tr>
@@ -195,6 +198,9 @@ const Cart = () => {
                         </button>
                       </div>
                     )}
+                  </td>
+                  <td className='font-bold'>
+                    {item.productId.stock ? item.productId.stock : 'N/A'}
                   </td>
                   <td className='font-bold'>₱ {item.total.toLocaleString()}</td>
                   <td>
