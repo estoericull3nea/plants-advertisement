@@ -1,18 +1,57 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { toast } from 'react-hot-toast'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import { Pagination, Navigation, Autoplay } from 'swiper/modules'
+import 'swiper/css'
+import 'swiper/css/pagination'
+import 'swiper/css/navigation'
+
+const ImageModal = ({ images, isOpen, onClose, startIndex }) => {
+  if (!isOpen) return null
+
+  return (
+    <div className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-80'>
+      <Swiper
+        pagination={{ clickable: true }}
+        navigation
+        modules={[Pagination, Navigation, Autoplay]}
+        initialSlide={startIndex}
+        autoplay={{
+          delay: 3500,
+          disableOnInteraction: false,
+        }}
+      >
+        {images.map((image) => (
+          <SwiperSlide key={image}>
+            <img
+              src={image}
+              alt='Full size'
+              className='max-w-full max-h-screen object-cover'
+            />
+          </SwiperSlide>
+        ))}
+      </Swiper>
+      <button
+        className='absolute top-4 right-4 text-white text-2xl'
+        onClick={onClose}
+      >
+        &times; {/* Close button */}
+      </button>
+    </div>
+  )
+}
 
 const Chatbox = () => {
   const [users, setUsers] = useState([])
   const [messages, setMessages] = useState([])
-  const [selectedUserId, setSelectedUserId] = useState(null) // Store the selected user's ID
+  const [selectedUserId, setSelectedUserId] = useState(null)
   const [text, setText] = useState('')
   const [images, setImages] = useState([])
   const [loading, setLoading] = useState(true)
   const [loadingUsers, setLoadingUsers] = useState(true)
-  const [selectedImage, setSelectedImage] = useState(null) // For the image modal
-  const [imageIndex, setImageIndex] = useState(0) // To track current image index in the carousel
-  const currentUserId = localStorage.getItem('userId') // Get the current logged-in user's ID
+  const [selectedImageIndex, setSelectedImageIndex] = useState(null) // Track current image index in the carousel
+  const currentUserId = localStorage.getItem('userId')
 
   const fetchUsers = async () => {
     setLoadingUsers(true)
@@ -60,17 +99,17 @@ const Chatbox = () => {
 
   const handleSendMessage = async (e) => {
     e.preventDefault()
-    if (!text && images.length === 0) return // Do not send empty messages
+    if (!text && images.length === 0) return
 
     const newMessage = {
       senderId: currentUserId,
       receiverId: selectedUserId,
       text: text || '',
-      images: [...images].map((file) => file.name), // Store only the filenames for the local state
-      _id: Date.now(), // Temporary ID for local update
+      images: [...images].map((file) => file.name),
+      _id: Date.now(),
     }
 
-    setMessages((prevMessages) => [...prevMessages, newMessage]) // Update state locally
+    setMessages((prevMessages) => [...prevMessages, newMessage])
 
     const formData = new FormData()
     formData.append('receiverId', selectedUserId)
@@ -99,37 +138,20 @@ const Chatbox = () => {
   }
 
   const handleUserSelect = (userId) => {
-    setSelectedUserId(userId) // Set the selected user
-    fetchMessages(userId) // Fetch messages for the selected user
+    setSelectedUserId(userId)
+    fetchMessages(userId)
   }
 
   const getFullImageUrl = (filename) => {
-    return `http://localhost:5000/${filename}` // Assuming images are stored in "uploads" directory
+    return `http://localhost:5000/${filename}`
   }
 
-  const handleImageClick = (image, index) => {
-    setSelectedImage(image)
-    setImageIndex(index)
+  const handleImageClick = (index) => {
+    setSelectedImageIndex(index)
   }
 
-  const closeModal = () => {
-    setSelectedImage(null)
-    setImageIndex(0)
-  }
-
-  const nextImage = () => {
-    setImageIndex(
-      (prevIndex) =>
-        (prevIndex + 1) % messages.flatMap((msg) => msg.images).length
-    )
-  }
-
-  const prevImage = () => {
-    setImageIndex(
-      (prevIndex) =>
-        (prevIndex - 1 + messages.flatMap((msg) => msg.images).length) %
-        messages.flatMap((msg) => msg.images).length
-    )
+  const closeImageModal = () => {
+    setSelectedImageIndex(null)
   }
 
   useEffect(() => {
@@ -181,21 +203,20 @@ const Chatbox = () => {
               >
                 <div className='chat-bubble'>
                   {message.text}
-                  {message.images && message.images.length > 0 && (
-                    <div className='flex space-x-2'>
-                      {message.images.map((image, index) => (
-                        <img
-                          key={image}
-                          src={getFullImageUrl(image)}
-                          alt='Message attachment'
-                          className='w-20 h-20 rounded-md cursor-pointer'
-                          onClick={() =>
-                            handleImageClick(getFullImageUrl(image), index)
-                          }
-                        />
-                      ))}
-                    </div>
-                  )}
+                  {Array.isArray(message.images) &&
+                    message.images.length > 0 && (
+                      <div className='flex space-x-2'>
+                        {message.images.map((image, index) => (
+                          <img
+                            key={image}
+                            src={getFullImageUrl(image)}
+                            alt='Message attachment'
+                            className='w-20 h-20 rounded-md cursor-pointer'
+                            onClick={() => handleImageClick(index)}
+                          />
+                        ))}
+                      </div>
+                    )}
                 </div>
               </div>
             ))
@@ -208,7 +229,7 @@ const Chatbox = () => {
             onChange={(e) => setText(e.target.value)}
             placeholder='Type a message...'
             className='border border-gray-300 rounded-l-lg p-2 flex-1'
-            disabled={!selectedUserId} // Disable input if no user is selected
+            disabled={!selectedUserId}
           />
           <input
             type='file'
@@ -219,42 +240,22 @@ const Chatbox = () => {
           <button
             type='submit'
             className='bg-blue-500 text-white rounded-lg px-4'
-            disabled={!selectedUserId} // Disable button if no user is selected
+            disabled={!selectedUserId}
           >
             Send
           </button>
         </form>
       </div>
 
-      {selectedImage && (
-        <div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50'>
-          <div className='relative'>
-            <button
-              onClick={prevImage}
-              className='absolute left-2 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-1'
-            >
-              ◀
-            </button>
-            <img
-              src={selectedImage}
-              alt='Full size'
-              className='max-w-lg max-h-screen'
-            />
-            <button
-              onClick={nextImage}
-              className='absolute right-2 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-1'
-            >
-              ▶
-            </button>
-            <button
-              onClick={closeModal}
-              className='absolute top-2 right-2 bg-white rounded-full p-1'
-            >
-              ✖
-            </button>
-          </div>
-        </div>
-      )}
+      {/* Image Modal */}
+      <ImageModal
+        images={messages.flatMap((msg) =>
+          Array.isArray(msg.images) ? msg.images.map(getFullImageUrl) : []
+        )}
+        isOpen={selectedImageIndex !== null}
+        onClose={closeImageModal}
+        startIndex={selectedImageIndex}
+      />
     </div>
   )
 }
