@@ -51,7 +51,25 @@ const Chatbox = () => {
   const [loading, setLoading] = useState(true)
   const [loadingUsers, setLoadingUsers] = useState(true)
   const [selectedImageIndex, setSelectedImageIndex] = useState(null)
+  const [currentUser, setCurrentUser] = useState(null) // State for current user
   const currentUserId = localStorage.getItem('userId')
+
+  const fetchCurrentUser = async () => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_DEV_BACKEND_URL}/users/${currentUserId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        }
+      )
+      setCurrentUser(response.data)
+    } catch (error) {
+      toast.error('Error fetching current user')
+      console.error(error)
+    }
+  }
 
   const fetchUsers = async () => {
     setLoadingUsers(true)
@@ -159,11 +177,12 @@ const Chatbox = () => {
   }
 
   useEffect(() => {
+    fetchCurrentUser()
     fetchUsers()
   }, [])
 
   return (
-    <div className='flex h-screen'>
+    <div className='flex h-screen container my-10'>
       <div className='w-1/5 border-r p-4'>
         <h2 className='text-xl font-bold'>Users</h2>
         {loadingUsers ? (
@@ -187,6 +206,16 @@ const Chatbox = () => {
       </div>
 
       <div className='chat-box w-4/5 border rounded-lg shadow-lg p-4 flex-1 h-full'>
+        {/* Current User Info */}
+        {currentUser && (
+          <div className='flex items-center mb-4'>
+            <div className='text-lg font-bold'>
+              {currentUser.firstName} {currentUser.lastName}
+            </div>
+            <div className='ml-2 text-gray-600'>{currentUser.email}</div>
+          </div>
+        )}
+
         <div className='messages space-y-2 max-h-[700px] overflow-y-auto p-2 border-b'>
           {loading ? (
             <div className='flex flex-col gap-4'>
