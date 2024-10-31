@@ -26,6 +26,11 @@ const io = new Server(server, {
 io.on('connection', (socket) => {
   console.log('A client connected:', socket.id)
 
+  socket.on('join', (userId) => {
+    console.log('user joined')
+    socket.join(userId)
+  })
+
   socket.on('updateCartCount', (data) => {
     console.log('updateCartCount received: ', data)
     io.emit('newUpdateCartCount', data)
@@ -34,6 +39,11 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     console.log('Client disconnected:', socket.id)
   })
+})
+
+app.use((req, res, next) => {
+  req.io = io
+  next()
 })
 
 import authRouter from './api/routes/auth.route.js'

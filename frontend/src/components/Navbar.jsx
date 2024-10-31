@@ -8,7 +8,9 @@ import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { jwtDecode } from 'jwt-decode'
 
 import { io } from 'socket.io-client'
-const socket = io('http://localhost:5000')
+const socket = io('http://localhost:5000', {
+  transports: ['websocket'],
+})
 
 const navItems = [
   { title: 'Home', href: '/' },
@@ -65,7 +67,7 @@ function Navbar() {
   }, [isAuthenticated, token])
 
   const handleLogout = () => {
-    localStorage.removeItem('token')
+    localStorage.clear('token')
     navigate('/login')
   }
 

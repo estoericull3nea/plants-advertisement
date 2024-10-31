@@ -7,6 +7,10 @@ import 'swiper/css'
 import 'swiper/css/pagination'
 import 'swiper/css/navigation'
 
+import { io } from 'socket.io-client'
+import { useNavigate } from 'react-router-dom'
+const socket = io('http://localhost:5000')
+
 const ImageModal = ({ images, isOpen, onClose, startIndex }) => {
   if (!isOpen) return null
 
@@ -52,6 +56,32 @@ const Chatbox = () => {
   const [selectedImageIndex, setSelectedImageIndex] = useState(null)
   const [currentUser, setCurrentUser] = useState(null)
   const currentUserId = localStorage.getItem('userId')
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    const socket = io('http://localhost:5000')
+
+    fetchCurrentUser()
+    fetchUsers()
+
+    socket.on('message', (newMessage) => {
+      setMessages((prevMessages) => [...prevMessages, newMessage])
+    })
+
+    socket.on('connect', () => {
+      console.log('Connected to Socket.IO server')
+      socket.emit('join', currentUserId) // Move this here to ensure currentUserId is defined
+    })
+
+    socket.on('disconnect', () => {
+      console.log('Disconnected from Socket.IO server')
+    })
+
+    return () => {
+      socket.off('message') // Clean up the listener
+      socket.disconnect() // Clean up on unmount
+    }
+  }, [currentUserId])
 
   const fetchCurrentUser = async () => {
     try {
@@ -65,8 +95,11 @@ const Chatbox = () => {
       )
       setCurrentUser(response.data)
     } catch (error) {
-      toast.error('Error fetching current user')
-      console.error(error)
+      if (error.response.data.message === 'Unauthorized! Invalid token.') {
+        toast.error('Please login again')
+        localStorage.clear()
+        navigate('/login')
+      }
     }
   }
 
@@ -86,7 +119,11 @@ const Chatbox = () => {
       )
       setUsers(filteredUsers)
     } catch (error) {
-      toast.error('Error fetching users')
+      if (error.response.data.message === 'Unauthorized! Invalid token.') {
+        toast.error('Please login again')
+        localStorage.clear()
+        navigate('/login')
+      }
       console.error(error)
     } finally {
       setLoadingUsers(false)
@@ -106,7 +143,11 @@ const Chatbox = () => {
       )
       setMessages(response.data)
     } catch (error) {
-      toast.error('Error fetching messages')
+      if (error.response.data.message === 'Unauthorized! Invalid token.') {
+        toast.error('Please login again')
+        localStorage.clear()
+        navigate('/login')
+      }
       console.error(error)
     }
   }
@@ -123,7 +164,7 @@ const Chatbox = () => {
     })
 
     try {
-      await axios.post(
+      const response = await axios.post(
         `${import.meta.env.VITE_DEV_BACKEND_URL}/chats/send`,
         formData,
         {
@@ -134,6 +175,9 @@ const Chatbox = () => {
         }
       )
 
+      // Emit message to the socket
+      socket.emit('message', response.data) // Emit the newly created message
+
       // Reset input fields
       setText('')
       setImages([])
@@ -141,8 +185,11 @@ const Chatbox = () => {
       // Refetch messages after sending
       fetchMessages(selectedUserId)
     } catch (error) {
-      toast.error('Error sending message')
-      console.error(error)
+      if (error.response.data.message === 'Unauthorized! Invalid token.') {
+        toast.error('Please login again')
+        localStorage.clear()
+        navigate('/login')
+      }
     }
   }
 
@@ -162,11 +209,6 @@ const Chatbox = () => {
   const closeImageModal = () => {
     setSelectedImageIndex(null)
   }
-
-  useEffect(() => {
-    fetchCurrentUser()
-    fetchUsers()
-  }, [])
 
   return (
     <div className='flex h-screen container my-10 gap-3'>

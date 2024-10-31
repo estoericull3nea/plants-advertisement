@@ -23,6 +23,8 @@ export const sendMessage = async (req, res) => {
     .populate('senderId')
     .populate('receiverId')
 
+  req.io.to(receiverId).emit('message', populatedMessage)
+
   res.status(201).json(populatedMessage)
 }
 
