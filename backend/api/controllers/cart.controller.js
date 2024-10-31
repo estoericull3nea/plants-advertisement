@@ -119,3 +119,27 @@ export const updateCartItemQuantity = async (req, res) => {
 
   return res.status(200).json(cartItem)
 }
+
+export const deleteSelectedItems = async (req, res) => {
+  const { userId, cartIds } = req.body
+
+  if (!userId || !Array.isArray(cartIds) || cartIds.length === 0) {
+    return res.status(400).json({ message: 'Invalid request data' })
+  }
+
+  try {
+    const result = await Cart.deleteMany({
+      userId: userId,
+      _id: { $in: cartIds },
+    })
+
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ message: 'No items found to delete' })
+    }
+
+    res.status(200).json({ message: 'Selected items deleted successfully' })
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ message: 'An error occurred while deleting items' })
+  }
+}

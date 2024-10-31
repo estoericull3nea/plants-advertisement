@@ -12,6 +12,7 @@ const Cart = () => {
   const [updating, setUpdating] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [confirmDeleteId, setConfirmDeleteId] = useState(null)
+  const [selectedItems, setSelectedItems] = useState(new Set())
   const [error, setError] = useState(null)
   const [editableItemId, setEditableItemId] = useState(null)
 
@@ -97,6 +98,43 @@ const Cart = () => {
     }
   }
 
+  const deleteSelectedItems = async () => {
+    if (selectedItems.size === 0) {
+      toast.error('No items selected for deletion')
+      return
+    }
+
+    setDeleting(true)
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_DEV_BACKEND_URL}/carts/delete/selected`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            userId, // User ID from the params
+            cartIds: Array.from(selectedItems), // Convert the Set of selected item IDs to an array
+          }),
+        }
+      )
+
+      if (!response.ok) {
+        throw new Error('Failed to delete selected items')
+      }
+
+      toast.success('Selected items removed from cart!')
+      await fetchCartItems()
+      setSelectedItems(new Set()) // Clear selected items
+      socket.emit('updateCartCount', 'cartCount') // Update cart count via socket
+    } catch (err) {
+      toast.error(err.message)
+    } finally {
+      setDeleting(false)
+    }
+  }
+
   const openConfirmModal = (itemId) => {
     setConfirmDeleteId(itemId)
   }
@@ -125,6 +163,18 @@ const Cart = () => {
     }
   }
 
+  const toggleSelectItem = (itemId) => {
+    setSelectedItems((prevSelected) => {
+      const newSelected = new Set(prevSelected)
+      if (newSelected.has(itemId)) {
+        newSelected.delete(itemId)
+      } else {
+        newSelected.add(itemId)
+      }
+      return newSelected
+    })
+  }
+
   if (loading) {
     return (
       <div className='flex justify-center'>
@@ -143,6 +193,21 @@ const Cart = () => {
           <table className='table w-full'>
             <thead>
               <tr>
+                <th>
+                  <input
+                    type='checkbox'
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setSelectedItems(
+                          new Set(cartItems.map((item) => item._id))
+                        )
+                      } else {
+                        setSelectedItems(new Set())
+                      }
+                    }}
+                    checked={selectedItems.size === cartItems.length}
+                  />
+                </th>
                 <th>Product</th>
                 <th>Price</th>
                 <th>Quantity</th>
@@ -154,6 +219,13 @@ const Cart = () => {
             <tbody>
               {cartItems.map((item) => (
                 <tr key={item._id}>
+                  <td>
+                    <input
+                      type='checkbox'
+                      checked={selectedItems.has(item._id)}
+                      onChange={() => toggleSelectItem(item._id)}
+                    />
+                  </td>
                   <td className='flex items-center'>
                     <img
                       src={`http://localhost:5000/${
@@ -220,7 +292,18 @@ const Cart = () => {
       )}
       {cartItems.length > 0 && (
         <div className='mt-6 flex flex-col sm:flex-row justify-between'>
-          <button className='btn btn-accent w-full sm:w-auto'>Checkout</button>
+          <div className='flex space-x-2'>
+            <button
+              className='btn bg-red-600 text-white'
+              onClick={deleteSelectedItems}
+              disabled={deleting}
+            >
+              {deleting ? 'Removing...' : 'Remove Selected'}
+            </button>
+            <button className='btn btn-accent w-full sm:w-auto'>
+              Checkout
+            </button>
+          </div>
           <p className='font-semibold mt-2 sm:mt-0'>
             Total: ₱{' '}
             {cartItems
