@@ -50,7 +50,7 @@ const Chatbox = () => {
   const [images, setImages] = useState([])
   const [loading, setLoading] = useState(true)
   const [loadingUsers, setLoadingUsers] = useState(true)
-  const [selectedImageIndex, setSelectedImageIndex] = useState(null) // Track current image index in the carousel
+  const [selectedImageIndex, setSelectedImageIndex] = useState(null)
   const currentUserId = localStorage.getItem('userId')
 
   const fetchUsers = async () => {
@@ -105,10 +105,11 @@ const Chatbox = () => {
       senderId: currentUserId,
       receiverId: selectedUserId,
       text: text || '',
-      images: [...images].map((file) => file.name),
+      images: [...images].map((file) => `uploads/${file.name}`),
       _id: Date.now(),
     }
 
+    // Optimistically update messages state
     setMessages((prevMessages) => [...prevMessages, newMessage])
 
     const formData = new FormData()
@@ -129,6 +130,9 @@ const Chatbox = () => {
           },
         }
       )
+
+      // Refetch messages after sending
+      fetchMessages(selectedUserId)
       setText('')
       setImages([])
     } catch (error) {
@@ -182,8 +186,8 @@ const Chatbox = () => {
         )}
       </div>
 
-      <div className='chat-box w-4/5 border rounded-lg shadow-lg p-4 flex-1'>
-        <div className='messages space-y-2 max-h-80 overflow-y-auto p-2 border-b'>
+      <div className='chat-box w-4/5 border rounded-lg shadow-lg p-4 flex-1 h-full'>
+        <div className='messages space-y-2 max-h-[700px] overflow-y-auto p-2 border-b'>
           {loading ? (
             <div className='flex flex-col gap-4'>
               <div className='skeleton h-32 w-full'></div>
@@ -222,7 +226,10 @@ const Chatbox = () => {
             ))
           )}
         </div>
-        <form onSubmit={handleSendMessage} className='message-form flex mt-4'>
+        <form
+          onSubmit={handleSendMessage}
+          className='message-form flex mt-10 w-full'
+        >
           <input
             type='text'
             value={text}
