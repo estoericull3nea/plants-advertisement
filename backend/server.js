@@ -9,6 +9,8 @@ import connectDB from './api/utils/connectDB.js'
 import { Server } from 'socket.io'
 import http from 'http'
 
+import User from './api/models/user.model.js'
+
 const allowedOrigins = [process.env.VITE_DEV_FRONTEND_URL]
 
 dotenv.config()
@@ -28,9 +30,13 @@ const onlineUsers = new Map()
 io.on('connection', (socket) => {
   console.log('A client connected:', socket.id)
 
-  socket.on('join', (userId) => {
+  socket.on('join', async (userId) => {
     console.log('User joined:', userId)
     onlineUsers.set(userId, socket.id)
+
+    // Update last active time
+    await User.findByIdAndUpdate(userId, { lastActive: Date.now() })
+
     // Notify other users that this user is online
     socket.broadcast.emit('userStatusUpdate', { userId, online: true })
   })
@@ -41,9 +47,13 @@ io.on('connection', (socket) => {
   })
 
   socket.on('disconnect', () => {
-    onlineUsers.forEach((value, key) => {
+    onlineUsers.forEach(async (value, key) => {
       if (value === socket.id) {
         onlineUsers.delete(key)
+
+        // Optionally update lastActive when the user disconnects
+        await User.findByIdAndUpdate(key, { lastActive: Date.now() })
+
         socket.broadcast.emit('userStatusUpdate', {
           userId: key,
           online: false,
@@ -64,6 +74,7 @@ import userRouter from './api/routes/user.route.js'
 import productRouter from './api/routes/product.route.js'
 import addCartRouter from './api/routes/cart.route.js'
 import chatRouter from './api/routes/chat.route.js'
+import userModel from './api/models/user.model.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
