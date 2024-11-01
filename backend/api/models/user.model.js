@@ -13,6 +13,7 @@ const UserSchema = new mongoose.Schema(
     dateOfBirth: { type: Date, required: false },
     age: { type: Number, required: false },
     picture: { type: String, required: false },
+    lastActive: { type: Date, default: Date.now },
   },
   { timestamps: true }
 )
