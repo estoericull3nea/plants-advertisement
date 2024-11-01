@@ -6,8 +6,8 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import { Pagination, Autoplay } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/pagination'
-
 import { io } from 'socket.io-client'
+
 const socket = io('http://localhost:5000')
 
 const ProductDetail = () => {
@@ -17,6 +17,8 @@ const ProductDetail = () => {
   const [loading, setLoading] = useState(true)
   const [addingToCart, setAddingToCart] = useState(false)
   const [liked, setLiked] = useState(false)
+  const [likeCount, setLikeCount] = useState(0)
+  const [togglingLike, setTogglingLike] = useState(false) // State for toggling like
 
   const fetchProduct = async () => {
     setLoading(true)
@@ -25,7 +27,8 @@ const ProductDetail = () => {
         `${import.meta.env.VITE_DEV_BACKEND_URL}/products/${id}`
       )
       setProduct(response.data)
-      checkIfLiked(response.data._id) // Check if the user has liked this product
+      await checkIfLiked(response.data._id) // Check if the user has liked this product
+      await fetchLikeCount(response.data._id) // Fetch the like count for this product
     } catch (error) {
       console.error('Error fetching product:', error)
     } finally {
@@ -41,10 +44,22 @@ const ProductDetail = () => {
           import.meta.env.VITE_DEV_BACKEND_URL
         }/likes/user/${userId}/product/${productId}`
       )
-      setLiked(response.data.length > 0) // If there are any likes, set liked to truec
-      console.log(response)
+      setLiked(response.data.length > 0) // If there are any likes, set liked to true
     } catch (error) {
       console.error('Error checking like status:', error)
+    }
+  }
+
+  const fetchLikeCount = async (productId) => {
+    try {
+      const response = await axios.get(
+        `${
+          import.meta.env.VITE_DEV_BACKEND_URL
+        }/likes/count/product/${productId}`
+      )
+      setLikeCount(response.data.count) // Set the like count from the response
+    } catch (error) {
+      console.error('Error fetching like count:', error)
     }
   }
 
@@ -78,20 +93,22 @@ const ProductDetail = () => {
   }
 
   const handleToggleLike = async () => {
+    setTogglingLike(true) // Set loading state
     try {
       const userId = localStorage.getItem('userId')
-      const action = liked ? 'dislike' : 'like' // Determine action based on current state
 
-      await axios.post(`${import.meta.env.VITE_DEV_BACKEND_URL}/likes`, {
+      await axios.post(`${import.meta.env.VITE_DEV_BACKEND_URL}/likes/toggle`, {
         userId,
         productId: product._id,
-        action,
       })
 
       setLiked((prevLiked) => !prevLiked) // Toggle liked state
+      await fetchLikeCount(product._id) // Refetch the like count
       toast.success(`Product ${liked ? 'disliked' : 'liked'} successfully!`)
     } catch (error) {
       toast.error(error.response.data.message)
+    } finally {
+      setTogglingLike(false) // Reset loading state
     }
   }
 
@@ -161,7 +178,8 @@ const ProductDetail = () => {
           </p>
           <p className='mt-2'>Category: {product.category}</p>
           <p className='mt-2'>Address: {product.address}</p>
-
+          <p className='font-bold mt-4'>Likes: {likeCount}</p>{' '}
+          {/* Display like count */}
           <div className='mt-4 flex flex-col sm:flex-row'>
             <input
               type='number'
@@ -181,11 +199,9 @@ const ProductDetail = () => {
               {addingToCart ? 'Adding...' : 'Add to Cart'}
             </button>
           </div>
-
           <p className='font-bold mt-4'>
             Total Price: ₱ {totalPrice.toLocaleString()}
           </p>
-
           <h2 className='text-2xl font-bold mt-8'>User Information</h2>
           <div className='mt-4'>
             <table className='min-w-full border-collapse'>
@@ -265,12 +281,17 @@ const ProductDetail = () => {
               </tbody>
             </table>
           </div>
-
           <button
             onClick={handleToggleLike}
-            className={`bg-blue-500 text-white rounded px-4 py-2 mt-4 `}
+            className={`bg-blue-500 text-white rounded px-4 py-2 mt-4 flex items-center ${
+              togglingLike ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
+            disabled={togglingLike} // Disable button when toggling
           >
-            {liked ? 'Dislike' : 'Like'}
+            <span className='mr-2'>
+              {togglingLike ? 'Processing...' : liked ? 'Dislike' : 'Like'}
+            </span>
+            <span>({likeCount})</span>
           </button>
         </div>
       </div>

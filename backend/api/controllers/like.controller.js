@@ -1,16 +1,21 @@
 import Like from '../models/like.model.js'
+import Product from '../models/product.model.js'
 
-export const likeProduct = async (req, res) => {
-  const { userId, productId, action } = req.body
+export const toggleLikeProduct = async (req, res) => {
+  const { userId, productId } = req.body
 
-  if (action === 'like') {
-    const newLike = new Like({ userId, productId })
-    await newLike.save()
-    return res.status(201).json({ message: 'Product liked successfully.' })
-  } else if (action === 'dislike') {
+  const existingLike = await Like.findOne({ userId, productId })
+
+  if (existingLike) {
+    // User wants to dislike (remove the like)
+    await Like.findOneAndDelete({ userId, productId })
     return res.status(200).json({ message: 'Product disliked successfully.' })
   } else {
-    return res.status(400).json({ message: 'Invalid action.' })
+    // User wants to like (add the like)
+    const newLike = new Like({ userId, productId })
+    await newLike.save()
+    await Product.findByIdAndUpdate(productId, { $inc: { likeCount: 1 } })
+    return res.status(201).json({ message: 'Product liked successfully.' })
   }
 }
 
@@ -33,4 +38,11 @@ export const checkIfLiked = async (req, res) => {
 
   const existingLike = await Like.find({ userId, productId })
   return res.status(200).json(existingLike)
+}
+
+export const countLikes = async (req, res) => {
+  const { productId } = req.params
+
+  const likeCount = await Like.countDocuments({ productId })
+  return res.status(200).json({ count: likeCount })
 }
