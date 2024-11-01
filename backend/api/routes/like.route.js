@@ -1,6 +1,6 @@
 // routes/likeRoutes.js
 import express from 'express'
-import { likeProduct } from '../controllers/like.controller'
+import { likeProduct } from '../controllers/like.controller.js'
 
 const router = express.Router()
 
