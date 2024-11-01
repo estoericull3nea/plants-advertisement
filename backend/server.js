@@ -23,12 +23,16 @@ const io = new Server(server, {
   },
 })
 
+const onlineUsers = new Map()
+
 io.on('connection', (socket) => {
   console.log('A client connected:', socket.id)
 
   socket.on('join', (userId) => {
-    console.log('user joined')
-    socket.join(userId)
+    console.log('User joined:', userId)
+    onlineUsers.set(userId, socket.id)
+    // Notify other users that this user is online
+    socket.broadcast.emit('userStatusUpdate', { userId, online: true })
   })
 
   socket.on('updateCartCount', (data) => {
@@ -37,6 +41,15 @@ io.on('connection', (socket) => {
   })
 
   socket.on('disconnect', () => {
+    onlineUsers.forEach((value, key) => {
+      if (value === socket.id) {
+        onlineUsers.delete(key)
+        socket.broadcast.emit('userStatusUpdate', {
+          userId: key,
+          online: false,
+        })
+      }
+    })
     console.log('Client disconnected:', socket.id)
   })
 })

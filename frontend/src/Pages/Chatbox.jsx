@@ -57,6 +57,7 @@ const Chatbox = () => {
   const [currentUser, setCurrentUser] = useState(null)
   const currentUserId = localStorage.getItem('userId')
   const navigate = useNavigate()
+  const [onlineUsers, setOnlineUsers] = useState(new Set())
 
   const messagesEndRef = useRef(null) // Reference for scrolling
 
@@ -68,7 +69,19 @@ const Chatbox = () => {
 
     socket.on('message', (newMessage) => {
       setMessages((prevMessages) => [...prevMessages, newMessage])
-      scrollToBottom() // Scroll to the bottom when a new message arrives
+      scrollToBottom()
+    })
+
+    socket.on('userStatusUpdate', ({ userId, online }) => {
+      setOnlineUsers((prev) => {
+        const updated = new Set(prev)
+        if (online) {
+          updated.add(userId)
+        } else {
+          updated.delete(userId)
+        }
+        return updated
+      })
     })
 
     socket.on('connect', () => {
@@ -82,6 +95,7 @@ const Chatbox = () => {
 
     return () => {
       socket.off('message')
+      socket.off('userStatusUpdate')
       socket.disconnect()
     }
   }, [currentUserId])
@@ -237,10 +251,17 @@ const Chatbox = () => {
           users.map((user) => (
             <div
               key={user._id}
-              className='p-2 border-b hover:bg-gray-100 cursor-pointer'
+              className='p-2 border-b hover:bg-gray-100 cursor-pointer flex justify-between items-center'
               onClick={() => handleUserSelect(user._id)}
             >
-              {user.firstName} {user.lastName}
+              <span>
+                {user.firstName} {user.lastName}
+              </span>
+              {onlineUsers.has(user._id) ? (
+                <span className='text-green-500'>●</span> // Green dot for online
+              ) : (
+                <span className='text-red-500'>●</span> // Red dot for offline
+              )}
             </div>
           ))
         )}
