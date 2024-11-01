@@ -25,11 +25,26 @@ const ProductDetail = () => {
         `${import.meta.env.VITE_DEV_BACKEND_URL}/products/${id}`
       )
       setProduct(response.data)
-      setLiked(response.data.liked) // Assuming the product data contains a liked field
+      checkIfLiked(response.data._id) // Check if the user has liked this product
     } catch (error) {
       console.error('Error fetching product:', error)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const checkIfLiked = async (productId) => {
+    const userId = localStorage.getItem('userId')
+    try {
+      const response = await axios.get(
+        `${
+          import.meta.env.VITE_DEV_BACKEND_URL
+        }/likes/user/${userId}/product/${productId}`
+      )
+      setLiked(response.data.length > 0) // If there are any likes, set liked to truec
+      console.log(response)
+    } catch (error) {
+      console.error('Error checking like status:', error)
     }
   }
 
