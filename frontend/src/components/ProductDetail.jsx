@@ -16,6 +16,7 @@ const ProductDetail = () => {
   const [quantity, setQuantity] = useState(1)
   const [loading, setLoading] = useState(true)
   const [addingToCart, setAddingToCart] = useState(false)
+  const [liked, setLiked] = useState(false)
 
   const fetchProduct = async () => {
     setLoading(true)
@@ -24,6 +25,7 @@ const ProductDetail = () => {
         `${import.meta.env.VITE_DEV_BACKEND_URL}/products/${id}`
       )
       setProduct(response.data)
+      setLiked(response.data.liked) // Assuming the product data contains a liked field
     } catch (error) {
       console.error('Error fetching product:', error)
     } finally {
@@ -52,12 +54,29 @@ const ProductDetail = () => {
       }))
 
       setQuantity(1)
-
       socket.emit('updateCartCount', 'cartCount')
     } catch (error) {
       toast.error(error.response.data.message)
     } finally {
       setAddingToCart(false)
+    }
+  }
+
+  const handleToggleLike = async () => {
+    try {
+      const userId = localStorage.getItem('userId')
+      const action = liked ? 'dislike' : 'like' // Determine action based on current state
+
+      await axios.post(`${import.meta.env.VITE_DEV_BACKEND_URL}/likes`, {
+        userId,
+        productId: product._id,
+        action,
+      })
+
+      setLiked((prevLiked) => !prevLiked) // Toggle liked state
+      toast.success(`Product ${liked ? 'disliked' : 'liked'} successfully!`)
+    } catch (error) {
+      toast.error(error.response.data.message)
     }
   }
 
@@ -231,6 +250,13 @@ const ProductDetail = () => {
               </tbody>
             </table>
           </div>
+
+          <button
+            onClick={handleToggleLike}
+            className={`bg-blue-500 text-white rounded px-4 py-2 mt-4 `}
+          >
+            {liked ? 'Dislike' : 'Like'}
+          </button>
         </div>
       </div>
     </div>
