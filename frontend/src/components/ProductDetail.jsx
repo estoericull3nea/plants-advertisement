@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, Link } from 'react-router-dom'
 import { toast } from 'react-hot-toast'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Pagination, Autoplay } from 'swiper/modules'
@@ -362,8 +362,15 @@ const ProductDetail = () => {
                     <strong>Name:</strong>
                   </td>
                   <td className='border px-4 py-2'>
-                    {product.userId.firstName || 'N/A'}{' '}
-                    {product.userId.lastName || 'N/A'}
+                    <Link
+                      to={`${import.meta.env.VITE_DEV_FRONTEND_URL}/profile/${
+                        product.userId._id
+                      }/user-info`}
+                    >
+                      {' '}
+                      {product.userId.firstName || 'N/A'}{' '}
+                      {product.userId.lastName || 'N/A'}
+                    </Link>
                   </td>
                 </tr>
                 <tr>
