@@ -31,6 +31,9 @@ const ProductDetail = () => {
   const [showLikesModal, setShowLikesModal] = useState(false)
   const [sharing, setSharing] = useState(false)
 
+  const [messageContent, setMessageContent] = useState('')
+  const [sendingMessage, setSendingMessage] = useState(false)
+
   const handleShare = async () => {
     setSharing(true)
     const userId = localStorage.getItem('userId')
