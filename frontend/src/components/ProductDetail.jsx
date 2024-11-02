@@ -26,6 +26,7 @@ const ProductDetail = () => {
   const [newComment, setNewComment] = useState('')
   const [loadingComments, setLoadingComments] = useState(true)
   const [showCommentsModal, setShowCommentsModal] = useState(false)
+  const [showLikesModal, setShowLikesModal] = useState(false)
 
   const fetchComments = async () => {
     if (!product) return // Ensure product exists before fetching comments
@@ -347,7 +348,17 @@ const ProductDetail = () => {
               setShowCommentsModal(true)
             }}
           >
-            Show Comments
+            Show Comments ({comments.length})
+          </button>
+
+          <button
+            className='mt-4 underline'
+            onClick={() => {
+              fetchLikesUsers(product._id) // Fetch likes users when opening the modal
+              setShowLikesModal(true)
+            }}
+          >
+            Show Likes ({likeCount})
           </button>
 
           {/* Modal for displaying comments */}
@@ -379,6 +390,9 @@ const ProductDetail = () => {
                               : `${comment.userId.firstName} ${comment.userId.lastName}`}
                           </strong>
                           : {comment.content}
+                          <div className='text-gray-500 text-sm'>
+                            {new Date(comment.createdAt).toLocaleString()}
+                          </div>
                         </li>
                       )
                     })}
@@ -400,6 +414,34 @@ const ProductDetail = () => {
                     Submit
                   </button>
                 </form>
+              </div>
+            </dialog>
+          )}
+
+          {showLikesModal && (
+            <dialog open className='modal'>
+              <div className='modal-box'>
+                <form method='dialog'>
+                  <button
+                    className='btn btn-sm btn-circle btn-ghost absolute right-2 top-2'
+                    onClick={() => setShowLikesModal(false)}
+                  >
+                    ✕
+                  </button>
+                </form>
+                <h3 className='font-bold text-lg'>Likes</h3>
+                <ul className='mt-4'>
+                  {likesUsers.map((user) => (
+                    <li key={user._id}>
+                      <button
+                        onClick={() => handleUserClick(user._id)}
+                        className='text-blue-600 underline'
+                      >
+                        {`${user.firstName} ${user.lastName}`}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
               </div>
             </dialog>
           )}
