@@ -437,7 +437,7 @@ const ProductDetail = () => {
                         onClick={() => handleUserClick(user._id)}
                         className='text-blue-600 underline'
                       >
-                        {`${user.firstName} ${user.lastName}`}
+                        {`${user.userId.firstName} ${user.userId.lastName}`}
                       </button>
                     </li>
                   ))}
