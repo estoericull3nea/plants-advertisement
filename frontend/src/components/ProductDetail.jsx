@@ -19,6 +19,18 @@ const ProductDetail = () => {
   const [liked, setLiked] = useState(false)
   const [likeCount, setLikeCount] = useState(0)
   const [togglingLike, setTogglingLike] = useState(false) // State for toggling like
+  const [likesUsers, setLikesUsers] = useState([]) // New state for users who liked the product
+
+  const fetchLikesUsers = async (productId) => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_DEV_BACKEND_URL}/likes/product/${productId}`
+      )
+      setLikesUsers(response.data) // Set the users who liked the product
+    } catch (error) {
+      console.error('Error fetching likes users:', error)
+    }
+  }
 
   const fetchProduct = async () => {
     setLoading(true)
@@ -29,6 +41,7 @@ const ProductDetail = () => {
       setProduct(response.data)
       await checkIfLiked(response.data._id) // Check if the user has liked this product
       await fetchLikeCount(response.data._id) // Fetch the like count for this product
+      await fetchLikesUsers(response.data._id)
     } catch (error) {
       console.error('Error fetching product:', error)
     } finally {
@@ -179,6 +192,14 @@ const ProductDetail = () => {
           <p className='mt-2'>Category: {product.category}</p>
           <p className='mt-2'>Address: {product.address}</p>
           <p className='font-bold mt-4'>Likes: {likeCount}</p>{' '}
+          <h2 className='text-2xl font-bold mt-4'>
+            Users Who Liked This Product
+          </h2>
+          <ul className='list-disc pl-5'>
+            {likesUsers.map((user) => (
+              <li key={user.id}>{user.name}</li> // Adjust based on your user object structure
+            ))}
+          </ul>
           {/* Display like count */}
           <div className='mt-4 flex flex-col sm:flex-row'>
             <input
