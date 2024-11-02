@@ -401,14 +401,21 @@ const ProductDetail = () => {
               </button>
             </form>
             <ul className='mt-4'>
-              {comments.map((comment) => (
-                <li key={comment._id} className='border p-2 my-2'>
-                  <strong>
-                    {comment.userId.firstName} {comment.userId.lastName}
-                  </strong>
-                  : {comment.content}
-                </li>
-              ))}
+              {comments.map((comment) => {
+                const currentUserId = localStorage.getItem('userId')
+                const isCurrentUser = comment.userId._id === currentUserId
+
+                return (
+                  <li key={comment._id} className='border p-2 my-2'>
+                    <strong>
+                      {isCurrentUser
+                        ? 'You'
+                        : `${comment.userId.firstName} ${comment.userId.lastName}`}
+                    </strong>
+                    : {comment.content}
+                  </li>
+                )
+              })}
             </ul>
           </div>
         </div>
