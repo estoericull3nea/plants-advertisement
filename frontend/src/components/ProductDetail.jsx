@@ -194,16 +194,26 @@ const ProductDetail = () => {
     return (
       <div className='container mx-auto p-4'>
         <div className='flex flex-col md:flex-row'>
-          <div className='skeleton h-96 w-full md:w-1/2 mr-4'></div>
+          <div className='skeleton rounded-md h-[500px] w-full md:w-1/2 mr-4 mt-12'></div>
           <div className='w-full md:w-1/2'>
-            <div className='skeleton h-8 w-full mb-4'></div>
-            <div className='skeleton h-4 w-full mb-2'></div>
-            <div className='skeleton h-4 w-1/2 mb-2'></div>
-            <div className='skeleton h-4 w-1/2 mb-2'></div>
-            <div className='skeleton h-4 w-full mb-2'></div>
-            <div className='skeleton h-4 w-full mb-2'></div>
-            <div className='skeleton h-4 w-full mb-2'></div>
-            <div className='skeleton h-4 w-full mb-2'></div>
+            <div className='flex justify-end'>
+              <div className='skeleton rounded-md h-8 w-32 mb-4'></div>
+            </div>
+            <div className='skeleton rounded-md h-[300px] w-full mb-4'></div>
+            <div className='flex gap-x-3'>
+              <div className='skeleton rounded-md h-8 w-[80%] mb-2'></div>
+              <div className='skeleton rounded-md h-8 w-[20%] mb-2'></div>
+            </div>
+            <div className='skeleton rounded-md h-8 w-full mb-2'></div>
+            <div className='skeleton rounded-md h-8 w-full mb-2'></div>
+            <div className='skeleton rounded-md h-8 w-full mb-2'></div>
+            <div className='skeleton rounded-md h-8 w-full mb-2'></div>
+            <div className='skeleton rounded-md h-8 w-full mb-2'></div>
+            <div className='flex gap-x-3'>
+              <div className='skeleton rounded-md h-8 w-[60%] mb-2'></div>
+              <div className='skeleton rounded-md h-8 w-[20%] mb-2'></div>
+              <div className='skeleton rounded-md h-8 w-[20%] mb-2'></div>
+            </div>
           </div>
         </div>
       </div>
