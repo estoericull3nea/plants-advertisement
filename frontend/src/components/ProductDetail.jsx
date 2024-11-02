@@ -8,10 +8,9 @@ import { FaHeart, FaRegHeart } from 'react-icons/fa'
 import { IoIosShareAlt } from 'react-icons/io'
 import 'swiper/css'
 import 'swiper/css/pagination'
-import { io } from 'socket.io-client'
 import RelatedProducts from './RelatedProducts'
-
 const socket = io('http://localhost:5000')
+import { io } from 'socket.io-client'
 
 const ProductDetail = () => {
   const { id } = useParams()
@@ -31,8 +30,47 @@ const ProductDetail = () => {
   const [showLikesModal, setShowLikesModal] = useState(false)
   const [sharing, setSharing] = useState(false)
 
-  const [messageContent, setMessageContent] = useState('')
-  const [sendingMessage, setSendingMessage] = useState(false)
+  const [messageText, setMessageText] = useState('')
+
+  const handleSendMessage = async (e) => {
+    e.preventDefault()
+    if (!messageText) return // Ensure there's text to send
+
+    const receiverId = product.userId._id // Assuming product.userId contains the seller's info
+    const formData = new FormData()
+    formData.append('receiverId', receiverId)
+    formData.append('text', messageText)
+
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_DEV_BACKEND_URL}/chats/send`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      )
+
+      socket.emit('message', response.data) // Emit the newly created message
+
+      // Reset the input field
+      setMessageText('')
+      toast.success('Sent')
+    } catch (error) {
+      if (
+        error.response &&
+        error.response.data.message === 'Unauthorized! Invalid token.'
+      ) {
+        toast.error('Please login again')
+        localStorage.clear()
+        navigate('/login')
+      } else {
+        toast.error(error.response.data.message)
+      }
+    }
+  }
 
   const handleShare = async () => {
     setSharing(true)
@@ -546,6 +584,23 @@ const ProductDetail = () => {
                   <IoIosShareAlt /> Share
                 </div>
               )}
+            </button>
+          </div>
+
+          <div className='flex items-center flex-wrap mt-4 gap-3'>
+            <textarea
+              value={messageText}
+              onChange={(e) => setMessageText(e.target.value)}
+              className='border rounded p-2 flex-1'
+              placeholder='Type your message...'
+              required
+              rows='2'
+            />
+            <button
+              onClick={handleSendMessage}
+              className={`bg-main text-white rounded px-4 py-2`}
+            >
+              Send Message
             </button>
           </div>
         </div>
