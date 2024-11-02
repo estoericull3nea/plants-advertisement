@@ -4,8 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { toast } from 'react-hot-toast'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Pagination, Autoplay } from 'swiper/modules'
-import { FaHeart, FaRegHeart } from 'react-icons/fa' // Importing heart icons
-
+import { FaHeart, FaRegHeart } from 'react-icons/fa'
 import 'swiper/css'
 import 'swiper/css/pagination'
 import { io } from 'socket.io-client'
@@ -25,8 +24,12 @@ const ProductDetail = () => {
   const [likesUsers, setLikesUsers] = useState([])
   const [comments, setComments] = useState([])
   const [newComment, setNewComment] = useState('')
+  const [loadingComments, setLoadingComments] = useState(true)
+  const [showCommentsModal, setShowCommentsModal] = useState(false)
 
   const fetchComments = async () => {
+    if (!product) return // Ensure product exists before fetching comments
+    setLoadingComments(true)
     try {
       const response = await axios.get(
         `${import.meta.env.VITE_DEV_BACKEND_URL}/comments/${product._id}`
@@ -34,6 +37,8 @@ const ProductDetail = () => {
       setComments(response.data)
     } catch (error) {
       console.error('Error fetching comments:', error)
+    } finally {
+      setLoadingComments(false)
     }
   }
 
@@ -77,7 +82,7 @@ const ProductDetail = () => {
       await checkIfLiked(response.data._id)
       await fetchLikeCount(response.data._id)
       await fetchLikesUsers(response.data._id)
-      await fetchComments()
+      await fetchComments() // Fetch comments after product is set
     } catch (error) {
       console.error('Error fetching product:', error)
     } finally {
@@ -232,32 +237,6 @@ const ProductDetail = () => {
           </p>
           <p className='mt-2'>Category: {product.category}</p>
           <p className='mt-2'>Address: {product.address}</p>
-          <p className='font-bold mt-4'>Likes: {likeCount}</p>
-
-          {/* Modal for displaying users who liked the product */}
-          <dialog id='likes_modal' className='modal'>
-            <div className='modal-box'>
-              <form method='dialog'>
-                <button className='btn btn-sm btn-circle btn-ghost absolute right-2 top-2'>
-                  ✕
-                </button>
-              </form>
-              <h3 className='font-bold text-lg'>
-                Users Who Liked This Product
-              </h3>
-              <ul className='list-disc pl-5 py-4'>
-                {likesUsers.map((user) => (
-                  <li
-                    key={user.userId._id}
-                    className='cursor-pointer text-blue-600'
-                    onClick={() => handleUserClick(user.userId._id)}
-                  >
-                    {user.userId.firstName} {user.userId.lastName}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </dialog>
 
           <div className='mt-4 flex flex-col sm:flex-row'>
             <input
@@ -360,63 +339,107 @@ const ProductDetail = () => {
               </tbody>
             </table>
           </div>
-          {/* Button to open the modal */}
+
           <button
             className='mt-4 underline'
-            onClick={() => document.getElementById('likes_modal').showModal()}
+            onClick={() => {
+              fetchComments() // Fetch comments when opening the modal
+              setShowCommentsModal(true)
+            }}
           >
-            Likes
-            <span>({likeCount})</span>
-          </button>
-          <button
-            onClick={handleToggleLike}
-            className={`bg-blue-500 text-white rounded px-4 py-2 mt-4 flex items-center ${
-              togglingLike ? 'opacity-50 cursor-not-allowed' : ''
-            }`}
-            disabled={togglingLike} // Disable button when toggling
-          >
-            <span className='mr-2'>{liked ? <FaHeart /> : <FaRegHeart />}</span>
-            <span>
-              {togglingLike ? 'Processing...' : liked ? 'Dislike' : 'Like'} (
-              {likeCount})
-            </span>
+            Show Comments
           </button>
 
-          <div className='mt-8'>
-            <h2 className='text-2xl font-bold'>Comments</h2>
-            <form onSubmit={handleAddComment} className='flex mt-4'>
-              <input
-                type='text'
+          {/* Modal for displaying comments */}
+          {showCommentsModal && (
+            <dialog open className='modal'>
+              <div className='modal-box'>
+                <form method='dialog'>
+                  <button
+                    className='btn btn-sm btn-circle btn-ghost absolute right-2 top-2'
+                    onClick={() => setShowCommentsModal(false)}
+                  >
+                    ✕
+                  </button>
+                </form>
+                <h3 className='font-bold text-lg'>Comments</h3>
+                {loadingComments ? (
+                  <div>Loading comments...</div>
+                ) : (
+                  <ul className='mt-4'>
+                    {comments.map((comment) => {
+                      const currentUserId = localStorage.getItem('userId')
+                      const isCurrentUser = comment.userId._id === currentUserId
+
+                      return (
+                        <li key={comment._id} className='border p-2 my-2'>
+                          <strong>
+                            {isCurrentUser
+                              ? 'You'
+                              : `${comment.userId.firstName} ${comment.userId.lastName}`}
+                          </strong>
+                          : {comment.content}
+                        </li>
+                      )
+                    })}
+                  </ul>
+                )}
+                <form onSubmit={handleAddComment} className='flex mt-4'>
+                  <input
+                    type='text'
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
+                    className='border rounded p-2 flex-1'
+                    placeholder='Add a comment...'
+                    required
+                  />
+                  <button
+                    type='submit'
+                    className='bg-blue-500 text-white rounded px-4 py-2 ml-2'
+                  >
+                    Submit
+                  </button>
+                </form>
+              </div>
+            </dialog>
+          )}
+
+          <div className='flex items-center mt-4'>
+            <button
+              onClick={handleToggleLike}
+              className={`bg-blue-500 text-white rounded px-4 py-2 flex items-center ${
+                togglingLike ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
+              disabled={togglingLike}
+            >
+              <span className='mr-2'>
+                {liked ? <FaHeart /> : <FaRegHeart />}
+              </span>
+              <span>
+                {togglingLike ? 'Processing...' : liked ? 'Dislike' : 'Like'} (
+                {likeCount})
+              </span>
+            </button>
+
+            <form
+              onSubmit={handleAddComment}
+              className='flex items-center ml-4'
+            >
+              <textarea
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
-                className='border rounded p-2 flex-1'
+                className='border rounded p-2 mr-2'
                 placeholder='Add a comment...'
                 required
+                rows='1'
               />
               <button
                 type='submit'
-                className='bg-blue-500 text-white rounded px-4 py-2 ml-2'
+                className='bg-blue-500 text-white rounded px-4 py-2'
               >
                 Submit
               </button>
             </form>
-            <ul className='mt-4'>
-              {comments.map((comment) => {
-                const currentUserId = localStorage.getItem('userId')
-                const isCurrentUser = comment.userId._id === currentUserId
-
-                return (
-                  <li key={comment._id} className='border p-2 my-2'>
-                    <strong>
-                      {isCurrentUser
-                        ? 'You'
-                        : `${comment.userId.firstName} ${comment.userId.lastName}`}
-                    </strong>
-                    : {comment.content}
-                  </li>
-                )
-              })}
-            </ul>
           </div>
         </div>
       </div>
