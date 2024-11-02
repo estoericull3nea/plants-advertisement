@@ -46,3 +46,11 @@ export const countLikes = async (req, res) => {
   const likeCount = await Like.countDocuments({ productId })
   return res.status(200).json({ count: likeCount })
 }
+
+export const getLikesByProductId = async (req, res) => {
+  const { productId } = req.params
+
+  const likes = await Like.find({ productId }).populate('userId')
+
+  res.status(200).json(likes)
+}
