@@ -75,6 +75,7 @@ import productRouter from './api/routes/product.route.js'
 import addCartRouter from './api/routes/cart.route.js'
 import chatRouter from './api/routes/chat.route.js'
 import likeRouter from './api/routes/like.route.js'
+import commentRouter from './api/routes/comment.route.js'
 import userModel from './api/models/user.model.js'
 
 const __filename = fileURLToPath(import.meta.url)
@@ -102,6 +103,7 @@ app.use('/api/v1/products', productRouter)
 app.use('/api/v1/carts', addCartRouter)
 app.use('/api/v1/chats', chatRouter)
 app.use('/api/v1/likes', likeRouter)
+app.use('/api/v1/comments', commentRouter)
 
 // ================================== Connection to MongoDB ==================================
 connectDB()
