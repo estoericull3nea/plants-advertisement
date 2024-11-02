@@ -7,6 +7,7 @@ import {
   deleteProduct,
   getAllProducts,
   getProductById,
+  getRelatedProducts,
   updateProduct,
 } from '../controllers/product.controller.js'
 
@@ -37,5 +38,7 @@ router.get('/', verifyToken, getAllProducts)
 router.get('/:id', getProductById)
 router.put('/:id', updateProduct)
 router.delete('/:id', deleteProduct)
+
+router.get('/related/:categoryId/:productId', getRelatedProducts)
 
 export default router

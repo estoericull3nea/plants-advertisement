@@ -8,6 +8,7 @@ import { FaHeart, FaRegHeart } from 'react-icons/fa'
 import 'swiper/css'
 import 'swiper/css/pagination'
 import { io } from 'socket.io-client'
+import RelatedProducts from './RelatedProducts'
 
 const socket = io('http://localhost:5000')
 
@@ -537,6 +538,8 @@ const ProductDetail = () => {
           </div>
         </div>
       </div>
+
+      <RelatedProducts category={product.category} productId={product._id} />
     </div>
   )
 }

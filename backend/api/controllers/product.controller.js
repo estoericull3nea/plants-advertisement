@@ -65,3 +65,14 @@ export const deleteProduct = async (req, res) => {
   }
   res.status(204).json()
 }
+
+export const getRelatedProducts = async (req, res) => {
+  const { categoryId, productId } = req.params
+
+  const products = await Product.find({
+    category: categoryId,
+    _id: { $ne: productId },
+  }).limit(4)
+
+  res.json(products)
+}
