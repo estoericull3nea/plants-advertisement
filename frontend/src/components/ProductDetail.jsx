@@ -47,7 +47,7 @@ const ProductDetail = () => {
   }
 
   const fetchComments = async () => {
-    if (!product) return // Ensure product exists before fetching comments
+    if (!product) return
     setLoadingComments(true)
     try {
       const response = await axios.get(
@@ -74,7 +74,7 @@ const ProductDetail = () => {
 
       setNewComment('')
       toast.success('Comment added successfully!')
-      fetchComments() // Refresh comments
+      fetchComments()
     } catch (error) {
       toast.error(error.response.data.message)
     }
@@ -101,7 +101,7 @@ const ProductDetail = () => {
       await checkIfLiked(response.data._id)
       await fetchLikeCount(response.data._id)
       await fetchLikesUsers(response.data._id)
-      await fetchComments() // Fetch comments after product is set
+      await fetchComments()
     } catch (error) {
       console.error('Error fetching product:', error)
     } finally {
@@ -211,15 +211,30 @@ const ProductDetail = () => {
   }
 
   if (!product) {
-    return <div>Product not found</div>
+    return (
+      <div className='container py-10 text-center font-bold'>
+        Product not found
+      </div>
+    )
   }
 
   const totalPrice = product.price * quantity
 
   return (
     <div className='container mx-auto p-4'>
-      <div className='flex flex-col md:flex-row'>
-        <div className='w-full md:w-1/2 pr-4 mb-4 md:mb-0'>
+      <div className='text-end'>
+        <button
+          onClick={() => {
+            navigator.clipboard.writeText(window.location.href)
+            toast.success('URL copied to clipboard!')
+          }}
+          className='bg-main text-white rounded px-4 py-2 mb-3'
+        >
+          Copy URL
+        </button>
+      </div>
+      <div className='grid grid-cols-1 lg:grid-cols-2'>
+        <div className='w-full  pr-4 mb-4 md:mb-0'>
           <Swiper
             modules={[Pagination, Autoplay]}
             pagination={{ clickable: true }}
@@ -233,7 +248,7 @@ const ProductDetail = () => {
               <SwiperSlide key={index}>
                 <img
                   src={`http://localhost:5000/${image}`}
-                  className='rounded-box w-full h-full object-fit'
+                  className='rounded-box w-full h-full object-cover'
                   alt={`Product Image ${index + 1}`}
                 />
               </SwiperSlide>
@@ -241,7 +256,7 @@ const ProductDetail = () => {
           </Swiper>
         </div>
 
-        <div className='w-full md:w-1/2 border p-3 shadow-lg rounded-lg text-sm'>
+        <div className='w-full  border p-3 shadow-lg rounded-lg text-sm'>
           <h1 className='text-xl font-bold mb-4'>{product.title}</h1>
           <p className='text-lg mb-2'>{product.caption}</p>
           <p className='font-bold text-xl mb-2'>
@@ -363,7 +378,7 @@ const ProductDetail = () => {
             <button
               className='mt-4 underline'
               onClick={() => {
-                fetchLikesUsers(product._id) // Fetch likes users when opening the modal
+                fetchLikesUsers(product._id)
                 setShowLikesModal(true)
               }}
             >
@@ -373,7 +388,7 @@ const ProductDetail = () => {
             <button
               className='mt-4 underline'
               onClick={() => {
-                fetchComments() // Fetch comments when opening the modal
+                fetchComments()
                 setShowCommentsModal(true)
               }}
             >
@@ -381,7 +396,6 @@ const ProductDetail = () => {
             </button>
           </div>
 
-          {/* Modal for displaying comments */}
           {showCommentsModal && (
             <dialog open className='modal'>
               <div className='modal-box'>
@@ -503,7 +517,7 @@ const ProductDetail = () => {
 
             <button
               onClick={handleShare}
-              className={`bg-main text-white rounded px-4 py-2  ${
+              className={`bg-main text-white rounded px-4 py-2 ${
                 sharing ? 'opacity-50 cursor-not-allowed' : ''
               }`}
               disabled={sharing}
