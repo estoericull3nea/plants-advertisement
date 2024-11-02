@@ -5,6 +5,7 @@ import { toast } from 'react-hot-toast'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Pagination, Autoplay } from 'swiper/modules'
 import { FaHeart, FaRegHeart } from 'react-icons/fa'
+import { IoIosShareAlt } from 'react-icons/io'
 import 'swiper/css'
 import 'swiper/css/pagination'
 import { io } from 'socket.io-client'
@@ -241,7 +242,7 @@ const ProductDetail = () => {
           }}
           className='bg-main text-white rounded px-4 py-2 mb-3'
         >
-          Copy URL
+          Copy Product URL
         </button>
       </div>
       <div className='grid grid-cols-1 lg:grid-cols-2'>
@@ -491,7 +492,7 @@ const ProductDetail = () => {
             </dialog>
           )}
 
-          <div className='flex items-center mt-4 gap-3'>
+          <div className='flex items-center flex-wrap mt-4 gap-3  justify-center lg:justify-between w-full'>
             <button
               onClick={handleToggleLike}
               className={`bg-main text-white rounded px-4 py-2 flex items-center gap-2 ${
@@ -508,7 +509,7 @@ const ProductDetail = () => {
 
             <form
               onSubmit={handleAddComment}
-              className='flex items-center ml-4'
+              className='flex items-center flex-wrap gap-3 ml-4'
             >
               <textarea
                 value={newComment}
@@ -533,7 +534,15 @@ const ProductDetail = () => {
               }`}
               disabled={sharing}
             >
-              {sharing ? 'Sharing...' : 'Share This Post'}
+              {sharing ? (
+                <div className='flex items-center gap-1'>
+                  <IoIosShareAlt className='spinner-icon' /> Sharing...
+                </div>
+              ) : (
+                <div className='flex items-center gap-1'>
+                  <IoIosShareAlt /> Share
+                </div>
+              )}
             </button>
           </div>
         </div>

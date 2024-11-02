@@ -114,7 +114,7 @@ function Navbar() {
               </NavLink>
             ))}
           </div>
-          <div className='flex items-center gap-4'>
+          <div className='flex items-center gap-4 '>
             {isAuthenticated && (
               <Link
                 to={`/profile/${localStorage.getItem('userId')}/cart`}
@@ -191,18 +191,18 @@ function Navbar() {
               ))}
               <motion.div variants={listItemVariants}>
                 {isAuthenticated ? (
-                  <div className='flex items-center'>
+                  <div className='flex items-center flex-col gap-8 '>
                     <Link
                       to={`/profile/${localStorage.getItem(
                         'userId'
                       )}/user-info`}
-                      className='text-xl whitespace-nowrap bg-gradient-to-l from-[#091C82] to-[#182046] hover:bg-[#393baf] text-black font-semibold px-6 py-2 rounded-full text-thin mb-2'
+                      className='text-xl whitespace-nowrap bg-gradient-to-l from-[#091C82] to-[#182046] hover:bg-[#393baf] text-white font-semibold px-6 py-2 rounded-full text-thin '
                     >
                       Profile
                     </Link>
                     <button
                       onClick={handleLogout}
-                      className='text-xl whitespace-nowrap bg-gradient-to-l from-[#091C82] to-[#182046] hover:bg-[#393baf] text-black font-semibold px-6 py-2 rounded-full text-thin'
+                      className='text-xl whitespace-nowrap bg-gradient-to-l from-[#091C82] to-[#182046] hover:bg-[#393baf] text-white font-semibold px-6 py-2 rounded-full text-thin'
                     >
                       Logout
                     </button>

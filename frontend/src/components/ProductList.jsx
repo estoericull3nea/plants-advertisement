@@ -120,8 +120,9 @@ const ProductList = ({ trigger }) => {
                   className='w-full h-48 object-cover'
                 />
                 <div className='p-4'>
-                  <h2 className='text-lg font-semibold'>{product.title}</h2>
-                  <p className='text-gray-700'>{product.caption}</p>
+                  {/* <h2 className='text-lg font-semibold'>{product.title}</h2>
+                  <p className='text-gray-700'>{product.caption}</p> */}
+                  <p className='font-bold'>{product.category.toUpperCase()}</p>
                   <p className='font-bold'>₱ {product.price}</p>
                   <p className='text-gray-500'>
                     Posted by: {product.userId.firstName}{' '}
