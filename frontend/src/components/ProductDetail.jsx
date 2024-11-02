@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { toast } from 'react-hot-toast'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Pagination, Autoplay } from 'swiper/modules'
+import { FaHeart, FaRegHeart } from 'react-icons/fa' // Importing heart icons
+
 import 'swiper/css'
 import 'swiper/css/pagination'
 import { io } from 'socket.io-client'
@@ -12,21 +14,22 @@ const socket = io('http://localhost:5000')
 
 const ProductDetail = () => {
   const { id } = useParams()
+  const navigate = useNavigate()
   const [product, setProduct] = useState(null)
   const [quantity, setQuantity] = useState(1)
   const [loading, setLoading] = useState(true)
   const [addingToCart, setAddingToCart] = useState(false)
   const [liked, setLiked] = useState(false)
   const [likeCount, setLikeCount] = useState(0)
-  const [togglingLike, setTogglingLike] = useState(false) // State for toggling like
-  const [likesUsers, setLikesUsers] = useState([]) // New state for users who liked the product
+  const [togglingLike, setTogglingLike] = useState(false)
+  const [likesUsers, setLikesUsers] = useState([])
 
   const fetchLikesUsers = async (productId) => {
     try {
       const response = await axios.get(
         `${import.meta.env.VITE_DEV_BACKEND_URL}/likes/product/${productId}`
       )
-      setLikesUsers(response.data) // Set the users who liked the product
+      setLikesUsers(response.data)
     } catch (error) {
       console.error('Error fetching likes users:', error)
     }
@@ -39,8 +42,8 @@ const ProductDetail = () => {
         `${import.meta.env.VITE_DEV_BACKEND_URL}/products/${id}`
       )
       setProduct(response.data)
-      await checkIfLiked(response.data._id) // Check if the user has liked this product
-      await fetchLikeCount(response.data._id) // Fetch the like count for this product
+      await checkIfLiked(response.data._id)
+      await fetchLikeCount(response.data._id)
       await fetchLikesUsers(response.data._id)
     } catch (error) {
       console.error('Error fetching product:', error)
@@ -57,7 +60,7 @@ const ProductDetail = () => {
           import.meta.env.VITE_DEV_BACKEND_URL
         }/likes/user/${userId}/product/${productId}`
       )
-      setLiked(response.data.length > 0) // If there are any likes, set liked to true
+      setLiked(response.data.length > 0)
     } catch (error) {
       console.error('Error checking like status:', error)
     }
@@ -70,7 +73,7 @@ const ProductDetail = () => {
           import.meta.env.VITE_DEV_BACKEND_URL
         }/likes/count/product/${productId}`
       )
-      setLikeCount(response.data.count) // Set the like count from the response
+      setLikeCount(response.data.count)
     } catch (error) {
       console.error('Error fetching like count:', error)
     }
@@ -106,7 +109,7 @@ const ProductDetail = () => {
   }
 
   const handleToggleLike = async () => {
-    setTogglingLike(true) // Set loading state
+    setTogglingLike(true)
     try {
       const userId = localStorage.getItem('userId')
 
@@ -115,14 +118,19 @@ const ProductDetail = () => {
         productId: product._id,
       })
 
-      setLiked((prevLiked) => !prevLiked) // Toggle liked state
-      await fetchLikeCount(product._id) // Refetch the like count
+      setLiked((prevLiked) => !prevLiked)
+      await fetchLikeCount(product._id)
+      await fetchLikesUsers(product._id)
       toast.success(`Product ${liked ? 'disliked' : 'liked'} successfully!`)
     } catch (error) {
       toast.error(error.response.data.message)
     } finally {
-      setTogglingLike(false) // Reset loading state
+      setTogglingLike(false)
     }
+  }
+
+  const handleUserClick = (userId) => {
+    navigate(`/user/${userId}`)
   }
 
   if (loading) {
@@ -191,16 +199,33 @@ const ProductDetail = () => {
           </p>
           <p className='mt-2'>Category: {product.category}</p>
           <p className='mt-2'>Address: {product.address}</p>
-          <p className='font-bold mt-4'>Likes: {likeCount}</p>{' '}
-          <h2 className='text-2xl font-bold mt-4'>
-            Users Who Liked This Product
-          </h2>
-          <ul className='list-disc pl-5'>
-            {likesUsers.map((user) => (
-              <li key={user.id}>{user.name}</li> // Adjust based on your user object structure
-            ))}
-          </ul>
-          {/* Display like count */}
+          <p className='font-bold mt-4'>Likes: {likeCount}</p>
+
+          {/* Modal for displaying users who liked the product */}
+          <dialog id='likes_modal' className='modal'>
+            <div className='modal-box'>
+              <form method='dialog'>
+                <button className='btn btn-sm btn-circle btn-ghost absolute right-2 top-2'>
+                  ✕
+                </button>
+              </form>
+              <h3 className='font-bold text-lg'>
+                Users Who Liked This Product
+              </h3>
+              <ul className='list-disc pl-5 py-4'>
+                {likesUsers.map((user) => (
+                  <li
+                    key={user.userId._id}
+                    className='cursor-pointer text-blue-600'
+                    onClick={() => handleUserClick(user.userId._id)}
+                  >
+                    {user.userId.firstName} {user.userId.lastName}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </dialog>
+
           <div className='mt-4 flex flex-col sm:flex-row'>
             <input
               type='number'
@@ -302,6 +327,14 @@ const ProductDetail = () => {
               </tbody>
             </table>
           </div>
+          {/* Button to open the modal */}
+          <button
+            className='mt-4 underline'
+            onClick={() => document.getElementById('likes_modal').showModal()}
+          >
+            Likes
+            <span>({likeCount})</span>
+          </button>
           <button
             onClick={handleToggleLike}
             className={`bg-blue-500 text-white rounded px-4 py-2 mt-4 flex items-center ${
@@ -309,10 +342,11 @@ const ProductDetail = () => {
             }`}
             disabled={togglingLike} // Disable button when toggling
           >
-            <span className='mr-2'>
-              {togglingLike ? 'Processing...' : liked ? 'Dislike' : 'Like'}
+            <span className='mr-2'>{liked ? <FaHeart /> : <FaRegHeart />}</span>
+            <span>
+              {togglingLike ? 'Processing...' : liked ? 'Dislike' : 'Like'} (
+              {likeCount})
             </span>
-            <span>({likeCount})</span>
           </button>
         </div>
       </div>
