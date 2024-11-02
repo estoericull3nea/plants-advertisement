@@ -27,6 +27,24 @@ const ProductDetail = () => {
   const [loadingComments, setLoadingComments] = useState(true)
   const [showCommentsModal, setShowCommentsModal] = useState(false)
   const [showLikesModal, setShowLikesModal] = useState(false)
+  const [sharing, setSharing] = useState(false)
+
+  const handleShare = async () => {
+    setSharing(true)
+    const userId = localStorage.getItem('userId')
+
+    try {
+      await axios.post(`${import.meta.env.VITE_DEV_BACKEND_URL}/shares/track`, {
+        productId: product._id,
+        userId,
+      })
+      toast.success('Post shared successfully!')
+    } catch (error) {
+      toast.error(error.response.data.message)
+    } finally {
+      setSharing(false)
+    }
+  }
 
   const fetchComments = async () => {
     if (!product) return // Ensure product exists before fetching comments
@@ -341,25 +359,27 @@ const ProductDetail = () => {
             </table>
           </div>
 
-          <button
-            className='mt-4 underline'
-            onClick={() => {
-              fetchComments() // Fetch comments when opening the modal
-              setShowCommentsModal(true)
-            }}
-          >
-            Show Comments ({comments.length})
-          </button>
+          <div className='flex gap-3'>
+            <button
+              className='mt-4 underline'
+              onClick={() => {
+                fetchLikesUsers(product._id) // Fetch likes users when opening the modal
+                setShowLikesModal(true)
+              }}
+            >
+              Show Likes ({likeCount})
+            </button>
 
-          <button
-            className='mt-4 underline'
-            onClick={() => {
-              fetchLikesUsers(product._id) // Fetch likes users when opening the modal
-              setShowLikesModal(true)
-            }}
-          >
-            Show Likes ({likeCount})
-          </button>
+            <button
+              className='mt-4 underline'
+              onClick={() => {
+                fetchComments() // Fetch comments when opening the modal
+                setShowCommentsModal(true)
+              }}
+            >
+              Show Comments ({comments.length})
+            </button>
+          </div>
 
           {/* Modal for displaying comments */}
           {showCommentsModal && (
@@ -409,7 +429,7 @@ const ProductDetail = () => {
                   />
                   <button
                     type='submit'
-                    className='bg-blue-500 text-white rounded px-4 py-2 ml-2'
+                    className='bg-main text-white rounded px-4 py-2 ml-2'
                   >
                     Submit
                   </button>
@@ -446,17 +466,15 @@ const ProductDetail = () => {
             </dialog>
           )}
 
-          <div className='flex items-center mt-4'>
+          <div className='flex items-center mt-4 gap-3'>
             <button
               onClick={handleToggleLike}
-              className={`bg-blue-500 text-white rounded px-4 py-2 flex items-center ${
+              className={`bg-main text-white rounded px-4 py-2 flex items-center gap-2 ${
                 togglingLike ? 'opacity-50 cursor-not-allowed' : ''
               }`}
               disabled={togglingLike}
             >
-              <span className='mr-2'>
-                {liked ? <FaHeart /> : <FaRegHeart />}
-              </span>
+              <span>{liked ? <FaHeart /> : <FaRegHeart />}</span>
               <span>
                 {togglingLike ? 'Processing...' : liked ? 'Dislike' : 'Like'} (
                 {likeCount})
@@ -477,11 +495,21 @@ const ProductDetail = () => {
               />
               <button
                 type='submit'
-                className='bg-blue-500 text-white rounded px-4 py-2'
+                className='bg-main text-white rounded px-4 py-2'
               >
                 Submit
               </button>
             </form>
+
+            <button
+              onClick={handleShare}
+              className={`bg-main text-white rounded px-4 py-2  ${
+                sharing ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
+              disabled={sharing}
+            >
+              {sharing ? 'Sharing...' : 'Share This Post'}
+            </button>
           </div>
         </div>
       </div>
