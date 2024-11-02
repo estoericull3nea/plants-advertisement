@@ -23,6 +23,38 @@ const ProductDetail = () => {
   const [likeCount, setLikeCount] = useState(0)
   const [togglingLike, setTogglingLike] = useState(false)
   const [likesUsers, setLikesUsers] = useState([])
+  const [comments, setComments] = useState([])
+  const [newComment, setNewComment] = useState('')
+
+  const fetchComments = async () => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_DEV_BACKEND_URL}/comments/${product._id}`
+      )
+      setComments(response.data)
+    } catch (error) {
+      console.error('Error fetching comments:', error)
+    }
+  }
+
+  const handleAddComment = async (e) => {
+    e.preventDefault()
+    const userId = localStorage.getItem('userId')
+
+    try {
+      await axios.post(`${import.meta.env.VITE_DEV_BACKEND_URL}/comments`, {
+        productId: product._id,
+        userId,
+        content: newComment,
+      })
+
+      setNewComment('')
+      toast.success('Comment added successfully!')
+      fetchComments() // Refresh comments
+    } catch (error) {
+      toast.error(error.response.data.message)
+    }
+  }
 
   const fetchLikesUsers = async (productId) => {
     try {
@@ -45,6 +77,7 @@ const ProductDetail = () => {
       await checkIfLiked(response.data._id)
       await fetchLikeCount(response.data._id)
       await fetchLikesUsers(response.data._id)
+      await fetchComments()
     } catch (error) {
       console.error('Error fetching product:', error)
     } finally {
@@ -348,6 +381,36 @@ const ProductDetail = () => {
               {likeCount})
             </span>
           </button>
+
+          <div className='mt-8'>
+            <h2 className='text-2xl font-bold'>Comments</h2>
+            <form onSubmit={handleAddComment} className='flex mt-4'>
+              <input
+                type='text'
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                className='border rounded p-2 flex-1'
+                placeholder='Add a comment...'
+                required
+              />
+              <button
+                type='submit'
+                className='bg-blue-500 text-white rounded px-4 py-2 ml-2'
+              >
+                Submit
+              </button>
+            </form>
+            <ul className='mt-4'>
+              {comments.map((comment) => (
+                <li key={comment._id} className='border p-2 my-2'>
+                  <strong>
+                    {comment.userId.firstName} {comment.userId.lastName}
+                  </strong>
+                  : {comment.content}
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
     </div>
