@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { toast } from 'react-hot-toast'
 import ProductList from '../components/ProductList'
@@ -13,7 +13,11 @@ const PostProduct = () => {
   const [address, setAddress] = useState('')
   const [message, setMessage] = useState('')
   const [trigger, setTrigger] = useState(1)
-  const [showForm, setShowForm] = useState(false) // State to control form visibility
+  const [showForm, setShowForm] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [searchResults, setSearchResults] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [notFoundSearch, setNotFoundSearch] = useState(false)
 
   const handleImageChange = (e) => {
     setImages(Array.from(e.target.files))
@@ -21,7 +25,6 @@ const PostProduct = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-
     const productData = new FormData()
     productData.append('title', title)
     productData.append('caption', caption)
@@ -49,15 +52,42 @@ const PostProduct = () => {
       )
       toast.success('Product posted successfully!')
       setTrigger((prevState) => prevState + 1)
-      setTitle('')
-      setCaption('')
-      setStock(0)
-      setPrice(0)
-      setImages([])
-      setAddress('')
-      setShowForm(false) // Hide form after successful submission
+      resetForm()
     } catch (error) {
       setMessage('Error posting product: ' + error.message)
+    }
+  }
+
+  const resetForm = () => {
+    setTitle('')
+    setCaption('')
+    setStock(0)
+    setPrice(0)
+    setImages([])
+    setAddress('')
+    setShowForm(false)
+  }
+
+  const handleSearch = async (e) => {
+    setSearchQuery(e.target.value)
+    setLoading(true)
+
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_DEV_BACKEND_URL}/products/search/all-products`,
+        {
+          params: { query: e.target.value },
+        }
+      )
+      setSearchResults(response.data)
+      setNotFoundSearch('')
+      console.log(response.data)
+    } catch (error) {
+      if (error?.response?.data?.message === 'Product not found') {
+        setNotFoundSearch(error?.response?.data?.message)
+      }
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -65,7 +95,7 @@ const PostProduct = () => {
     <div>
       <div className='text-center my-4'>
         <button
-          onClick={() => setShowForm(!showForm)} // Toggle form visibility
+          onClick={() => setShowForm(!showForm)}
           className='py-1 px-3 rounded-lg border-main bg-main text-white shadow-lg'
         >
           {showForm ? 'Hide Form' : 'Do you like to post your product?'}
@@ -93,7 +123,6 @@ const PostProduct = () => {
                 required
               />
             </div>
-
             <div>
               <label
                 htmlFor='caption'
@@ -109,7 +138,6 @@ const PostProduct = () => {
                 placeholder='Write a caption...'
               />
             </div>
-
             <div>
               <label
                 htmlFor='category'
@@ -129,7 +157,6 @@ const PostProduct = () => {
                 <option value='uncategorized'>Uncategorized</option>
               </select>
             </div>
-
             <div className='grid grid-cols-1 md:grid-cols-2 gap-3'>
               <div>
                 <label
@@ -148,7 +175,6 @@ const PostProduct = () => {
                   required
                 />
               </div>
-
               <div>
                 <label
                   htmlFor='price'
@@ -167,7 +193,6 @@ const PostProduct = () => {
                 />
               </div>
             </div>
-
             <div>
               <label
                 htmlFor='images'
@@ -184,7 +209,6 @@ const PostProduct = () => {
                 className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5'
               />
             </div>
-
             <div>
               <label
                 htmlFor='address'
@@ -202,7 +226,6 @@ const PostProduct = () => {
                 required
               />
             </div>
-
             <button
               type='submit'
               className='py-1 px-3 rounded-lg border-main bg-main text-white shadow-lg'
@@ -213,7 +236,33 @@ const PostProduct = () => {
         </div>
       )}
 
-      <ProductList trigger={trigger} />
+      <div className='my-4 container px-4 mt-10'>
+        <input
+          type='text'
+          placeholder='Search for products...'
+          value={searchQuery}
+          onChange={handleSearch}
+          className='input input-bordered w-full'
+        />
+      </div>
+
+      {notFoundSearch ? (
+        <div className='text-red-500 font-bold container px-4'>
+          Product Not Found
+        </div>
+      ) : (
+        ''
+      )}
+
+      {loading ? (
+        <div className='flex flex-col space-y-4'>
+          <div className='h-10 bg-gray-200 rounded-lg animate-pulse'></div>
+          <div className='h-10 bg-gray-200 rounded-lg animate-pulse'></div>
+          <div className='h-10 bg-gray-200 rounded-lg animate-pulse'></div>
+        </div>
+      ) : (
+        <ProductList products={searchResults} trigger={trigger} />
+      )}
     </div>
   )
 }
