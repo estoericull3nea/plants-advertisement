@@ -14,7 +14,7 @@ const Profile = () => {
     <div className='bg-gray-50 min-h-screen'>
       <div className='container flex flex-col lg:flex-row py-6 gap-3'>
         <Sidebar isVisitor={isVisitor} className='w-full md:w-1/4' />
-        <div className='main-content overflow-hidden w-full md:w-3/4'>
+        <div className='main-content overflow-hidden w-full '>
           <Routes>
             <Route
               path='/user-info'

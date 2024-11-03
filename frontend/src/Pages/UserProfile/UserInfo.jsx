@@ -215,7 +215,7 @@ const UserInfo = ({ isVisitor }) => {
         {!isVisitor && (
           <button
             type='submit'
-            className='w-full text-white bg-main focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center'
+            className='py-1 px-3 rounded-lg border-main bg-main text-white shadow-lg'
             disabled={isUpdating}
           >
             {isUpdating ? 'Updating...' : 'Update User'}

@@ -16,6 +16,7 @@ const ProductTable = ({ isVisitor }) => {
   const [selectedProduct, setSelectedProduct] = useState(null)
   const [dialogVisible, setDialogVisible] = useState(false)
   const [viewImagesDialogVisible, setViewImagesDialogVisible] = useState(false)
+  const [imagesLoading, setImagesLoading] = useState(false)
   const [formData, setFormData] = useState({
     title: '',
     caption: '',
@@ -73,10 +74,10 @@ const ProductTable = ({ isVisitor }) => {
       )
       fetchProducts()
       setDialogVisible(false)
-      toast.success('Product updated successfully!') // Success toast
+      toast.success('Product updated successfully!')
     } catch (error) {
       console.error('Error updating product:', error)
-      toast.error('Failed to update product.') // Error toast
+      toast.error('Failed to update product.')
     }
   }
 
@@ -87,27 +88,19 @@ const ProductTable = ({ isVisitor }) => {
           `${import.meta.env.VITE_DEV_BACKEND_URL}/products/${id}`
         )
         fetchProducts()
-        toast.success('Product deleted successfully!') // Success toast
+        toast.success('Product deleted successfully!')
       } catch (error) {
         console.error('Error deleting product:', error)
-        toast.error('Failed to delete product.') // Error toast
+        toast.error('Failed to delete product.')
       }
     }
   }
 
   const loadingTemplate = () => (
-    <div className='grid grid-cols-1 gap-3 w-full'>
-      <div className='flex gap-3'>
-        <div className='skeleton mt-3 rounded h-8 w-28'></div>
-        <div className='skeleton mt-3 rounded h-8 w-28'></div>
-        <div className='skeleton mt-3 rounded h-8 w-28'></div>
-        <div className='skeleton mt-3 rounded h-8 w-28'></div>
-        <div className='skeleton mt-3 rounded h-8 w-28'></div>
-        <div className='skeleton mt-3 rounded h-8 w-28'></div>
-        <div className='skeleton mt-3 rounded h-8 w-28'></div>
-        <div className='skeleton mt-3 rounded h-8 w-28'></div>
-        <div className='skeleton mt-3 rounded h-8 w-28'></div>
-      </div>
+    <div className='grid grid-cols-1 gap-2 w-full'>
+      {Array.from({ length: 5 }).map((_, index) => (
+        <div key={index} className='skeleton mt-3 rounded h-8 '></div>
+      ))}
     </div>
   )
 
@@ -127,16 +120,17 @@ const ProductTable = ({ isVisitor }) => {
   const viewImages = (images) => {
     setSelectedProduct(images)
     setViewImagesDialogVisible(true)
+    setImagesLoading(true) // Start loading
+    // Simulate an image load delay (remove if fetching actual data)
+    setTimeout(() => {
+      setImagesLoading(false) // Stop loading after images are "loaded"
+    }, 1000)
   }
 
   return (
     <div className='p-4 shadow-2xl bg-white rounded-lg'>
       {loading ? (
-        <div className=''>
-          {Array.from({ length: 5 }).map((_, index) => (
-            <div key={index}>{loadingTemplate()}</div>
-          ))}
-        </div>
+        <div>{loadingTemplate()}</div>
       ) : (
         <DataTable
           value={products}
@@ -153,26 +147,36 @@ const ProductTable = ({ isVisitor }) => {
           <Column field='address' header='Address' />
           <Column
             body={(rowData) => (
-              <div>
-                <Button
-                  label='View Images'
-                  icon='pi pi-eye'
-                  className='mr-2'
-                  onClick={() => viewImages(rowData.images)}
-                />
-                <Button
-                  label='Edit'
-                  icon='pi pi-pencil'
-                  onClick={() => openEditDialog(rowData)}
-                  disabled={isVisitor}
-                />
-                <Button
-                  label='Delete'
-                  icon='pi pi-trash'
-                  className='ml-2'
-                  onClick={() => deleteProduct(rowData._id)}
-                  disabled={isVisitor}
-                />
+              <div className='flex gap-3'>
+                <div
+                  className='tooltip border py-1 rounded-lg border-main bg-main text-white shadow-lg'
+                  data-tip='View Images'
+                >
+                  <Button
+                    icon='pi pi-eye'
+                    onClick={() => viewImages(rowData.images)}
+                  />
+                </div>
+                <div
+                  className='tooltip border py-1 rounded-lg border-main bg-main text-white shadow-lg'
+                  data-tip='Edit'
+                >
+                  <Button
+                    icon='pi pi-pencil'
+                    onClick={() => openEditDialog(rowData)}
+                    disabled={isVisitor}
+                  />
+                </div>
+                <div
+                  className='tooltip border py-1 rounded-lg border-main bg-main text-white shadow-lg'
+                  data-tip='Delete'
+                >
+                  <Button
+                    icon='pi pi-trash'
+                    onClick={() => deleteProduct(rowData._id)}
+                    disabled={isVisitor}
+                  />
+                </div>
               </div>
             )}
             header='Actions'
@@ -186,8 +190,16 @@ const ProductTable = ({ isVisitor }) => {
         onHide={() => setDialogVisible(false)}
         footer={
           <div className='flex items-center gap-3'>
-            <Button label='Cancel' onClick={() => setDialogVisible(false)} />
-            <Button label='Save' onClick={updateProduct} />
+            <Button
+              label='Cancel'
+              onClick={() => setDialogVisible(false)}
+              className='py-1 px-2 rounded-lg border border-main  bg-transparent hover:bg-main hover:text-white text-black shadow-lg'
+            />
+            <Button
+              label='Save'
+              onClick={updateProduct}
+              className='py-1 px-2 rounded-lg border-main bg-main text-white shadow-lg'
+            />
           </div>
         }
       >
@@ -286,27 +298,36 @@ const ProductTable = ({ isVisitor }) => {
           <Button
             label='Close'
             onClick={() => setViewImagesDialogVisible(false)}
+            className='py-1 px-2 rounded-lg border-main bg-main text-white shadow-lg'
           />
         }
       >
-        <div className='flex gap-2 flex-wrap'>
-          {Array.isArray(selectedProduct) ? (
-            selectedProduct.map((image, index) => (
+        {imagesLoading ? (
+          <div className='flex gap-2'>
+            {Array.from({ length: 3 }).map((_, index) => (
+              <div key={index} className='skeleton h-40 w-40 rounded'></div>
+            ))}
+          </div>
+        ) : (
+          <div className='flex gap-2 flex-wrap'>
+            {Array.isArray(selectedProduct) ? (
+              selectedProduct.map((image, index) => (
+                <img
+                  key={index}
+                  src={`http://localhost:5000/${image}`}
+                  alt={`Product Image ${index + 1}`}
+                  className='h-40 w-40 object-cover'
+                />
+              ))
+            ) : (
               <img
-                key={index}
-                src={`http://localhost:5000/${image}`}
-                alt={`Product Image ${index + 1}`}
+                src={`http://localhost:5000/${selectedProduct}`}
+                alt='Product Image'
                 className='h-40 w-40 object-cover'
               />
-            ))
-          ) : (
-            <img
-              src={`http://localhost:5000/${selectedProduct}`}
-              alt='Product Image'
-              className='h-40 w-40 object-cover'
-            />
-          )}
-        </div>
+            )}
+          </div>
+        )}
       </Dialog>
     </div>
   )

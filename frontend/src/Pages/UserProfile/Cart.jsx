@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { io } from 'socket.io-client'
 import { toast } from 'react-hot-toast'
+import { FaRegTrashAlt } from 'react-icons/fa'
 
 const socket = io('http://localhost:5000')
 
@@ -17,8 +18,8 @@ const Cart = ({ isVisitor }) => {
   const [deleting, setDeleting] = useState(false)
   const [confirmDeleteId, setConfirmDeleteId] = useState(null)
   const [selectedItems, setSelectedItems] = useState(new Set())
-  const [error, setError] = useState(null)
   const [editableItemId, setEditableItemId] = useState(null)
+  const [viewingDetails, setViewingDetails] = useState(null)
 
   useEffect(() => {
     fetchCartItems()
@@ -37,7 +38,6 @@ const Cart = ({ isVisitor }) => {
       setCartItems(data)
     } catch (err) {
       toast.error(err.message)
-      setError(err.message)
     } finally {
       setLoading(false)
     }
@@ -179,6 +179,10 @@ const Cart = ({ isVisitor }) => {
     })
   }
 
+  const toggleDetails = (itemId) => {
+    setViewingDetails((prev) => (prev === itemId ? null : itemId))
+  }
+
   if (loading) {
     return (
       <div className='container mx-auto mt-4 px-4'>
@@ -203,16 +207,16 @@ const Cart = ({ isVisitor }) => {
   }
 
   return (
-    <div className='container mx-auto mt-4 px-4'>
+    <div className='container mx-auto px-4 bg-white p-5 border rounded-xl shadow-lg'>
       <h1 className='text-2xl font-bold mb-4'>Your Cart</h1>
       {cartItems.length === 0 ? (
         <p className='text-gray-600'>Your cart is empty.</p>
       ) : (
         <div className='overflow-x-auto'>
-          <table className='table w-full'>
+          <table className='min-w-full divide-y divide-gray-200 hidden md:table'>
             <thead>
               <tr>
-                <th>
+                <th className='px-2 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
                   <input
                     type='checkbox'
                     onChange={(e) => {
@@ -225,25 +229,37 @@ const Cart = ({ isVisitor }) => {
                     checked={selectedItems.size === cartItems.length}
                   />
                 </th>
-                <th>Product</th>
-                <th>Price</th>
-                <th>Quantity</th>
-                <th>Stock</th>
-                <th>Total</th>
-                <th>Action</th>
+                <th className='px-2 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+                  Product
+                </th>
+                <th className='px-2 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+                  Price
+                </th>
+                <th className='px-2 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+                  Quantity
+                </th>
+                <th className='px-2 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+                  Stock
+                </th>
+                <th className='px-2 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+                  Total
+                </th>
+                <th className='px-2 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+                  Action
+                </th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className='bg-white divide-y divide-gray-200'>
               {cartItems.map((item) => (
                 <tr key={item._id}>
-                  <td>
+                  <td className='px-2 py-2'>
                     <input
                       type='checkbox'
                       checked={selectedItems.has(item._id)}
                       onChange={() => toggleSelectItem(item._id)}
                     />
                   </td>
-                  <td className='flex items-center'>
+                  <td className='flex items-center px-2 py-2'>
                     <img
                       src={`http://localhost:5000/${
                         item.productId.images &&
@@ -254,15 +270,15 @@ const Cart = ({ isVisitor }) => {
                       alt={item.productId.title || 'Product Image'}
                       className='h-20 w-20 object-cover rounded-lg mr-4'
                     />
-                    {item.productId.title || 'Untitled Product'}
+                    <span>{item.productId.title || 'Untitled Product'}</span>
                   </td>
-                  <td className='font-bold'>
+                  <td className='font-bold px-2 py-2'>
                     ₱{' '}
                     {item.productId.price
                       ? item.productId.price.toLocaleString()
                       : 'N/A'}
                   </td>
-                  <td>
+                  <td className='px-2 py-2'>
                     {editableItemId === item._id ? (
                       <input
                         type='number'
@@ -288,11 +304,68 @@ const Cart = ({ isVisitor }) => {
                       </div>
                     )}
                   </td>
-                  <td className='font-bold'>
+                  <td className='font-bold px-2 py-2'>
                     {item.productId.stock ? item.productId.stock : 'N/A'}
                   </td>
-                  <td className='font-bold'>₱ {item.total.toLocaleString()}</td>
-                  <td>
+                  <td className='font-bold px-2 py-2'>
+                    ₱ {item.total.toLocaleString()}
+                  </td>
+                  <td className='px-2 py-2'>
+                    <div className='tooltip' data-tip='Remove'>
+                      <button
+                        className='p-2 rounded-lg border-main bg-red-500 text-white shadow-lg'
+                        onClick={() => openConfirmModal(item._id)}
+                        disabled={updating || deleting}
+                      >
+                        <FaRegTrashAlt />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          {/* Mobile View */}
+          <div className='md:hidden'>
+            {cartItems.map((item) => (
+              <div key={item._id} className='border-b py-4'>
+                <div className='flex items-center'>
+                  <img
+                    src={`http://localhost:5000/${
+                      item.productId.images && item.productId.images.length > 0
+                        ? item.productId.images[0]
+                        : 'placeholder-image-url.jpg'
+                    }`}
+                    alt={item.productId.title || 'Product Image'}
+                    className='h-16 w-16 object-cover rounded-lg mr-4'
+                  />
+                  <div className='flex-grow'>
+                    <h2 className='text-lg'>
+                      {item.productId.title || 'Untitled Product'}
+                    </h2>
+                    <p>
+                      Price: ₱{' '}
+                      {item.productId.price
+                        ? item.productId.price.toLocaleString()
+                        : 'N/A'}
+                    </p>
+                    <p>Quantity: {item.quantity}</p>
+                  </div>
+                  <button
+                    className='btn btn-accent'
+                    onClick={() => toggleDetails(item._id)}
+                  >
+                    {viewingDetails === item._id ? 'Hide Details' : 'View'}
+                  </button>
+                </div>
+                {viewingDetails === item._id && (
+                  <div className='mt-2'>
+                    <p>
+                      Stock:{' '}
+                      {item.productId.stock ? item.productId.stock : 'N/A'}
+                    </p>
+                    <p>Total: ₱ {item.total.toLocaleString()}</p>
                     <button
                       className='btn bg-red-600 text-white'
                       onClick={() => openConfirmModal(item._id)}
@@ -300,25 +373,22 @@ const Cart = ({ isVisitor }) => {
                     >
                       Remove
                     </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       )}
       {cartItems.length > 0 && (
         <div className='mt-6 flex flex-col sm:flex-row justify-between'>
           <div className='flex space-x-2'>
             <button
-              className='btn bg-red-600 text-white'
+              className='py-1 font-semibold px-3 rounded-lg border-main bg-main text-white shadow-lg'
               onClick={deleteSelectedItems}
               disabled={deleting}
             >
               {deleting ? 'Removing...' : 'Remove Selected'}
-            </button>
-            <button className='btn btn-accent w-full sm:w-auto'>
-              Checkout
             </button>
           </div>
           <p className='font-semibold mt-2 sm:mt-0'>
