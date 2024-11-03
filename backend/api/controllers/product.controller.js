@@ -1,4 +1,5 @@
 import Product from '../models/product.model.js'
+import User from '../models/user.model.js'
 
 export const createProduct = async (req, res) => {
   try {
@@ -75,4 +76,19 @@ export const getRelatedProducts = async (req, res) => {
   }).limit(4)
 
   res.json(products)
+}
+
+export const searchProducts = async (req, res) => {
+  const { query } = req.query
+
+  const products = await Product.find({
+    $or: [
+      { title: { $regex: query, $options: 'i' } },
+      { caption: { $regex: query, $options: 'i' } },
+      { category: { $regex: query, $options: 'i' } },
+      { address: { $regex: query, $options: 'i' } },
+    ],
+  }).populate('userId', 'firstName lastName email')
+
+  res.status(200).json(products)
 }

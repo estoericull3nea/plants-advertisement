@@ -128,7 +128,7 @@ const ProductTable = ({ isVisitor }) => {
   }
 
   return (
-    <div className='p-4 shadow-2xl bg-white rounded-lg'>
+    <div className='p-4 shadow-2xl bg-white rounded-lg border'>
       {loading ? (
         <div>{loadingTemplate()}</div>
       ) : (

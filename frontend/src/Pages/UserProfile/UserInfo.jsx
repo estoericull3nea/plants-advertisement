@@ -89,7 +89,7 @@ const UserInfo = ({ isVisitor }) => {
   }
 
   return (
-    <div className='bg-white p-10 shadow-xl rounded-xl'>
+    <div className='bg-white border p-10 shadow-xl rounded-xl'>
       <h2 className='text-3xl font-bold'>My Details</h2>
       <p className='mt-10'>Personal Information</p>
       <hr />

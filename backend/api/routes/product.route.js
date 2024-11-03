@@ -7,6 +7,7 @@ import {
   getAllProducts,
   getProductById,
   getRelatedProducts,
+  searchProducts,
   updateProduct,
 } from '../controllers/product.controller.js'
 
@@ -39,5 +40,7 @@ router.put('/:id', updateProduct)
 router.delete('/:id', deleteProduct)
 
 router.get('/related/:categoryId/:productId', getRelatedProducts)
+
+router.get('/search', searchProducts)
 
 export default router
