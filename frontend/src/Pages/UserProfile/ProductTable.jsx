@@ -96,11 +96,18 @@ const ProductTable = ({ isVisitor }) => {
   }
 
   const loadingTemplate = () => (
-    <div className='flex w-52 flex-col gap-4'>
-      <div className='skeleton h-32 w-full'></div>
-      <div className='skeleton h-4 w-28'></div>
-      <div className='skeleton h-4 w-full'></div>
-      <div className='skeleton h-4 w-full'></div>
+    <div className='grid grid-cols-1 gap-3 w-full'>
+      <div className='flex gap-3'>
+        <div className='skeleton mt-3 rounded h-8 w-28'></div>
+        <div className='skeleton mt-3 rounded h-8 w-28'></div>
+        <div className='skeleton mt-3 rounded h-8 w-28'></div>
+        <div className='skeleton mt-3 rounded h-8 w-28'></div>
+        <div className='skeleton mt-3 rounded h-8 w-28'></div>
+        <div className='skeleton mt-3 rounded h-8 w-28'></div>
+        <div className='skeleton mt-3 rounded h-8 w-28'></div>
+        <div className='skeleton mt-3 rounded h-8 w-28'></div>
+        <div className='skeleton mt-3 rounded h-8 w-28'></div>
+      </div>
     </div>
   )
 
@@ -125,11 +132,9 @@ const ProductTable = ({ isVisitor }) => {
   return (
     <div className='p-4 shadow-2xl bg-white rounded-lg'>
       {loading ? (
-        <div className='flex flex-wrap gap-4'>
+        <div className=''>
           {Array.from({ length: 5 }).map((_, index) => (
-            <div key={index} className='flex flex-col gap-4'>
-              {loadingTemplate()}
-            </div>
+            <div key={index}>{loadingTemplate()}</div>
           ))}
         </div>
       ) : (
@@ -146,7 +151,6 @@ const ProductTable = ({ isVisitor }) => {
           <Column field='stock' header='Stock' />
           <Column field='price' header='Price' />
           <Column field='address' header='Address' />
-          <Column body={imageTemplate} header='Images' />
           <Column
             body={(rowData) => (
               <div>

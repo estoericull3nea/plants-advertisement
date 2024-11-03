@@ -26,7 +26,9 @@ const Profile = () => {
             />
             {isVisitor ? (
               <Route path='/cart' element={<Cart isVisitor={isVisitor} />} />
-            ) : null}
+            ) : (
+              <Route path='/cart' element={<Cart />} />
+            )}
           </Routes>
         </div>
       </div>
