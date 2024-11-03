@@ -64,12 +64,21 @@ const UserInfo = ({ isVisitor }) => {
 
   if (loading) {
     return (
-      <div className='flex w-full justify-center items-center h-screen'>
-        <div className='flex flex-col gap-4'>
-          <div className='skeleton h-32 w-full'></div>
-          <div className='skeleton h-4 w-28'></div>
-          <div className='skeleton h-4 w-full'></div>
-          <div className='skeleton h-4 w-full'></div>
+      <div className='bg-white p-10 shadow-xl rounded-xl flex flex-col gap-4'>
+        <div className='skeleton rounded-lg h-10 w-[100px]'></div>
+        <div className='grid grid-cols-1 gap-4'>
+          <div className='skeleton rounded-lg h-8 w-full'></div>
+          <div className='skeleton rounded-lg h-8 w-full'></div>
+          <div className='skeleton rounded-lg h-8 w-full'></div>
+          <div className='skeleton rounded-lg h-8 w-full'></div>
+          <div className='skeleton rounded-lg h-8 w-full'></div>
+          <div className='skeleton rounded-lg h-8 w-full'></div>
+          <div className='skeleton rounded-lg h-8 w-full'></div>
+          <div className='skeleton rounded-lg h-8 w-full'></div>
+          <div className='skeleton rounded-lg h-8 w-full'></div>
+          <div className='skeleton rounded-lg h-8 w-full'></div>
+          <div className='skeleton rounded-lg h-8 w-full'></div>
+          <div className='skeleton rounded-lg h-8 w-full'></div>
         </div>
       </div>
     )

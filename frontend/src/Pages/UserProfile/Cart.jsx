@@ -7,7 +7,7 @@ const socket = io('http://localhost:5000')
 
 const Cart = ({ isVisitor }) => {
   if (isVisitor) {
-    return <div>You can't view his/her Cart</div>
+    return <div>You can't view this Cart</div>
   }
 
   const { userId } = useParams()
@@ -181,8 +181,23 @@ const Cart = ({ isVisitor }) => {
 
   if (loading) {
     return (
-      <div className='flex justify-center'>
-        <div className='skeleton h-32 w-full rounded-lg'></div>
+      <div className='container mx-auto mt-4 px-4'>
+        <h1 className='text-2xl font-bold mb-4'>Your Cart</h1>
+        <div className='grid grid-cols-1 gap-2'>
+          {Array.from({ length: 7 }).map((_, index) => (
+            <div
+              key={index}
+              className='skeleton h-8 w-full rounded-lg mb-4'
+            ></div>
+          ))}
+        </div>
+        <div className='flex justify-between gap-2'>
+          <div>
+            <div className='skeleton h-8 w-[100px] rounded-lg mb-4'></div>
+            <div className='skeleton h-8 w-[100px] rounded-lg mb-4'></div>
+          </div>
+          <div className='skeleton h-8 w-[100px] rounded-lg mb-4'></div>
+        </div>
       </div>
     )
   }

@@ -11,10 +11,10 @@ const Profile = () => {
   const isVisitor = currentUserId !== localStorage.getItem('userId') // Determine if the user is a visitor
 
   return (
-    <div className='bg-gray-50'>
-      <div className='container flex py-6 gap-3'>
-        <Sidebar isVisitor={isVisitor} />
-        <div className='main-content overflow-hidden w-full'>
+    <div className='bg-gray-50 min-h-screen'>
+      <div className='container flex flex-col lg:flex-row py-6 gap-3'>
+        <Sidebar isVisitor={isVisitor} className='w-full md:w-1/4' />
+        <div className='main-content overflow-hidden w-full md:w-3/4'>
           <Routes>
             <Route
               path='/user-info'
@@ -24,11 +24,7 @@ const Profile = () => {
               path='/all-posts'
               element={<ProductTable isVisitor={isVisitor} />}
             />
-            {isVisitor ? (
-              <Route path='/cart' element={<Cart isVisitor={isVisitor} />} />
-            ) : (
-              <Route path='/cart' element={<Cart />} />
-            )}
+            <Route path='/cart' element={<Cart isVisitor={isVisitor} />} />
           </Routes>
         </div>
       </div>
