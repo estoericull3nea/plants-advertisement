@@ -3,10 +3,10 @@ import { useParams, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { toast } from 'react-hot-toast'
 
-const UserInfo = () => {
+const UserInfo = ({ isVisitor }) => {
   const { userId } = useParams()
   const navigate = useNavigate()
-  const [userData, setUserData] = useState(null) // userData can be null initially
+  const [userData, setUserData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [isUpdating, setIsUpdating] = useState(false)
@@ -43,6 +43,7 @@ const UserInfo = () => {
         contactNumber: e.target.contactNumber.value,
         password: e.target.password.value,
       }
+
       await axios.put(
         `${import.meta.env.VITE_DEV_BACKEND_URL}/users/${userId}`,
         updateData
@@ -99,6 +100,7 @@ const UserInfo = () => {
             placeholder='John'
             defaultValue={userData?.firstName || ''}
             required
+            disabled={isVisitor}
           />
         </div>
 
@@ -117,6 +119,7 @@ const UserInfo = () => {
             placeholder='Doe'
             defaultValue={userData?.lastName || ''}
             required
+            disabled={isVisitor}
           />
         </div>
 
@@ -138,6 +141,7 @@ const UserInfo = () => {
             placeholder='25'
             defaultValue={userData?.age || ''}
             required
+            disabled={isVisitor}
           />
         </div>
 
@@ -157,6 +161,7 @@ const UserInfo = () => {
               userData?.dateOfBirth ? userData.dateOfBirth.split('T')[0] : ''
             }
             required
+            disabled={isVisitor}
           />
         </div>
 
@@ -175,6 +180,7 @@ const UserInfo = () => {
             placeholder='123-456-7890'
             defaultValue={userData?.contactNumber || ''}
             required
+            disabled={isVisitor}
           />
         </div>
 
@@ -197,13 +203,15 @@ const UserInfo = () => {
           </p>
         </div>
 
-        <button
-          type='submit'
-          className='w-full text-white bg-main focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center'
-          disabled={isUpdating}
-        >
-          {isUpdating ? 'Updating...' : 'Update User'}
-        </button>
+        {!isVisitor && (
+          <button
+            type='submit'
+            className='w-full text-white bg-main focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center'
+            disabled={isUpdating}
+          >
+            {isUpdating ? 'Updating...' : 'Update User'}
+          </button>
+        )}
       </form>
     </div>
   )

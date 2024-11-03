@@ -32,7 +32,7 @@ const RelatedProducts = ({ category, productId }) => {
 
   if (loading) {
     return (
-      <div className='mt-40 hidden'>
+      <div className='mt-2'>
         <h2 className='text-2xl font-bold mb-4'>Related Products</h2>
         <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4'>
           {[...Array(4)].map((_, index) => (
@@ -56,7 +56,8 @@ const RelatedProducts = ({ category, productId }) => {
   }
 
   return (
-    <div className='mt-8'>
+    <div className='mt-32'>
+      <hr className='pt-10' />
       <h2 className='text-2xl font-bold mb-4'>Related Products</h2>
       <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4'>
         {relatedProducts.map((product) => (

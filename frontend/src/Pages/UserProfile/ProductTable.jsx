@@ -10,7 +10,7 @@ import 'primereact/resources/themes/saga-blue/theme.css'
 import 'primereact/resources/primereact.min.css'
 import 'primeicons/primeicons.css'
 
-const ProductTable = () => {
+const ProductTable = ({ isVisitor }) => {
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
   const [selectedProduct, setSelectedProduct] = useState(null)
@@ -31,7 +31,12 @@ const ProductTable = () => {
   const fetchProducts = async () => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_DEV_BACKEND_URL}/products`
+        `${import.meta.env.VITE_DEV_BACKEND_URL}/products`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        }
       )
       setProducts(response.data)
     } catch (error) {
@@ -141,6 +146,7 @@ const ProductTable = () => {
           <Column field='stock' header='Stock' />
           <Column field='price' header='Price' />
           <Column field='address' header='Address' />
+          <Column body={imageTemplate} header='Images' />
           <Column
             body={(rowData) => (
               <div>
@@ -154,12 +160,14 @@ const ProductTable = () => {
                   label='Edit'
                   icon='pi pi-pencil'
                   onClick={() => openEditDialog(rowData)}
+                  disabled={isVisitor}
                 />
                 <Button
                   label='Delete'
                   icon='pi pi-trash'
                   className='ml-2'
                   onClick={() => deleteProduct(rowData._id)}
+                  disabled={isVisitor}
                 />
               </div>
             )}

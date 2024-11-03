@@ -30,7 +30,7 @@ const ProductDetail = () => {
   const [showLikesModal, setShowLikesModal] = useState(false)
   const [sharing, setSharing] = useState(false)
 
-  const [messageText, setMessageText] = useState('')
+  const [messageText, setMessageText] = useState('Is this available?')
 
   const handleSendMessage = async (e) => {
     e.preventDefault()
@@ -361,16 +361,18 @@ const ProductDetail = () => {
                   <td className='border px-4 py-2'>
                     <strong>Name:</strong>
                   </td>
-                  <td className='border px-4 py-2'>
-                    <Link
-                      to={`${import.meta.env.VITE_DEV_FRONTEND_URL}/profile/${
-                        product.userId._id
-                      }/user-info`}
-                    >
-                      {' '}
-                      {product.userId.firstName || 'N/A'}{' '}
-                      {product.userId.lastName || 'N/A'}
-                    </Link>
+                  <td className='border px-4 py-2 underline text-blue-600'>
+                    <div className='tooltip' data-tip='View Profile'>
+                      <Link
+                        to={`${import.meta.env.VITE_DEV_FRONTEND_URL}/profile/${
+                          product.userId._id
+                        }/user-info`}
+                      >
+                        {' '}
+                        {product.userId.firstName || 'N/A'}{' '}
+                        {product.userId.lastName || 'N/A'}
+                      </Link>
+                    </div>
                   </td>
                 </tr>
                 <tr>
@@ -575,23 +577,25 @@ const ProductDetail = () => {
               </button>
             </form>
 
-            <button
-              onClick={handleShare}
-              className={`bg-main text-white rounded px-4 py-2 ${
-                sharing ? 'opacity-50 cursor-not-allowed' : ''
-              }`}
-              disabled={sharing}
-            >
-              {sharing ? (
-                <div className='flex items-center gap-1'>
-                  <IoIosShareAlt className='spinner-icon' /> Sharing...
-                </div>
-              ) : (
-                <div className='flex items-center gap-1'>
-                  <IoIosShareAlt /> Share
-                </div>
-              )}
-            </button>
+            <div className='tooltip' data-tip='Share this Post'>
+              <button
+                onClick={handleShare}
+                className={`bg-main text-white rounded px-4 py-2 ${
+                  sharing ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
+                disabled={sharing}
+              >
+                {sharing ? (
+                  <div className='flex items-center gap-1'>
+                    <IoIosShareAlt className='spinner-icon' /> Sharing...
+                  </div>
+                ) : (
+                  <div className='flex items-center gap-1'>
+                    <IoIosShareAlt /> Share
+                  </div>
+                )}
+              </button>
+            </div>
           </div>
 
           <div className='flex items-center flex-wrap mt-4 gap-3'>

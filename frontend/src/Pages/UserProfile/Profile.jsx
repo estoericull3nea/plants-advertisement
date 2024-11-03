@@ -1,20 +1,32 @@
 import React from 'react'
 import Sidebar from './Sidebar'
-import { useParams, Routes, Route, useNavigate } from 'react-router-dom'
+import { useParams, Routes, Route } from 'react-router-dom'
 import UserInfo from './UserInfo'
 import ProductTable from './ProductTable'
 import Cart from './Cart'
 
 const Profile = () => {
+  const { userId } = useParams() // Get the userId from the URL
+  const currentUserId = userId // Replace with your logic to get the logged-in user's ID
+  const isVisitor = currentUserId !== localStorage.getItem('userId') // Determine if the user is a visitor
+
   return (
-    <div className='bg-gray-50 '>
-      <div className='container flex py-6 gap-3 '>
-        <Sidebar />
+    <div className='bg-gray-50'>
+      <div className='container flex py-6 gap-3'>
+        <Sidebar isVisitor={isVisitor} />
         <div className='main-content overflow-hidden w-full'>
           <Routes>
-            <Route path='/user-info' element={<UserInfo />} />
-            <Route path='/all-posts' element={<ProductTable />} />
-            <Route path='/cart' element={<Cart />} />
+            <Route
+              path='/user-info'
+              element={<UserInfo userId={userId} isVisitor={isVisitor} />}
+            />
+            <Route
+              path='/all-posts'
+              element={<ProductTable isVisitor={isVisitor} />}
+            />
+            {isVisitor ? (
+              <Route path='/cart' element={<Cart isVisitor={isVisitor} />} />
+            ) : null}
           </Routes>
         </div>
       </div>

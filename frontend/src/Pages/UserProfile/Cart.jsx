@@ -5,7 +5,11 @@ import { toast } from 'react-hot-toast'
 
 const socket = io('http://localhost:5000')
 
-const Cart = () => {
+const Cart = ({ isVisitor }) => {
+  if (isVisitor) {
+    return <div>You can't view his/her Cart</div>
+  }
+
   const { userId } = useParams()
   const [cartItems, setCartItems] = useState([])
   const [loading, setLoading] = useState(true)
@@ -15,6 +19,10 @@ const Cart = () => {
   const [selectedItems, setSelectedItems] = useState(new Set())
   const [error, setError] = useState(null)
   const [editableItemId, setEditableItemId] = useState(null)
+
+  useEffect(() => {
+    fetchCartItems()
+  }, [userId])
 
   const fetchCartItems = async () => {
     setLoading(true)
@@ -34,10 +42,6 @@ const Cart = () => {
       setLoading(false)
     }
   }
-
-  useEffect(() => {
-    fetchCartItems()
-  }, [userId])
 
   const updateQuantity = async (itemId, newQuantity) => {
     setUpdating(true)
@@ -114,8 +118,8 @@ const Cart = () => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            userId, // User ID from the params
-            cartIds: Array.from(selectedItems), // Convert the Set of selected item IDs to an array
+            userId,
+            cartIds: Array.from(selectedItems),
           }),
         }
       )
@@ -126,8 +130,8 @@ const Cart = () => {
 
       toast.success('Selected items removed from cart!')
       await fetchCartItems()
-      setSelectedItems(new Set()) // Clear selected items
-      socket.emit('updateCartCount', 'cartCount') // Update cart count via socket
+      setSelectedItems(new Set())
+      socket.emit('updateCartCount', 'cartCount')
     } catch (err) {
       toast.error(err.message)
     } finally {
@@ -197,13 +201,11 @@ const Cart = () => {
                   <input
                     type='checkbox'
                     onChange={(e) => {
-                      if (e.target.checked) {
-                        setSelectedItems(
-                          new Set(cartItems.map((item) => item._id))
-                        )
-                      } else {
-                        setSelectedItems(new Set())
-                      }
+                      setSelectedItems(
+                        e.target.checked
+                          ? new Set(cartItems.map((item) => item._id))
+                          : new Set()
+                      )
                     }}
                     checked={selectedItems.size === cartItems.length}
                   />
