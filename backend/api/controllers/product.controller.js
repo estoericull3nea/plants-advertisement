@@ -81,7 +81,8 @@ export const getRelatedProducts = async (req, res) => {
 export const searchProducts = async (req, res) => {
   const { query } = req.query
 
-  const products = await Product.find({
+  // Search for products by title, caption, category, or address
+  const productSearchResults = await Product.find({
     $or: [
       { title: { $regex: query, $options: 'i' } },
       { caption: { $regex: query, $options: 'i' } },
@@ -90,5 +91,29 @@ export const searchProducts = async (req, res) => {
     ],
   }).populate('userId', 'firstName lastName email')
 
-  res.status(200).json(products)
+  // Search for users by firstName, lastName, or email
+  const userSearchResults = await User.find({
+    $or: [
+      { firstName: { $regex: query, $options: 'i' } },
+      { lastName: { $regex: query, $options: 'i' } },
+      { email: { $regex: query, $options: 'i' } },
+    ],
+  })
+
+  // Extract user IDs from the matched users
+  const userIds = userSearchResults.map((user) => user._id)
+
+  // Search for products posted by the matched users
+  const userProducts = await Product.find({
+    userId: { $in: userIds },
+  }).populate('userId', 'firstName lastName email')
+
+  // Combine the results from both searches
+  const allProducts = [...productSearchResults, ...userProducts]
+
+  if (!allProducts.length) {
+    return res.status(404).json({ message: 'Product not found' })
+  }
+
+  res.status(200).json(allProducts)
 }

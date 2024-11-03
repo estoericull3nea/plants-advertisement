@@ -41,6 +41,6 @@ router.delete('/:id', deleteProduct)
 
 router.get('/related/:categoryId/:productId', getRelatedProducts)
 
-router.get('/search', searchProducts)
+router.get('/search/all-products', searchProducts)
 
 export default router
