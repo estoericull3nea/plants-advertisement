@@ -132,13 +132,13 @@ function Navbar() {
               <div className='flex items-center justify-center gap-3'>
                 <button
                   onClick={handleLogout}
-                  className='text-sm whitespace-nowrap bg-gradient-to-l border border-main text-black hover:bg-main hover:text-white font-semibold px-6 py-2 rounded-full text-thin'
+                  className='py-1 rounded-lg border-main bg-main text-white shadow-lg px-3'
                 >
                   Logout
                 </button>
                 <Link
                   to={`/profile/${localStorage.getItem('userId')}/user-info`}
-                  className='text-sm whitespace-nowrap bg-gradient-to-l from-main to-[#182046] text-white font-semibold px-6 py-2 rounded-full text-thin'
+                  className='py-1 rounded-lg border-main bg-main text-white shadow-lg px-3'
                 >
                   Profile
                 </Link>
@@ -196,13 +196,13 @@ function Navbar() {
                       to={`/profile/${localStorage.getItem(
                         'userId'
                       )}/user-info`}
-                      className='text-xl whitespace-nowrap bg-gradient-to-l from-[#091C82] to-[#182046] hover:bg-[#393baf] text-white font-semibold px-6 py-2 rounded-full text-thin '
+                      className='py-1 rounded-lg border-main bg-main text-white shadow-lg px-3 '
                     >
                       Profile
                     </Link>
                     <button
                       onClick={handleLogout}
-                      className='text-xl whitespace-nowrap bg-gradient-to-l from-[#091C82] to-[#182046] hover:bg-[#393baf] text-white font-semibold px-6 py-2 rounded-full text-thin'
+                      className='py-1 rounded-lg border-main bg-main text-white shadow-lg px-3'
                     >
                       Logout
                     </button>

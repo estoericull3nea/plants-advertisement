@@ -281,7 +281,7 @@ const ProductDetail = () => {
             navigator.clipboard.writeText(window.location.href)
             toast.success('URL copied to clipboard!')
           }}
-          className='bg-main text-white rounded px-4 py-2 mb-3'
+          className='py-1 px-3 mb-3 rounded-lg border-main bg-main text-white shadow-lg'
         >
           Copy Product URL
         </button>
@@ -338,7 +338,7 @@ const ProductDetail = () => {
             />
             <button
               onClick={handleAddToCart}
-              className='bg-main text-white rounded px-4 py-2'
+              className='px-3 rounded-lg border-main bg-main text-white shadow-lg'
               disabled={addingToCart || product.stock === 0}
             >
               {addingToCart ? 'Adding...' : 'Add to Cart'}
@@ -545,7 +545,7 @@ const ProductDetail = () => {
           <div className='flex items-center flex-wrap mt-4 gap-3  justify-center lg:justify-between w-full'>
             <button
               onClick={handleToggleLike}
-              className={`bg-main text-white rounded px-4 py-2 flex items-center gap-2 ${
+              className={`py-1 px-3 flex gap-2 items-center rounded-lg border-main bg-main text-white shadow-lg ${
                 togglingLike ? 'opacity-50 cursor-not-allowed' : ''
               }`}
               disabled={togglingLike}
@@ -571,7 +571,7 @@ const ProductDetail = () => {
               />
               <button
                 type='submit'
-                className='bg-main text-white rounded px-4 py-2'
+                className='py-1 rounded-lg border-main bg-main text-white shadow-lg px-3'
               >
                 Submit
               </button>
@@ -580,7 +580,7 @@ const ProductDetail = () => {
             <div className='tooltip' data-tip='Share this Post'>
               <button
                 onClick={handleShare}
-                className={`bg-main text-white rounded px-4 py-2 ${
+                className={`py-1 rounded-lg border-main bg-main text-white shadow-lg px-3 ${
                   sharing ? 'opacity-50 cursor-not-allowed' : ''
                 }`}
                 disabled={sharing}
@@ -609,7 +609,7 @@ const ProductDetail = () => {
             />
             <button
               onClick={handleSendMessage}
-              className={`bg-main text-white rounded px-4 py-2`}
+              className={`py-1 rounded-lg border-main bg-main text-white shadow-lg px-3`}
             >
               Send Message
             </button>

@@ -66,7 +66,7 @@ const PostProduct = () => {
       <div className='text-center my-4'>
         <button
           onClick={() => setShowForm(!showForm)} // Toggle form visibility
-          className='btn bg-main text-white hover:bg-transparent hover:text-black hover:border-main'
+          className='py-1 px-3 rounded-lg border-main bg-main text-white shadow-lg'
         >
           {showForm ? 'Hide Form' : 'Do you like to post your product?'}
         </button>
@@ -205,7 +205,7 @@ const PostProduct = () => {
 
             <button
               type='submit'
-              className='btn bg-main text-white hover:bg-transparent hover:text-black hover:border-main w-full'
+              className='py-1 px-3 rounded-lg border-main bg-main text-white shadow-lg'
             >
               Post Product
             </button>

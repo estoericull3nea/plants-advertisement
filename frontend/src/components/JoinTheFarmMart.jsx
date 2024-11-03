@@ -31,7 +31,8 @@ export default function JoinTheFarmMart() {
           Link,
           {
             to: '/register',
-            className: 'px-4 py-2 text-white bg-main rounded-full duration-150',
+            className:
+              'py-1 px-3 rounded-lg border-main bg-main text-white shadow-lg',
           },
           'Sign Up'
         ),
@@ -40,7 +41,7 @@ export default function JoinTheFarmMart() {
           {
             to: '/contact',
             className:
-              'px-4 py-2 text-black bg-orange-50 rounded-full duration-150 hover:bg-orange-100 active:bg-orange-200',
+              'py-1 px-3 rounded-lg border-main bg-transparent border border-main text-white shadow-lg',
           },
           'Contact'
         )
