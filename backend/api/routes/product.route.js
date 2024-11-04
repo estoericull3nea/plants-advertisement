@@ -46,6 +46,6 @@ router.get('/related/:categoryId/:productId', getRelatedProducts)
 router.get('/search/all-products', searchProducts)
 router.get('/count/:userId', getProductCount)
 
-router.get('/:userId/products', getProductsByUserId)
+router.get('/:userId/all-products', getProductsByUserId)
 
 export default router
