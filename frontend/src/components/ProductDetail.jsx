@@ -271,6 +271,14 @@ const ProductDetail = () => {
     )
   }
 
+  if (!product.isAvailable) {
+    return (
+      <div className='container py-10 text-center font-bold'>
+        This product is not available yet
+      </div>
+    )
+  }
+
   const totalPrice = product.price * quantity
 
   return (

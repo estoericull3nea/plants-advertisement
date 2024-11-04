@@ -14,5 +14,6 @@ const productSchema = new mongoose.Schema({
   quantity: { type: Number, required: false },
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   address: { type: String, required: true },
+  isAvailable: { type: Boolean, default: true },
 })
 export default mongoose.model('Product', productSchema)

@@ -42,8 +42,9 @@ const ProductList = ({ trigger }) => {
       userIdToExclude = decodedToken.id
     }
 
+    // Filter to include only available products
     const filtered = products.filter(
-      (product) => product.userId._id !== userIdToExclude
+      (product) => product.isAvailable && product.userId._id !== userIdToExclude
     )
     setFilteredProducts(filtered)
   }
@@ -65,6 +66,7 @@ const ProductList = ({ trigger }) => {
     } else {
       const filtered = products.filter(
         (product) =>
+          product.isAvailable && // Check for availability
           product.category === category &&
           product.userId._id !== userIdToExclude
       )
@@ -105,7 +107,7 @@ const ProductList = ({ trigger }) => {
           ))
         ) : filteredProducts.length === 0 ? (
           <div className='col-span-full text-center p-4 text-lg text-gray-700'>
-            No posts about this category
+            No available products in this category
           </div>
         ) : (
           filteredProducts.map((product) => (
@@ -120,8 +122,6 @@ const ProductList = ({ trigger }) => {
                   className='w-full h-48 object-cover'
                 />
                 <div className='p-4'>
-                  {/* <h2 className='text-lg font-semibold'>{product.title}</h2>
-                  <p className='text-gray-700'>{product.caption}</p> */}
                   <p className='font-bold'>{product.category.toUpperCase()}</p>
                   <p className='font-bold'>₱ {product.price}</p>
                   <p className='text-gray-500'>

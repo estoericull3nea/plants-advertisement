@@ -23,6 +23,7 @@ const ProductTable = ({ isVisitor }) => {
     stock: '',
     price: '',
     address: '',
+    isAvailable: true, // Add isAvailable to formData
   })
 
   useEffect(() => {
@@ -57,13 +58,17 @@ const ProductTable = ({ isVisitor }) => {
       stock: product.stock,
       price: product.price,
       address: product.address,
+      isAvailable: product.isAvailable, // Set isAvailable when opening the dialog
     })
     setDialogVisible(true)
   }
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
-    setFormData((prevData) => ({ ...prevData, [name]: value }))
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: name === 'isAvailable' ? e.target.checked : value, // Handle checkbox for isAvailable
+    }))
   }
 
   const updateProduct = async () => {
@@ -101,7 +106,7 @@ const ProductTable = ({ isVisitor }) => {
   const loadingTemplate = () => (
     <div className='grid grid-cols-1 gap-2 w-full'>
       {Array.from({ length: 5 }).map((_, index) => (
-        <div key={index} className='skeleton mt-3 rounded h-8 '></div>
+        <div key={index} className='skeleton mt-3 rounded h-8'></div>
       ))}
     </div>
   )
@@ -123,7 +128,6 @@ const ProductTable = ({ isVisitor }) => {
     setSelectedProduct(images)
     setViewImagesDialogVisible(true)
     setImagesLoading(true) // Start loading
-    // Simulate an image load delay (remove if fetching actual data)
     setTimeout(() => {
       setImagesLoading(false) // Stop loading after images are "loaded"
     }, 1000)
@@ -147,6 +151,13 @@ const ProductTable = ({ isVisitor }) => {
           <Column field='stock' header='Stock' />
           <Column field='price' header='Price' />
           <Column field='address' header='Address' />
+          <Column
+            field='isAvailable'
+            header='Available'
+            body={(rowData) => (
+              <span>{rowData.isAvailable ? 'Yes' : 'No'}</span>
+            )}
+          />
           <Column
             body={(rowData) => (
               <div className='flex gap-3'>
@@ -289,6 +300,18 @@ const ProductTable = ({ isVisitor }) => {
             onChange={handleInputChange}
             required
           />
+        </div>
+        <div className='flex align-items-center'>
+          <input
+            type='checkbox'
+            name='isAvailable'
+            id='isAvailable'
+            checked={formData.isAvailable}
+            onChange={handleInputChange}
+          />
+          <label htmlFor='isAvailable' className='ml-2 text-sm'>
+            Available
+          </label>
         </div>
       </Dialog>
 
