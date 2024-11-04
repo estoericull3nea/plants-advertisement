@@ -81,7 +81,6 @@ export const getRelatedProducts = async (req, res) => {
 export const searchProducts = async (req, res) => {
   const { query } = req.query
 
-  // Search for products by title, caption, category, or address
   const productSearchResults = await Product.find({
     $or: [
       { title: { $regex: query, $options: 'i' } },
@@ -91,7 +90,6 @@ export const searchProducts = async (req, res) => {
     ],
   }).populate('userId', 'firstName lastName email')
 
-  // Search for users by firstName, lastName, or email
   const userSearchResults = await User.find({
     $or: [
       { firstName: { $regex: query, $options: 'i' } },
@@ -100,15 +98,12 @@ export const searchProducts = async (req, res) => {
     ],
   })
 
-  // Extract user IDs from the matched users
   const userIds = userSearchResults.map((user) => user._id)
 
-  // Search for products posted by the matched users
   const userProducts = await Product.find({
     userId: { $in: userIds },
   }).populate('userId', 'firstName lastName email')
 
-  // Combine the results from both searches
   const allProducts = [...productSearchResults, ...userProducts]
 
   if (!allProducts.length) {
@@ -116,4 +111,24 @@ export const searchProducts = async (req, res) => {
   }
 
   res.status(200).json(allProducts)
+}
+
+export const getProductCount = async (req, res) => {
+  const { userId } = req.params
+
+  const count = await Product.countDocuments({ userId })
+  res.status(200).json({ count })
+}
+
+export const getProductsByUserId = async (req, res) => {
+  const { userId } = req.params
+
+  const products = await Product.find({ userId }).populate(
+    'userId',
+    '-password'
+  )
+  if (!products.length) {
+    return res.status(404).json({ message: 'No products found for this user.' })
+  }
+  res.json(products)
 }

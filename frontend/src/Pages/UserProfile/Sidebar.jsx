@@ -9,6 +9,7 @@ const socket = io('http://localhost:5000')
 const Sidebar = ({ isVisitor }) => {
   const { userId } = useParams()
   const [cartCount, setCartCount] = useState(0)
+  const [postCount, setPostCount] = useState(0)
   const [user, setUser] = useState({ name: '', email: '' })
   const [loading, setLoading] = useState(true)
   const token = localStorage.getItem('token')
@@ -27,6 +28,26 @@ const Sidebar = ({ isVisitor }) => {
       if (!response.ok) throw new Error('Failed to fetch cart count')
       const data = await response.json()
       setCartCount(data.count)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  const fetchProductCount = async () => {
+    try {
+      const decoded = jwtDecode(token)
+      const response = await fetch(
+        `${import.meta.env.VITE_DEV_BACKEND_URL}/products/count/${decoded.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      if (!response.ok) throw new Error('Failed to fetch product count')
+      const data = await response.json()
+      console.log(data)
+      setPostCount(data.count)
     } catch (error) {
       console.error(error)
     }
@@ -57,6 +78,7 @@ const Sidebar = ({ isVisitor }) => {
     socket.on('newUpdateCartCount', fetchCartCount)
     fetchCartCount()
     fetchUserData()
+    fetchProductCount()
 
     return () => {
       socket.off('newUpdateCartCount', fetchCartCount)
@@ -87,7 +109,14 @@ const Sidebar = ({ isVisitor }) => {
           <NavLink to={`/profile/${userId}/user-info`}>My Details</NavLink>
         </li>
         <li>
-          <NavLink to={`/profile/${userId}/all-posts`}>All Posts</NavLink>
+          <NavLink to={`/profile/${userId}/all-posts`}>
+            All Posts
+            {postCount > 0 && (
+              <span className='absolute top-[-8px] right-[-10px] badge badge-primary bg-red-500 border-none'>
+                {postCount}
+              </span>
+            )}
+          </NavLink>
         </li>
         <li>
           <NavLink to={`/profile/${userId}/cart`} className='relative'>

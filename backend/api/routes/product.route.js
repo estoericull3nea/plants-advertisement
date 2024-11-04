@@ -6,6 +6,8 @@ import {
   deleteProduct,
   getAllProducts,
   getProductById,
+  getProductCount,
+  getProductsByUserId,
   getRelatedProducts,
   searchProducts,
   updateProduct,
@@ -42,5 +44,8 @@ router.delete('/:id', deleteProduct)
 router.get('/related/:categoryId/:productId', getRelatedProducts)
 
 router.get('/search/all-products', searchProducts)
+router.get('/count/:userId', getProductCount)
+
+router.get('/:userId/products', getProductsByUserId)
 
 export default router
