@@ -32,7 +32,9 @@ const ProductTable = ({ isVisitor }) => {
   const fetchProducts = async () => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_DEV_BACKEND_URL}/products`,
+        `${
+          import.meta.env.VITE_DEV_BACKEND_URL
+        }/products/${localStorage.getItem('userId')}/all-products`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
