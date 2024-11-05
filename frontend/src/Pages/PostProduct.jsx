@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { toast } from 'react-hot-toast'
 import ProductList from '../components/ProductList'
+import { jwtDecode } from 'jwt-decode'
 
 const PostProduct = () => {
   const [title, setTitle] = useState('')
@@ -91,7 +92,23 @@ const PostProduct = () => {
       )
 
       console.log(response.data.length)
-      setSearchResults(response.data)
+
+      // Decode the logged-in user's ID from the token
+      const token = localStorage.getItem('token')
+      let userIdToExclude = null
+
+      if (token) {
+        const decodedToken = jwtDecode(token)
+        userIdToExclude = decodedToken.id
+      }
+
+      // Filter out products by the logged-in user (if any)
+      const filteredResults = response.data.filter(
+        (product) => product.userId._id !== userIdToExclude
+      )
+
+      // Set the filtered search results
+      setSearchResults(filteredResults)
       setNotFoundSearch('') // Reset not found message if search results exist
     } catch (error) {
       if (error?.response?.data?.message === 'Product not found') {
