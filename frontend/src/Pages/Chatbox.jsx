@@ -320,6 +320,8 @@ const Chatbox = () => {
                       {message.senderId.firstName} {message.senderId.lastName}
                     </div>
                     <div>{message.text}</div>
+                    {/* update here */}
+                    <Link>{message?.productPreview?.title}</Link>
                     <div className='text-xs text-gray-500'>
                       {new Date(message.createdAt).toLocaleString()}
                     </div>
