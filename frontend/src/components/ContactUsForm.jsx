@@ -1,10 +1,43 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Icon } from '@iconify/react'
 import ContactUsText from './ContactUsText'
+import { jwtDecode } from 'jwt-decode'
+import axios from 'axios'
 
 const ContactUsForm = () => {
+  const [user, setUser] = useState(null) // To store user data
+  const [loading, setLoading] = useState(true) // To track loading state
+
+  useEffect(() => {
+    // Check if token is available in localStorage
+    const token = localStorage.getItem('token')
+    if (token) {
+      try {
+        // Decode the token to get the userId
+        const decoded = jwtDecode(token)
+
+        // Fetch user data from backend
+        axios
+          .get(`${import.meta.env.VITE_DEV_BACKEND_URL}/users/${decoded.id}`)
+          .then((response) => {
+            setUser(response.data) // Set user data
+            setLoading(false) // Set loading to false
+          })
+          .catch((error) => {
+            console.error('Error fetching user data:', error)
+            setLoading(false)
+          })
+      } catch (error) {
+        console.error('Error decoding token:', error)
+        setLoading(false)
+      }
+    } else {
+      setLoading(false) // No token, stop loading
+    }
+  }, [])
+
   return (
-    <div className='md:w-[90%] w-[80%] mx-auto my-10'>
+    <div className='md:w-[90%] w-[80%] mx-auto my-10 container'>
       <ContactUsText />
 
       <div className='flex flex-col justify-center items-center gap-4 mt-16'>
@@ -21,35 +54,57 @@ const ContactUsForm = () => {
         <div className='flex flex-col flex-1 text-sm text-gray-400 py-8 md:px-16 px-4 gap-8 rounded-3xl bg-white border border-gray-400'>
           <h1 className='text-xl text-black font-semibold'>Personal Detail</h1>
           <div className='md:flex justify-between gap-8 space-y-4 md:space-y-0'>
+            {/* First Name */}
             <div className='flex w-full gap-2 flex-col'>
               <label htmlFor='first-name'>First Name</label>
-              <input
-                className='py-3 px-4 border min-w-[200px] border-gray-300 focus:outline-[#51BA80] rounded-lg  '
-                type='text'
-                id='first-name'
-                placeholder='Your first name*'
-              />
+              {loading ? (
+                <div className='skeleton rounded-lg h-10 w-full'></div>
+              ) : (
+                <input
+                  className='py-3 px-4 border min-w-[200px] border-gray-300 focus:outline-[#51BA80] rounded-lg'
+                  type='text'
+                  id='first-name'
+                  value={user?.firstName || ''}
+                  placeholder='Your first name *'
+                  readOnly
+                />
+              )}
             </div>
+            {/* Last Name */}
             <div className='flex gap-2  md:pt-0 w-full flex-col'>
               <label htmlFor='last-name'>Last Name</label>
-              <input
-                className='py-3 px-4 border min-w-[200px] border-gray-300 focus:outline-[#51BA80] rounded-lg  '
-                type='text'
-                id='last-name'
-                placeholder='Your last name*'
-              />
+              {loading ? (
+                <div className='skeleton rounded-lg h-10 w-full'></div>
+              ) : (
+                <input
+                  className='py-3 px-4 border min-w-[200px] border-gray-300 focus:outline-[#51BA80] rounded-lg'
+                  type='text'
+                  id='last-name'
+                  value={user?.lastName || ''}
+                  placeholder='Your last name *'
+                  readOnly
+                />
+              )}
             </div>
           </div>
+          {/* Email */}
           <div className='flex gap-2  md:pt-0 w-full flex-col'>
             <label htmlFor='email'>Email</label>
-            <input
-              className='py-3 px-4 border min-w-[200px] border-gray-300 focus:outline-[#51BA80] rounded-lg  '
-              type='email'
-              id='email'
-              placeholder='Your email*'
-            />
+            {loading ? (
+              <div className='skeleton rounded-lg h-10 w-full'></div>
+            ) : (
+              <input
+                className='py-3 px-4 border min-w-[200px] border-gray-300 focus:outline-[#51BA80] rounded-lg'
+                type='email'
+                id='email'
+                value={user?.email || ''}
+                placeholder='Your email *'
+                readOnly
+              />
+            )}
           </div>
 
+          {/* Message */}
           <div className='flex gap-2 w-full flex-col'>
             <label htmlFor='message'>Message</label>
             <textarea
@@ -62,7 +117,7 @@ const ContactUsForm = () => {
           <div className='flex justify-end'>
             <a
               href='/'
-              className='py-2 rounded-lg border-main bg-main text-white shadow-lg px-3 '
+              className='py-2 rounded-lg border-main bg-main text-white shadow-lg px-3'
             >
               Send a message
             </a>
