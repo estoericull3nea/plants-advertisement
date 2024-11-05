@@ -1,6 +1,48 @@
 import Cart from '../models/cartItem.model.js'
 import Product from '../models/product.model.js'
 
+// export const addToCart = async (req, res) => {
+//   const { productId, userId, quantity } = req.body
+
+//   const product = await Product.findById(productId)
+//   if (!product) {
+//     return res.status(404).json({ message: 'Product not found' })
+//   }
+
+//   if (product.stock < quantity) {
+//     return res.status(400).json({ message: 'Not enough stock available' })
+//   }
+
+//   let cartItem = await Cart.findOne({ productId, userId })
+
+//   if (cartItem) {
+//     const newQuantity = cartItem.quantity + parseInt(quantity)
+
+//     if (product.stock < newQuantity) {
+//       return res.status(400).json({
+//         message: 'Not enough stock available for the updated quantity',
+//       })
+//     }
+
+//     cartItem.quantity = newQuantity
+//     cartItem.total = product.price * newQuantity
+//     await cartItem.save()
+//   } else {
+//     cartItem = new Cart({
+//       productId,
+//       userId,
+//       quantity: parseInt(quantity),
+//       total: product.price * quantity,
+//     })
+//     await cartItem.save()
+//   }
+
+//   product.stock -= quantity
+//   await product.save()
+
+//   res.status(200).json({ message: 'Item added to cart', cartItem })
+// }
+
 export const addToCart = async (req, res) => {
   const { productId, userId, quantity } = req.body
 
@@ -37,8 +79,8 @@ export const addToCart = async (req, res) => {
     await cartItem.save()
   }
 
-  product.stock -= quantity
-  await product.save()
+  // product.stock -= quantity
+  // await product.save()
 
   res.status(200).json({ message: 'Item added to cart', cartItem })
 }

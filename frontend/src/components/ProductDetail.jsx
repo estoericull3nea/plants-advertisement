@@ -56,7 +56,6 @@ const ProductDetail = () => {
       socket.emit('message', response.data) // Emit the newly created message
 
       // Reset the input field
-      setMessageText('')
       toast.success('Sent')
     } catch (error) {
       if (
@@ -196,7 +195,6 @@ const ProductDetail = () => {
 
       setProduct((prevProduct) => ({
         ...prevProduct,
-        stock: prevProduct.stock - quantity,
       }))
 
       setQuantity(1)
