@@ -88,7 +88,7 @@ export const searchProducts = async (req, res) => {
       { category: { $regex: query, $options: 'i' } },
       { address: { $regex: query, $options: 'i' } },
     ],
-  }).populate('userId', 'firstName lastName email')
+  }).populate('userId')
 
   const userSearchResults = await User.find({
     $or: [
@@ -102,7 +102,7 @@ export const searchProducts = async (req, res) => {
 
   const userProducts = await Product.find({
     userId: { $in: userIds },
-  }).populate('userId', 'firstName lastName email')
+  }).populate('userId')
 
   const allProducts = [...productSearchResults, ...userProducts]
 

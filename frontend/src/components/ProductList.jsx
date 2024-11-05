@@ -3,7 +3,7 @@ import axios from 'axios'
 import { Link } from 'react-router-dom'
 import { jwtDecode } from 'jwt-decode'
 
-const ProductList = ({ trigger }) => {
+const ProductList = ({ trigger, productsTest }) => {
   const [products, setProducts] = useState([])
   const [filteredProducts, setFilteredProducts] = useState([])
   const [selectedCategory, setSelectedCategory] = useState('all')
@@ -31,7 +31,7 @@ const ProductList = ({ trigger }) => {
     }
 
     fetchProducts()
-  }, [trigger])
+  }, [trigger, productsTest])
 
   const applyFilter = (products) => {
     const token = localStorage.getItem('token')
@@ -74,6 +74,13 @@ const ProductList = ({ trigger }) => {
     }
   }
 
+  const productsToDisplay =
+    productsTest.length > 0 ? productsTest : filteredProducts
+  console.log('filteredProducts')
+  console.log(filteredProducts)
+  console.log('productsTest')
+  console.log(productsTest)
+
   return (
     <div className='container mx-auto p-4'>
       <h1 className='text-2xl font-bold mb-4'>Marketplace</h1>
@@ -105,12 +112,12 @@ const ProductList = ({ trigger }) => {
               <div className='skeleton h-4 w-full'></div>
             </div>
           ))
-        ) : filteredProducts.length === 0 ? (
+        ) : productsToDisplay.length === 0 ? (
           <div className='col-span-full text-center p-4 text-lg text-gray-700'>
             No available products in this category
           </div>
         ) : (
-          filteredProducts.map((product) => (
+          productsToDisplay.map((product) => (
             <div
               key={product._id}
               className='border rounded-lg overflow-hidden shadow-lg'

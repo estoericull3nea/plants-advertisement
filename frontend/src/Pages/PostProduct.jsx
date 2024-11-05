@@ -69,22 +69,34 @@ const PostProduct = () => {
   }
 
   const handleSearch = async (e) => {
-    setSearchQuery(e.target.value)
+    const query = e.target.value
+    setSearchQuery(query)
+
+    // If the search query is empty, reset search results to an empty array
+    if (!query) {
+      setSearchResults([])
+      setNotFoundSearch('')
+      setLoading(false)
+      return
+    }
+
     setLoading(true)
 
     try {
       const response = await axios.get(
         `${import.meta.env.VITE_DEV_BACKEND_URL}/products/search/all-products`,
         {
-          params: { query: e.target.value },
+          params: { query },
         }
       )
+
+      console.log(response.data.length)
       setSearchResults(response.data)
-      setNotFoundSearch('')
-      console.log(response.data)
+      setNotFoundSearch('') // Reset not found message if search results exist
     } catch (error) {
       if (error?.response?.data?.message === 'Product not found') {
         setNotFoundSearch(error?.response?.data?.message)
+        setSearchResults([]) // Reset search results if no products found
       }
     } finally {
       setLoading(false)
@@ -261,7 +273,7 @@ const PostProduct = () => {
           <div className='h-10 bg-gray-200 rounded-lg animate-pulse'></div>
         </div>
       ) : (
-        <ProductList products={searchResults} trigger={trigger} />
+        <ProductList productsTest={searchResults} trigger={trigger} />
       )}
     </div>
   )
