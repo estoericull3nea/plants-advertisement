@@ -1,0 +1,24 @@
+[
+    {
+        "cropName": "Chinese Cabbage",
+        "timeOfPlanting": "October - December",
+        "plantPopulation": "41-666",
+        "maturity": "50 - 60 DAP",
+        "volumeOfProduction": "20 - 25",
+        "distanceOfPlanting": {
+            "hill": 40,
+            "rows": 60
+        }
+    },
+    {
+        "cropName": "Cantaloupe",
+        "timeOfPlanting": "Sept - December",
+        "plantPopulation": "41-666",
+        "maturity": "50 - 60 DAP",
+        "volumeOfProduction": "20 - 25",
+        "distanceOfPlanting": {
+            "hill": 40,
+            "rows": 60
+        }
+    }
+]

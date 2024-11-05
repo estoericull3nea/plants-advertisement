@@ -17,6 +17,7 @@ const navItems = [
   { title: 'Marketplace', href: '/posts' },
   { title: 'About', href: '/about' },
   { title: 'Contact', href: '/contact' },
+  { title: 'Crops Planning', href: '/crops-planning' },
 ]
 
 function Navbar() {
@@ -97,7 +98,7 @@ function Navbar() {
         >
           <span className='flex items-center gap-2'>
             <img src={Logo} alt='' className='h-10' />
-            <span>Plants Advertisement</span>
+            <h3 className='text-xl font-bold'>FarmMart</h3>
           </span>
         </Link>
         <div className='hidden md:flex items-center gap-14'>
