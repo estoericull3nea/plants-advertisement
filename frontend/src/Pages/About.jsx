@@ -7,7 +7,6 @@ const About = () => {
     <div className='container'>
       <section className=''>
         <div className='container grid gap-20 my-10 py-10'>
-          {/* Title and Overview Section */}
           <div className='text-center max-w-[650px] mx-auto space-y-10'>
             <p className='font-bold text-main'>About Us</p>
             <h1 className='mt-2 text-2xl font-semibold text-gray-800 md:text-3xl'>
@@ -20,10 +19,8 @@ const About = () => {
             </p>
           </div>
 
-          {/* How It Works Section */}
           <HowItWorks />
 
-          {/* Our Mission Section */}
           <div className='mt-12  max-w-[650px] mx-auto'>
             <h2 className='text-center text-xl font-semibold text-gray-800'>
               Our Mission
@@ -36,7 +33,6 @@ const About = () => {
             </p>
           </div>
 
-          {/* Core Values Section */}
           <div className='mt-12 max-w-[1200px] mx-auto'>
             <h2 className='text-center text-xl font-semibold text-gray-800'>
               Our Core Values
