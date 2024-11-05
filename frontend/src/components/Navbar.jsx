@@ -221,7 +221,7 @@ function Navbar() {
                 ) : (
                   <Link
                     to='/register'
-                    className='text-xl whitespace-nowrap bg-gradient-to-l from-[#091C82] to-[#182046] hover:bg-[#393baf] text-black font-semibold px-6 py-2 rounded-full text-thin'
+                    className='bg-gradient-to-l from-[#202752] to-main hover:bg-[#1d20e4] py-2 px-6 rounded-3xl flex items-center text-white'
                   >
                     Get Started
                   </Link>

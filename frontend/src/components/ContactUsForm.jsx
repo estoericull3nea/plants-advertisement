@@ -3,10 +3,14 @@ import { Icon } from '@iconify/react'
 import ContactUsText from './ContactUsText'
 import { jwtDecode } from 'jwt-decode'
 import axios from 'axios'
+import { toast } from 'react-hot-toast'
 
 const ContactUsForm = () => {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [message, setMessage] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [error, setError] = useState('')
 
   useEffect(() => {
     const token = localStorage.getItem('token')
@@ -32,6 +36,51 @@ const ContactUsForm = () => {
       setLoading(false)
     }
   }, [])
+
+  const handleMessageChange = (e) => {
+    setMessage(e.target.value)
+  }
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+
+    if (!message.trim()) {
+      setError('Please enter a message.')
+      setIsSubmitting(false)
+      return
+    }
+    if (!user?.firstName || !user?.lastName || !user?.email) {
+      setError('Please make sure your personal details are complete.')
+      setIsSubmitting(false)
+      return
+    }
+
+    setError('')
+
+    const contactData = {
+      firstName: user?.firstName,
+      lastName: user?.lastName,
+      email: user?.email,
+      message,
+    }
+
+    axios
+      .post(`${import.meta.env.VITE_DEV_BACKEND_URL}/contacts`, contactData)
+      .then((response) => {
+        setIsSubmitting(false)
+
+        setMessage('')
+
+        toast.success('Your message has been sent successfully!')
+      })
+      .catch((error) => {
+        setIsSubmitting(false)
+        console.error('Error submitting contact form:', error)
+
+        toast.error('Something went wrong. Please try again later.')
+      })
+  }
 
   return (
     <div className='md:w-[90%] w-[80%] mx-auto my-10 container'>
@@ -62,11 +111,14 @@ const ContactUsForm = () => {
                   id='first-name'
                   value={user?.firstName || ''}
                   placeholder='Your first name *'
-                  readOnly
+                  disabled={loading}
+                  onChange={(e) =>
+                    setUser({ ...user, firstName: e.target.value })
+                  }
                 />
               )}
             </div>
-            <div className='flex gap-2  md:pt-0 w-full flex-col'>
+            <div className='flex gap-2 md:pt-0 w-full flex-col'>
               <label htmlFor='last-name'>Last Name</label>
               {loading ? (
                 <div className='skeleton rounded-lg h-10 w-full'></div>
@@ -77,12 +129,15 @@ const ContactUsForm = () => {
                   id='last-name'
                   value={user?.lastName || ''}
                   placeholder='Your last name *'
-                  readOnly
+                  disabled={loading}
+                  onChange={(e) =>
+                    setUser({ ...user, lastName: e.target.value })
+                  }
                 />
               )}
             </div>
           </div>
-          <div className='flex gap-2  md:pt-0 w-full flex-col'>
+          <div className='flex gap-2 md:pt-0 w-full flex-col'>
             <label htmlFor='email'>Email</label>
             {loading ? (
               <div className='skeleton rounded-lg h-10 w-full'></div>
@@ -93,7 +148,8 @@ const ContactUsForm = () => {
                 id='email'
                 value={user?.email || ''}
                 placeholder='Your email *'
-                readOnly
+                disabled={loading}
+                onChange={(e) => setUser({ ...user, email: e.target.value })}
               />
             )}
           </div>
@@ -104,16 +160,20 @@ const ContactUsForm = () => {
               id='message'
               className='py-3 px-4 border min-w-[200px] border-gray-300 focus:outline-[#51BA80] rounded-xl h-32 resize-none'
               placeholder='Write your message here...'
+              value={message}
+              onChange={handleMessageChange}
             />
+            {error && <p className='text-red-500 text-sm'>{error}</p>}
           </div>
 
           <div className='flex justify-end'>
-            <a
-              href='/'
+            <button
+              onClick={handleFormSubmit}
               className='py-2 rounded-lg border-main bg-main text-white shadow-lg px-3'
+              disabled={isSubmitting}
             >
-              Send a message
-            </a>
+              {isSubmitting ? 'Sending...' : 'Send a message'}
+            </button>
           </div>
         </div>
 
@@ -143,7 +203,7 @@ const ContactUsForm = () => {
               target='_blank'
               rel='noopener noreferrer'
               href='https://twitter.com/'
-              className='h-[40px] w-[40px] rounded-lg shadow-lg  p-1'
+              className='h-[40px] w-[40px] rounded-lg shadow-lg p-1'
             >
               <Icon
                 className='h-full w-full'
@@ -154,7 +214,7 @@ const ContactUsForm = () => {
               target='_blank'
               rel='noopener noreferrer'
               href='https://www.facebook.com/'
-              className='h-[40px] w-[40px] rounded-lg shadow-lg  p-1'
+              className='h-[40px] w-[40px] rounded-lg shadow-lg p-1'
             >
               <Icon className='h-full w-full' icon='mage:facebook-square' />
             </a>
@@ -162,7 +222,7 @@ const ContactUsForm = () => {
               target='_blank'
               rel='noopener noreferrer'
               href='https://www.whatsapp.com/'
-              className='h-[40px] w-[40px] rounded-lg shadow-lg  p-1'
+              className='h-[40px] w-[40px] rounded-lg shadow-lg p-1'
             >
               <Icon className='h-full w-full' icon='uim:whatsapp' />
             </a>
@@ -170,7 +230,7 @@ const ContactUsForm = () => {
               target='_blank'
               rel='noopener noreferrer'
               href='https://www.instagram.com/'
-              className='h-[40px] w-[40px] rounded-lg shadow-lg  p-1'
+              className='h-[40px] w-[40px] rounded-lg shadow-lg p-1'
             >
               <Icon
                 className='h-full w-full'
