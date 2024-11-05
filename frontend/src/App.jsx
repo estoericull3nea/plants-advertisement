@@ -16,6 +16,7 @@ import PostProduct from './Pages/PostProduct'
 import ProductDetail from './components/ProductDetail'
 import Chatbox from './Pages/Chatbox'
 import ContactUsForm from './components/ContactUsForm'
+import About from './Pages/About'
 
 const App = () => {
   return (
@@ -70,6 +71,7 @@ const App = () => {
             }
           />
           <Route path='/contact' element={<ContactUsForm />} />
+          <Route path='/about' element={<About />} />
 
           <Route
             path='/posts'
