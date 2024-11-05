@@ -28,7 +28,7 @@ const io = new Server(server, {
 const onlineUsers = new Map()
 
 io.on('connection', (socket) => {
-  console.log('A client connected:', socket.id)
+  // console.log('A client connected:', socket.id)
 
   socket.on('join', async (userId) => {
     console.log('User joined:', userId)
@@ -44,6 +44,10 @@ io.on('connection', (socket) => {
   socket.on('updateCartCount', (data) => {
     console.log('updateCartCount received: ', data)
     io.emit('newUpdateCartCount', data)
+  })
+
+  socket.on('message', (data) => {
+    io.emit('newMessage', data)
   })
 
   socket.on('disconnect', () => {

@@ -67,7 +67,7 @@ const Chatbox = () => {
     fetchCurrentUser()
     fetchUsers()
 
-    socket.on('message', (newMessage) => {
+    socket.on('newMessage', (newMessage) => {
       setMessages((prevMessages) => [...prevMessages, newMessage])
       scrollToBottom()
     })
