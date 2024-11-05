@@ -14,7 +14,15 @@ const messageSchema = new mongoose.Schema(
     },
     text: { type: String },
     images: [{ type: String }],
+
+    productPreview: {
+      title: String,
+      description: String,
+      image: String,
+      url: String,
+    },
   },
+
   { timestamps: true }
 )
 
