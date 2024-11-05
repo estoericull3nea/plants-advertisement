@@ -5,23 +5,20 @@ import { jwtDecode } from 'jwt-decode'
 import axios from 'axios'
 
 const ContactUsForm = () => {
-  const [user, setUser] = useState(null) // To store user data
-  const [loading, setLoading] = useState(true) // To track loading state
+  const [user, setUser] = useState(null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Check if token is available in localStorage
     const token = localStorage.getItem('token')
     if (token) {
       try {
-        // Decode the token to get the userId
         const decoded = jwtDecode(token)
 
-        // Fetch user data from backend
         axios
           .get(`${import.meta.env.VITE_DEV_BACKEND_URL}/users/${decoded.id}`)
           .then((response) => {
-            setUser(response.data) // Set user data
-            setLoading(false) // Set loading to false
+            setUser(response.data)
+            setLoading(false)
           })
           .catch((error) => {
             console.error('Error fetching user data:', error)
@@ -32,7 +29,7 @@ const ContactUsForm = () => {
         setLoading(false)
       }
     } else {
-      setLoading(false) // No token, stop loading
+      setLoading(false)
     }
   }, [])
 
@@ -54,7 +51,6 @@ const ContactUsForm = () => {
         <div className='flex flex-col flex-1 text-sm text-gray-400 py-8 md:px-16 px-4 gap-8 rounded-3xl bg-white border border-gray-400'>
           <h1 className='text-xl text-black font-semibold'>Personal Detail</h1>
           <div className='md:flex justify-between gap-8 space-y-4 md:space-y-0'>
-            {/* First Name */}
             <div className='flex w-full gap-2 flex-col'>
               <label htmlFor='first-name'>First Name</label>
               {loading ? (
@@ -70,7 +66,6 @@ const ContactUsForm = () => {
                 />
               )}
             </div>
-            {/* Last Name */}
             <div className='flex gap-2  md:pt-0 w-full flex-col'>
               <label htmlFor='last-name'>Last Name</label>
               {loading ? (
@@ -87,7 +82,6 @@ const ContactUsForm = () => {
               )}
             </div>
           </div>
-          {/* Email */}
           <div className='flex gap-2  md:pt-0 w-full flex-col'>
             <label htmlFor='email'>Email</label>
             {loading ? (
@@ -104,7 +98,6 @@ const ContactUsForm = () => {
             )}
           </div>
 
-          {/* Message */}
           <div className='flex gap-2 w-full flex-col'>
             <label htmlFor='message'>Message</label>
             <textarea
@@ -145,7 +138,6 @@ const ContactUsForm = () => {
             </p>
           </div>
 
-          {/* Social Media Icons */}
           <div className='flex justify-center'>
             <a
               target='_blank'
