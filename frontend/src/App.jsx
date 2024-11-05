@@ -15,6 +15,7 @@ import ProtectedRoute from './components/ProtectedRoute'
 import PostProduct from './Pages/PostProduct'
 import ProductDetail from './components/ProductDetail'
 import Chatbox from './Pages/Chatbox'
+import ContactUsForm from './components/ContactUsForm'
 
 const App = () => {
   return (
@@ -60,7 +61,6 @@ const App = () => {
               </PrivateRoute>
             }
           />
-
           <Route
             path='/chats'
             element={
@@ -69,6 +69,7 @@ const App = () => {
               </PrivateRoute>
             }
           />
+          <Route path='/contact' element={<ContactUsForm />} />
 
           <Route
             path='/posts'
