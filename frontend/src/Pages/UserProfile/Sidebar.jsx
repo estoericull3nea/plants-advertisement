@@ -128,6 +128,11 @@ const Sidebar = ({ isVisitor }) => {
             )}
           </NavLink>
         </li>
+        <li>
+          <NavLink to={`/chats`} className='relative'>
+            Chats
+          </NavLink>
+        </li>
       </ul>
     </aside>
   )
