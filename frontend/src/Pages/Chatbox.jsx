@@ -6,10 +6,16 @@ import { Pagination, Navigation, Autoplay } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/pagination'
 import 'swiper/css/navigation'
+import { Link } from 'react-router-dom'
 
 import { io } from 'socket.io-client'
 import { useNavigate } from 'react-router-dom'
 const socket = io('http://localhost:5000')
+
+const removeLinks = (text) => {
+  const urlRegex = /https?:\/\/[^\s]+/g
+  return text.replace(urlRegex, '').trim() // Remove URLs and trim extra spaces
+}
 
 const ImageModal = ({ images, isOpen, onClose, startIndex }) => {
   if (!isOpen) return null
@@ -320,8 +326,23 @@ const Chatbox = () => {
                       {message.senderId.firstName} {message.senderId.lastName}
                     </div>
                     <div>{message.text}</div>
-                    {/* update here */}
-                    <Link>{message?.productPreview?.title}</Link>
+                    {message.productPreview ? (
+                      <div className='rounded-2xl bg-main border shadow border-black w-max my-3 p-3  transition-all duration-300 hover:translate-y-[-2px] hover:shadow-lg'>
+                        <Link to={message?.productPreview?.url}>
+                          <h3 className='text-lg font-semibold hover:text-blue-500 transition-all'>
+                            {message?.productPreview?.title}
+                          </h3>
+                          <img
+                            src={`http://localhost:5000/${message?.productPreview?.image}`}
+                            alt={message?.productPreview?.image}
+                            className='h-36 w-full rounded-lg transition-transform transform hover:scale-105'
+                          />
+                          <p>{message?.productPreview?.description}</p>
+                          <p>{message?.productPreview?.url}</p>
+                        </Link>
+                      </div>
+                    ) : null}
+
                     <div className='text-xs text-gray-500'>
                       {new Date(message.createdAt).toLocaleString()}
                     </div>

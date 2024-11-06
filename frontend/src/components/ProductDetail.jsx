@@ -37,9 +37,13 @@ const ProductDetail = () => {
     if (!messageText) return // Ensure there's text to send
 
     const receiverId = product.userId._id // Assuming product.userId contains the seller's info
+
+    const productLink = `Check out this product: ${window.location.origin}/products/${product._id}` // Link to product page
+    const updatedMessageText = `${messageText}\n\n${productLink}`
+
     const formData = new FormData()
     formData.append('receiverId', receiverId)
-    formData.append('text', messageText)
+    formData.append('text', updatedMessageText)
 
     try {
       const response = await axios.post(
