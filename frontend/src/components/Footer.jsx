@@ -5,18 +5,18 @@ const Footer = () => {
     {
       label: 'Explore',
       items: [
-        { href: 'javascript:void(0)', name: 'Crops' },
-        { href: 'javascript:void(0)', name: 'Livestock' },
-        { href: 'javascript:void(0)', name: 'Fisheries' },
+        { href: 'http://localhost:5173/crops', name: 'Crops' },
+        { href: 'http://localhost:5173/livestock', name: 'Livestock' },
+        { href: 'http://localhost:5173/fisheries', name: 'Fisheries' },
       ],
     },
     {
       label: 'Quick Links',
       items: [
-        { href: 'javascript:void(0)', name: 'Home' },
-        { href: 'javascript:void(0)', name: 'Posts' },
-        { href: 'javascript:void(0)', name: 'About' },
-        { href: 'javascript:void(0)', name: 'Contact' },
+        { href: 'http://localhost:5173/', name: 'Home' },
+        { href: 'http://localhost:5173/posts', name: 'Posts' },
+        { href: 'http://localhost:5173/about', name: 'About' },
+        { href: 'http://localhost:5173/contact', name: 'Contact' },
       ],
     },
     {
@@ -30,10 +30,10 @@ const Footer = () => {
     {
       label: 'Legal',
       items: [
-        { href: 'javascript:void(0)', name: 'Terms Of Service' },
-        { href: 'javascript:void(0)', name: 'Privacy Policy' },
-        { href: 'javascript:void(0)', name: 'Cookies Policy' },
-        { href: 'javascript:void(0)', name: 'FAQs' },
+        { href: 'http://localhost:5173/terms', name: 'Terms Of Service' },
+        { href: 'http://localhost:5173/privacy', name: 'Privacy Policy' },
+        { href: 'http://localhost:5173/cookies', name: 'Cookies Policy' },
+        { href: 'http://localhost:5173/faqs', name: 'FAQs' },
       ],
     },
   ]
