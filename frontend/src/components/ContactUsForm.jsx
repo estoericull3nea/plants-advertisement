@@ -83,7 +83,7 @@ const ContactUsForm = () => {
   }
 
   return (
-    <div className='md:w-[90%] w-[80%] mx-auto my-10 container'>
+    <div className='md:w-[90%] lg:w-[80%] mx-auto my-10 container'>
       <ContactUsText />
 
       <div className='flex flex-col justify-center items-center gap-4 mt-16'>

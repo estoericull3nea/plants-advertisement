@@ -6,8 +6,8 @@ const About = () => {
   return (
     <div className='container'>
       <section className=''>
-        <div className='container grid gap-20 my-10 py-10'>
-          <div className='text-center max-w-[650px] mx-auto space-y-10'>
+        <div className=' grid gap-20 my-10 py-10 w-full'>
+          <div className='text-center lg:max-w-[650px] mx-auto space-y-10'>
             <p className='font-bold text-main'>About Us</p>
             <h1 className='mt-2 text-2xl font-semibold text-gray-800 md:text-3xl'>
               Empowering the Agricultural Community Through Technology
