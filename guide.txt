@@ -2,3 +2,5 @@ https://github.com/estoericull3nea/plants-advertisement.git
 
 https://psgc.cloud/docs/psgc-regions-api-documentation/ (api for location)
 py-1 rounded-lg border-main bg-main text-white shadow-lg px-3
+
+integrate map
