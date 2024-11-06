@@ -83,6 +83,7 @@ import commentRouter from './api/routes/comment.route.js'
 import userModel from './api/models/user.model.js'
 import shareRouter from './api/routes/share.route.js'
 import contactRouter from './api/routes/contact.route.js'
+import plantRouter from './api/routes/plantCalendar.route.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -112,6 +113,7 @@ app.use('/api/v1/likes', likeRouter)
 app.use('/api/v1/comments', commentRouter)
 app.use('/api/v1/shares', shareRouter)
 app.use('/api/v1/contacts', contactRouter)
+app.use('/api/v1/plants', plantRouter)
 
 // ================================== Connection to MongoDB ==================================
 connectDB()
