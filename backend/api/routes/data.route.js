@@ -7,6 +7,7 @@ import {
   getLatestChats,
   getTop5RecentProducts,
   getTop5RecentUsers,
+  getUserRegistrationsForChart,
 } from '../controllers/data.controller.js'
 
 const router = express.Router()
@@ -19,5 +20,7 @@ router.get('/top-5-recent-users', getTop5RecentUsers)
 router.get('/top-5-recent-products', getTop5RecentProducts)
 router.get('/latest-chats', getLatestChats)
 router.get('/get-all-users', getAllUsers)
+
+router.get('/registration-data', getUserRegistrationsForChart)
 
 export default router

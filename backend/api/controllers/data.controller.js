@@ -104,3 +104,107 @@ export const getAllUsers = async (req, res) => {
   }
   res.status(200).json(users)
 }
+
+export const getUserRegistrationsForChart = async (req, res) => {
+  try {
+    // Current date for calculating intervals
+    const today = new Date()
+
+    // Aggregation to get daily, weekly, monthly, and yearly counts
+    const dailyRegistrations = await User.aggregate([
+      {
+        $match: {
+          createdAt: {
+            $gte: new Date(
+              today.getFullYear(),
+              today.getMonth(),
+              today.getDate() - 30
+            ),
+          },
+        }, // last 30 days
+      },
+      {
+        $group: {
+          _id: {
+            day: { $dayOfMonth: '$createdAt' },
+            month: { $month: '$createdAt' },
+            year: { $year: '$createdAt' },
+          },
+          count: { $sum: 1 },
+        },
+      },
+      { $sort: { '_id.year': 1, '_id.month': 1, '_id.day': 1 } },
+    ])
+
+    const weeklyRegistrations = await User.aggregate([
+      {
+        $match: {
+          createdAt: {
+            $gte: new Date(
+              today.getFullYear(),
+              today.getMonth(),
+              today.getDate() - 90
+            ),
+          },
+        }, // last 90 days
+      },
+      {
+        $group: {
+          _id: { week: { $week: '$createdAt' }, year: { $year: '$createdAt' } },
+          count: { $sum: 1 },
+        },
+      },
+      { $sort: { '_id.year': 1, '_id.week': 1 } },
+    ])
+
+    const monthlyRegistrations = await User.aggregate([
+      {
+        $match: {
+          createdAt: {
+            $gte: new Date(today.getFullYear() - 1, today.getMonth()),
+          },
+        }, // last 12 months
+      },
+      {
+        $group: {
+          _id: {
+            month: { $month: '$createdAt' },
+            year: { $year: '$createdAt' },
+          },
+          count: { $sum: 1 },
+        },
+      },
+      { $sort: { '_id.year': 1, '_id.month': 1 } },
+    ])
+
+    const yearlyRegistrations = await User.aggregate([
+      {
+        $group: {
+          _id: { year: { $year: '$createdAt' } },
+          count: { $sum: 1 },
+        },
+      },
+      { $sort: { '_id.year': 1 } },
+    ])
+
+    // Format the data for Chart.js
+    const formatData = (data, label) => ({
+      label,
+      data: data.map((item) => item.count),
+      labels: data.map((item) =>
+        `${item._id.year}-${item._id.month || ''}-${item._id.day || ''}`.trim()
+      ),
+    })
+
+    const responseData = {
+      daily: formatData(dailyRegistrations, 'Daily Registrations'),
+      weekly: formatData(weeklyRegistrations, 'Weekly Registrations'),
+      monthly: formatData(monthlyRegistrations, 'Monthly Registrations'),
+      yearly: formatData(yearlyRegistrations, 'Yearly Registrations'),
+    }
+
+    res.status(200).json(responseData)
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching registration data', error })
+  }
+}

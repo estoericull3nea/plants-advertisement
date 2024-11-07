@@ -132,6 +132,8 @@ const Products = () => {
           className='shadow-2xl'
         >
           <Column field='title' header='Title' sortable />
+          <Column field='userId.firstName' header='First Name' sortable />
+          <Column field='userId.lastName' header='Last Name' sortable />
           <Column field='category' header='Category' sortable />
           <Column field='stock' header='Stock' sortable />
           <Column field='price' header='Price' sortable />
