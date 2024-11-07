@@ -7,8 +7,6 @@ const Sidebar = () => {
       <h1 className='text-2xl font-semibold'>Welcome Admin</h1>
 
       <ul className='menu rounded-box mt-4'>
-        {/* Dashboard Section */}
-        <li className='menu-title'>Dashboard</li>
         <li>
           <NavLink
             to={`/admin/dashboard`}
@@ -21,7 +19,6 @@ const Sidebar = () => {
         </li>
 
         {/* User Management Section */}
-        <li className='menu-title'>User Management</li>
         <li>
           <NavLink
             to={`/admin/users`}
@@ -32,19 +29,8 @@ const Sidebar = () => {
             All Users
           </NavLink>
         </li>
-        <li>
-          <NavLink
-            to={`/admin/user-roles`}
-            className={({ isActive }) =>
-              isActive ? 'bg-main' : 'text-gray-700'
-            }
-          >
-            User Roles & Permissions
-          </NavLink>
-        </li>
 
         {/* Product Management Section */}
-        <li className='menu-title'>Product Management</li>
         <li>
           <NavLink
             to={`/admin/products`}
@@ -77,7 +63,6 @@ const Sidebar = () => {
         </li>
 
         {/* Order Management Section */}
-        <li className='menu-title'>Order & Transaction Management</li>
         <li>
           <NavLink
             to={`/admin/orders`}
@@ -120,7 +105,6 @@ const Sidebar = () => {
         </li>
 
         {/* Reports & Analytics Section */}
-        <li className='menu-title'>Reports & Analytics</li>
         <li>
           <NavLink
             to={`/admin/sales-reports`}
@@ -153,7 +137,6 @@ const Sidebar = () => {
         </li>
 
         {/* Content Management Section */}
-        <li className='menu-title'>Content Management</li>
         <li>
           <NavLink
             to={`/admin/content-management`}
@@ -176,7 +159,6 @@ const Sidebar = () => {
         </li>
 
         {/* Moderation & Support Section */}
-        <li className='menu-title'>Moderation & Support</li>
         <li>
           <NavLink
             to={`/admin/reports`}
@@ -209,7 +191,6 @@ const Sidebar = () => {
         </li>
 
         {/* Settings Section */}
-        <li className='menu-title'>Settings</li>
         <li>
           <NavLink
             to={`/admin/user-permissions`}

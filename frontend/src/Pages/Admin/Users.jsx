@@ -9,6 +9,7 @@ import { InputText } from 'primereact/inputtext'
 import { toast } from 'react-hot-toast'
 import { InputNumber } from 'primereact/inputnumber'
 import { Calendar } from 'primereact/calendar'
+import { formatDate } from '../../utils/formatDate'
 
 const Users = () => {
   const [users, setUsers] = useState([])
@@ -371,18 +372,71 @@ const Users = () => {
           value={users}
           paginator
           rows={10}
-          globalFilter={globalFilter} // Attach global filter
-          className='p-datatable-customers'
+          globalFilter={globalFilter}
         >
-          <Column field='firstName' header='First Name' sortable />
-          <Column field='lastName' header='Last Name' sortable />
-          <Column field='email' header='Email' sortable />
-          <Column field='contactNumber' header='Contact Number' sortable />
-          <Column field='municipality' header='Municipality' sortable />
-          <Column field='barangay' header='Barangay' sortable />
-          <Column field='dateOfBirth' header='Date of Birth' sortable />
-          <Column field='age' header='Age' sortable />
-          <Column field='isVerified' header='Verified' sortable />
+          <Column
+            field='firstName'
+            header='First Name'
+            sortable
+            body={(rowData) => rowData.firstName || 'N/A'}
+          />
+          <Column
+            field='lastName'
+            header='Last Name'
+            sortable
+            body={(rowData) => rowData.lastName || 'N/A'}
+          />
+          <Column
+            field='email'
+            header='Email'
+            sortable
+            body={(rowData) => rowData.email || 'N/A'}
+          />
+          <Column
+            field='contactNumber'
+            header='Contact Number'
+            sortable
+            body={(rowData) => rowData.contactNumber || 'N/A'}
+          />
+          <Column
+            field='municipality'
+            header='Municipality'
+            sortable
+            body={(rowData) => rowData.municipality || 'N/A'} // Display 'N/A' if municipality is null/undefined
+          />
+          <Column
+            field='barangay'
+            header='Barangay'
+            sortable
+            body={(rowData) => rowData.barangay || 'N/A'} // Display 'N/A' if barangay is null/undefined
+          />
+          <Column
+            field='dateOfBirth'
+            header='Date of Birth'
+            sortable
+            body={(rowData) =>
+              rowData.dateOfBirth ? formatDate(rowData.dateOfBirth) : 'N/A'
+            } // If dateOfBirth is null/undefined, show 'N/A'
+          />
+          <Column
+            field='age'
+            header='Age'
+            sortable
+            body={(rowData) => (rowData.age != null ? rowData.age : 'N/A')} // Display 'N/A' if age is null/undefined
+          />
+          <Column
+            field='isVerified'
+            header='Verified'
+            sortable
+            body={(rowData) =>
+              rowData.isVerified != null
+                ? rowData.isVerified
+                  ? 'Yes'
+                  : 'No'
+                : 'N/A'
+            } // Display 'Yes'/'No' based on isVerified, 'N/A' if null
+          />
+
           <Column header='Actions' body={actionBodyTemplate} />
         </DataTable>
       )}
