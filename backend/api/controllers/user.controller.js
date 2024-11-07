@@ -18,32 +18,27 @@ export const getAllUsers = async (req, res) => {
 
 export const updateUserById = async (req, res) => {
   const { userId } = req.params
-  const updateData = { ...req.body }
+  let updateData = { ...req.body }
 
-  if (updateData.password) {
-    const saltRounds = 10 // Adjust the salt rounds as necessary
-    updateData.password = await bcrypt.hash(updateData.password, saltRounds)
-  } else {
-    delete updateData.password
+  if (updateData.newPassword) {
+    const hashedPassword = await bcrypt.hash(updateData.newPassword, 10)
+    updateData.password = hashedPassword
+    delete updateData.newPassword
   }
 
-  try {
-    const updatedUser = await User.findByIdAndUpdate(userId, updateData, {
-      new: true,
-      runValidators: true,
-    })
-
-    if (!updatedUser) {
-      return res.status(404).json({ message: 'User not found' })
-    }
-
-    return res.status(200).json(updatedUser)
-  } catch (error) {
-    console.error(error)
-    return res
-      .status(500)
-      .json({ message: 'Error updating user', error: error.message })
+  if (!updateData.newPassword) {
+    delete updateData.newPassword
   }
+
+  const updatedUser = await User.findByIdAndUpdate(userId, updateData, {
+    new: true,
+  })
+
+  if (!updatedUser) {
+    return res.status(404).json({ message: 'User not found' })
+  }
+
+  return res.status(200).json(updatedUser)
 }
 
 export const getUserById = async (req, res) => {

@@ -177,6 +177,7 @@ const Users = () => {
       onHide={() => setShowDialog(false)}
     >
       <div className='p-fluid'>
+        {/* Existing fields */}
         <div className='p-field'>
           <label htmlFor='firstName'>First Name</label>
           <input
@@ -322,6 +323,58 @@ const Users = () => {
             <option value='false'>Not Verified</option>
           </select>
         </div>
+
+        {/* Password Fields for Edit User */}
+        {isEditing && (
+          <>
+            <div className='p-field'>
+              <label htmlFor='newPassword'>New Password</label>
+              <input
+                id='newPassword'
+                type='password'
+                value={selectedUser.newPassword || ''}
+                onChange={(e) =>
+                  setSelectedUser({
+                    ...selectedUser,
+                    newPassword: e.target.value,
+                  })
+                }
+                className='input input-bordered w-full'
+                placeholder='Enter new password (leave blank to keep current)'
+              />
+            </div>
+          </>
+        )}
+
+        {/* Password Fields for Add User */}
+        {!isEditing && (
+          <>
+            <div className='p-field'>
+              <label htmlFor='password'>Password</label>
+              <input
+                id='password'
+                type='password'
+                value={newUser.password}
+                onChange={(e) =>
+                  setNewUser({ ...newUser, password: e.target.value })
+                }
+                className='input input-bordered w-full'
+              />
+            </div>
+            <div className='p-field'>
+              <label htmlFor='confirmPassword'>Confirm Password</label>
+              <input
+                id='confirmPassword'
+                type='password'
+                value={newUser.confirmPassword}
+                onChange={(e) =>
+                  setNewUser({ ...newUser, confirmPassword: e.target.value })
+                }
+                className='input input-bordered w-full'
+              />
+            </div>
+          </>
+        )}
       </div>
 
       <div className='p-d-flex p-jc-between'>

@@ -3,6 +3,7 @@ import { useParams, Routes, Route, useNavigate } from 'react-router-dom'
 import Sidebar from './Sidebar'
 import AdminDashboard from './AdminDashboard'
 import Users from './Users'
+import Products from './Products'
 
 const Admin = () => {
   return (
@@ -13,6 +14,7 @@ const Admin = () => {
           <Routes>
             <Route path='/dashboard' element={<AdminDashboard />} />
             <Route path='/users' element={<Users />} />
+            <Route path='/products' element={<Products />} />
           </Routes>
         </div>
       </div>
