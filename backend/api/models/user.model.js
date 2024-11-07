@@ -14,6 +14,7 @@ const UserSchema = new mongoose.Schema(
     age: { type: Number, required: false },
     picture: { type: String, required: false },
     lastActive: { type: Date, default: Date.now },
+    isVerified: { type: Boolean, default: true },
   },
   { timestamps: true }
 )
