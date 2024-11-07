@@ -4,6 +4,7 @@ import axios from 'axios'
 const AdminDashboard = () => {
   const [loading, setLoading] = useState(true)
   const [recentUsers, setRecentUsers] = useState([]) // For storing recent users
+  const [recentProducts, setRecentProducts] = useState([]) // For storing recent products
 
   const [userCountData, setUserCountData] = useState({
     userCount: null,
@@ -55,6 +56,11 @@ const AdminDashboard = () => {
           `${import.meta.env.VITE_DEV_BACKEND_URL}/datas/top-5-recent-users`
         )
         setRecentUsers(recentUsersResponse.data)
+
+        const recentProductsResponse = await axios.get(
+          `${import.meta.env.VITE_DEV_BACKEND_URL}/datas/top-5-recent-products`
+        )
+        setRecentProducts(recentProductsResponse.data)
 
         setLoading(false)
       } catch (err) {
@@ -299,6 +305,66 @@ const AdminDashboard = () => {
                     </td>
                     <td className='px-4 py-2'>
                       {user.isVerified ? 'Yes' : 'No'}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
+      {/* Recent Products Section */}
+      <div className='card shadow-lg bg-base-100 p-6 rounded-xl col-span-1 md:col-span-2 xl:col-span-1'>
+        <h2 className='text-xl font-medium text-gray-700 mb-4'>
+          Top 5 Recent Products
+        </h2>
+        {loading ? (
+          <div className='flex w-full flex-col gap-4'>
+            <div className='skeleton h-32 w-full'></div>
+            <div className='skeleton h-4 w-28'></div>
+            <div className='skeleton h-4 w-full'></div>
+            <div className='skeleton h-4 w-full'></div>
+          </div>
+        ) : error ? (
+          <div className='text-red-500'>{error}</div>
+        ) : (
+          <div className='overflow-x-auto'>
+            <table className='min-w-full table-auto'>
+              <thead>
+                <tr className='border-b'>
+                  <th className='px-4 py-2 text-left text-sm font-semibold text-gray-600'>
+                    Product Title
+                  </th>
+                  <th className='px-4 py-2 text-left text-sm font-semibold text-gray-600'>
+                    Category
+                  </th>
+                  <th className='px-4 py-2 text-left text-sm font-semibold text-gray-600'>
+                    Price
+                  </th>
+                  <th className='px-4 py-2 text-left text-sm font-semibold text-gray-600'>
+                    Stock
+                  </th>
+                  <th className='px-4 py-2 text-left text-sm font-semibold text-gray-600'>
+                    Availability
+                  </th>
+                  <th className='px-4 py-2 text-left text-sm font-semibold text-gray-600'>
+                    Created At
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {recentProducts.map((product) => (
+                  <tr key={product._id} className='border-b'>
+                    <td className='px-4 py-2'>{product.title}</td>
+                    <td className='px-4 py-2'>{product.category}</td>
+                    <td className='px-4 py-2'>{product.price}</td>
+                    <td className='px-4 py-2'>{product.stock}</td>
+                    <td className='px-4 py-2'>
+                      {product.isAvailable ? 'Available' : 'Unavailable'}
+                    </td>
+                    <td className='px-4 py-2'>
+                      {new Date(product.createdAt).toLocaleString()}
                     </td>
                   </tr>
                 ))}

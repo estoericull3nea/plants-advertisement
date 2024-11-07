@@ -46,3 +46,13 @@ export const getTop5RecentUsers = async (req, res) => {
     return res.status(500).json({ error: 'Failed to fetch top 5 recent users' })
   }
 }
+
+export const getTop5RecentProducts = async (req, res) => {
+  const recentProducts = await Product.find({})
+    .sort({ createdAt: -1 })
+    .limit(5)
+    .populate('userId', 'firstName lastName email')
+    .exec()
+
+  res.status(200).json(recentProducts)
+}
