@@ -3,6 +3,8 @@ import axios from 'axios'
 
 const AdminDashboard = () => {
   const [loading, setLoading] = useState(true)
+  const [recentUsers, setRecentUsers] = useState([]) // For storing recent users
+
   const [userCountData, setUserCountData] = useState({
     userCount: null,
     verifiedCount: null,
@@ -49,6 +51,11 @@ const AdminDashboard = () => {
           totalChats: chatCountResponse.data.totalChats,
         })
 
+        const recentUsersResponse = await axios.get(
+          `${import.meta.env.VITE_DEV_BACKEND_URL}/datas/top-5-recent-users`
+        )
+        setRecentUsers(recentUsersResponse.data)
+
         setLoading(false)
       } catch (err) {
         setError('Failed to fetch data')
@@ -62,33 +69,162 @@ const AdminDashboard = () => {
   return (
     <div className='p-6 space-y-6'>
       <h1 className='text-3xl font-semibold text-gray-800'>Admin Dashboard</h1>
+      <div className='grid grid-cols-1 gap-3 md:grid-cols-3 xl:grid-cols-5'>
+        {/* User Count Section */}
+        <div className='card shadow-lg bg-base-100 p-6 rounded-xl'>
+          <h2 className='text-xl font-medium text-gray-700 mb-4'>
+            Total Users
+          </h2>
+          {loading ? (
+            <div className='flex w-52 flex-col gap-4'>
+              <div className='skeleton h-32 w-full'></div>
+              <div className='skeleton h-4 w-28'></div>
+              <div className='skeleton h-4 w-full'></div>
+              <div className='skeleton h-4 w-full'></div>
+            </div>
+          ) : error ? (
+            <div className='text-red-500'>{error}</div>
+          ) : (
+            <div className='text-4xl font-semibold text-main'>
+              {userCountData.userCount}
+            </div>
+          )}
+        </div>
 
-      {/* User Count Section */}
-      <div className='card shadow-lg bg-base-100 p-6 rounded-xl'>
-        <h2 className='text-xl font-medium text-gray-700 mb-4'>Total Users</h2>
-        {loading ? (
-          <div className='flex w-52 flex-col gap-4'>
-            <div className='skeleton h-32 w-full'></div>
-            <div className='skeleton h-4 w-28'></div>
-            <div className='skeleton h-4 w-full'></div>
-            <div className='skeleton h-4 w-full'></div>
-          </div>
-        ) : error ? (
-          <div className='text-red-500'>{error}</div>
-        ) : (
-          <div className='text-4xl font-semibold text-main'>
-            {userCountData.userCount}
-          </div>
-        )}
+        {/* Verified Users Section */}
+        <div className='card shadow-lg bg-base-100 p-6 rounded-xl'>
+          <h2 className='text-xl font-medium text-gray-700 mb-4'>
+            Verified Users
+          </h2>
+          {loading ? (
+            <div className='flex w-52 flex-col gap-4'>
+              <div className='skeleton h-32 w-full'></div>
+              <div className='skeleton h-4 w-28'></div>
+              <div className='skeleton h-4 w-full'></div>
+              <div className='skeleton h-4 w-full'></div>
+            </div>
+          ) : error ? (
+            <div className='text-red-500'>{error}</div>
+          ) : (
+            <div className='text-4xl font-semibold text-main'>
+              {userCountData.verifiedCount}
+            </div>
+          )}
+        </div>
+
+        {/* Non-Verified Users Section */}
+        <div className='card shadow-lg bg-base-100 p-6 rounded-xl'>
+          <h2 className='text-xl font-medium text-gray-700 mb-4'>
+            Non-Verified Users
+          </h2>
+          {loading ? (
+            <div className='flex w-52 flex-col gap-4'>
+              <div className='skeleton h-32 w-full'></div>
+              <div className='skeleton h-4 w-28'></div>
+              <div className='skeleton h-4 w-full'></div>
+              <div className='skeleton h-4 w-full'></div>
+            </div>
+          ) : error ? (
+            <div className='text-red-500'>{error}</div>
+          ) : (
+            <div className='text-4xl font-semibold text-main'>
+              {userCountData.nonVerifiedCount}
+            </div>
+          )}
+        </div>
+
+        {/* Total Products Section */}
+        <div className='card shadow-lg bg-base-100 p-6 rounded-xl'>
+          <h2 className='text-xl font-medium text-gray-700 mb-4'>
+            Total Products
+          </h2>
+          {loading ? (
+            <div className='flex w-52 flex-col gap-4'>
+              <div className='skeleton h-32 w-full'></div>
+              <div className='skeleton h-4 w-28'></div>
+              <div className='skeleton h-4 w-full'></div>
+              <div className='skeleton h-4 w-full'></div>
+            </div>
+          ) : error ? (
+            <div className='text-red-500'>{error}</div>
+          ) : (
+            <div className='text-4xl font-semibold text-main'>
+              {productCountData.productCount}
+            </div>
+          )}
+        </div>
+
+        {/* Available Products Section */}
+        <div className='card shadow-lg bg-base-100 p-6 rounded-xl'>
+          <h2 className='text-xl font-medium text-gray-700 mb-4'>
+            Available Products
+          </h2>
+          {loading ? (
+            <div className='flex w-52 flex-col gap-4'>
+              <div className='skeleton h-32 w-full'></div>
+              <div className='skeleton h-4 w-28'></div>
+              <div className='skeleton h-4 w-full'></div>
+              <div className='skeleton h-4 w-full'></div>
+            </div>
+          ) : error ? (
+            <div className='text-red-500'>{error}</div>
+          ) : (
+            <div className='text-4xl font-semibold text-main'>
+              {productCountData.availableCount}
+            </div>
+          )}
+        </div>
+
+        {/* Unavailable Products Section */}
+        <div className='card shadow-lg bg-base-100 p-6 rounded-xl'>
+          <h2 className='text-xl font-medium text-gray-700 mb-4'>
+            Unavailable Products
+          </h2>
+          {loading ? (
+            <div className='flex w-52 flex-col gap-4'>
+              <div className='skeleton h-32 w-full'></div>
+              <div className='skeleton h-4 w-28'></div>
+              <div className='skeleton h-4 w-full'></div>
+              <div className='skeleton h-4 w-full'></div>
+            </div>
+          ) : error ? (
+            <div className='text-red-500'>{error}</div>
+          ) : (
+            <div className='text-4xl font-semibold text-main'>
+              {productCountData.unavailableCount}
+            </div>
+          )}
+        </div>
+
+        {/* Total Chats Section */}
+        <div className='card shadow-lg bg-base-100 p-6 rounded-xl'>
+          <h2 className='text-xl font-medium text-gray-700 mb-4'>
+            Total Chats
+          </h2>
+          {loading ? (
+            <div className='flex w-52 flex-col gap-4'>
+              <div className='skeleton h-32 w-full'></div>
+              <div className='skeleton h-4 w-28'></div>
+              <div className='skeleton h-4 w-full'></div>
+              <div className='skeleton h-4 w-full'></div>
+            </div>
+          ) : error ? (
+            <div className='text-red-500'>{error}</div>
+          ) : (
+            <div className='text-4xl font-semibold text-main'>
+              {chatCountData.totalChats}
+            </div>
+          )}
+        </div>
       </div>
 
-      {/* Verified Users Section */}
-      <div className='card shadow-lg bg-base-100 p-6 rounded-xl'>
+      {/* Recent Users Section */}
+      <div className='card shadow-lg bg-base-100 p-6 rounded-xl col-span-1 md:col-span-2 xl:col-span-1'>
         <h2 className='text-xl font-medium text-gray-700 mb-4'>
-          Verified Users
+          Top 5 Recent Users
         </h2>
         {loading ? (
-          <div className='flex w-52 flex-col gap-4'>
+          <div className='flex w-full flex-col gap-4'>
             <div className='skeleton h-32 w-full'></div>
             <div className='skeleton h-4 w-28'></div>
             <div className='skeleton h-4 w-full'></div>
@@ -97,111 +233,77 @@ const AdminDashboard = () => {
         ) : error ? (
           <div className='text-red-500'>{error}</div>
         ) : (
-          <div className='text-4xl font-semibold text-main'>
-            {userCountData.verifiedCount}
-          </div>
-        )}
-      </div>
-
-      {/* Non-Verified Users Section */}
-      <div className='card shadow-lg bg-base-100 p-6 rounded-xl'>
-        <h2 className='text-xl font-medium text-gray-700 mb-4'>
-          Non-Verified Users
-        </h2>
-        {loading ? (
-          <div className='flex w-52 flex-col gap-4'>
-            <div className='skeleton h-32 w-full'></div>
-            <div className='skeleton h-4 w-28'></div>
-            <div className='skeleton h-4 w-full'></div>
-            <div className='skeleton h-4 w-full'></div>
-          </div>
-        ) : error ? (
-          <div className='text-red-500'>{error}</div>
-        ) : (
-          <div className='text-4xl font-semibold text-main'>
-            {userCountData.nonVerifiedCount}
-          </div>
-        )}
-      </div>
-
-      {/* Total Products Section */}
-      <div className='card shadow-lg bg-base-100 p-6 rounded-xl'>
-        <h2 className='text-xl font-medium text-gray-700 mb-4'>
-          Total Products
-        </h2>
-        {loading ? (
-          <div className='flex w-52 flex-col gap-4'>
-            <div className='skeleton h-32 w-full'></div>
-            <div className='skeleton h-4 w-28'></div>
-            <div className='skeleton h-4 w-full'></div>
-            <div className='skeleton h-4 w-full'></div>
-          </div>
-        ) : error ? (
-          <div className='text-red-500'>{error}</div>
-        ) : (
-          <div className='text-4xl font-semibold text-main'>
-            {productCountData.productCount}
-          </div>
-        )}
-      </div>
-
-      {/* Available Products Section */}
-      <div className='card shadow-lg bg-base-100 p-6 rounded-xl'>
-        <h2 className='text-xl font-medium text-gray-700 mb-4'>
-          Available Products
-        </h2>
-        {loading ? (
-          <div className='flex w-52 flex-col gap-4'>
-            <div className='skeleton h-32 w-full'></div>
-            <div className='skeleton h-4 w-28'></div>
-            <div className='skeleton h-4 w-full'></div>
-            <div className='skeleton h-4 w-full'></div>
-          </div>
-        ) : error ? (
-          <div className='text-red-500'>{error}</div>
-        ) : (
-          <div className='text-4xl font-semibold text-main'>
-            {productCountData.availableCount}
-          </div>
-        )}
-      </div>
-
-      {/* Unavailable Products Section */}
-      <div className='card shadow-lg bg-base-100 p-6 rounded-xl'>
-        <h2 className='text-xl font-medium text-gray-700 mb-4'>
-          Unavailable Products
-        </h2>
-        {loading ? (
-          <div className='flex w-52 flex-col gap-4'>
-            <div className='skeleton h-32 w-full'></div>
-            <div className='skeleton h-4 w-28'></div>
-            <div className='skeleton h-4 w-full'></div>
-            <div className='skeleton h-4 w-full'></div>
-          </div>
-        ) : error ? (
-          <div className='text-red-500'>{error}</div>
-        ) : (
-          <div className='text-4xl font-semibold text-main'>
-            {productCountData.unavailableCount}
-          </div>
-        )}
-      </div>
-
-      {/* Total Chats Section */}
-      <div className='card shadow-lg bg-base-100 p-6 rounded-xl'>
-        <h2 className='text-xl font-medium text-gray-700 mb-4'>Total Chats</h2>
-        {loading ? (
-          <div className='flex w-52 flex-col gap-4'>
-            <div className='skeleton h-32 w-full'></div>
-            <div className='skeleton h-4 w-28'></div>
-            <div className='skeleton h-4 w-full'></div>
-            <div className='skeleton h-4 w-full'></div>
-          </div>
-        ) : error ? (
-          <div className='text-red-500'>{error}</div>
-        ) : (
-          <div className='text-4xl font-semibold text-main'>
-            {chatCountData.totalChats}
+          <div className='overflow-x-auto'>
+            <table className='min-w-full table-auto'>
+              <thead>
+                <tr className='border-b'>
+                  <th className='px-4 py-2 text-left text-sm font-semibold text-gray-600'>
+                    Profile
+                  </th>
+                  <th className='px-4 py-2 text-left text-sm font-semibold text-gray-600'>
+                    First Name
+                  </th>
+                  <th className='px-4 py-2 text-left text-sm font-semibold text-gray-600'>
+                    Last Name
+                  </th>
+                  <th className='px-4 py-2 text-left text-sm font-semibold text-gray-600'>
+                    Email
+                  </th>
+                  <th className='px-4 py-2 text-left text-sm font-semibold text-gray-600'>
+                    Contact Number
+                  </th>
+                  <th className='px-4 py-2 text-left text-sm font-semibold text-gray-600'>
+                    Municipality
+                  </th>
+                  <th className='px-4 py-2 text-left text-sm font-semibold text-gray-600'>
+                    Barangay
+                  </th>
+                  <th className='px-4 py-2 text-left text-sm font-semibold text-gray-600'>
+                    Date of Birth
+                  </th>
+                  <th className='px-4 py-2 text-left text-sm font-semibold text-gray-600'>
+                    Age
+                  </th>
+                  <th className='px-4 py-2 text-left text-sm font-semibold text-gray-600'>
+                    Last Active
+                  </th>
+                  <th className='px-4 py-2 text-left text-sm font-semibold text-gray-600'>
+                    Verified
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {recentUsers.map((user) => (
+                  <tr key={user._id} className='border-b'>
+                    <td className='px-4 py-2'>
+                      <img
+                        src={user.picture || 'default-avatar.jpg'} // Fallback if no profile picture
+                        alt={`${user.firstName} ${user.lastName}`}
+                        className='w-10 h-10 rounded-full object-cover'
+                      />
+                    </td>
+                    <td className='px-4 py-2'>{user.firstName}</td>
+                    <td className='px-4 py-2'>{user.lastName}</td>
+                    <td className='px-4 py-2'>{user.email}</td>
+                    <td className='px-4 py-2'>{user.contactNumber}</td>
+                    <td className='px-4 py-2'>{user.municipality}</td>
+                    <td className='px-4 py-2'>{user.barangay}</td>
+                    <td className='px-4 py-2'>
+                      {user.dateOfBirth
+                        ? new Date(user.dateOfBirth).toLocaleDateString()
+                        : 'N/A'}
+                    </td>
+                    <td className='px-4 py-2'>{user.age || 'N/A'}</td>
+                    <td className='px-4 py-2'>
+                      {new Date(user.lastActive).toLocaleString()}
+                    </td>
+                    <td className='px-4 py-2'>
+                      {user.isVerified ? 'Yes' : 'No'}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         )}
       </div>

@@ -35,3 +35,14 @@ export const countChats = async (req, res) => {
     totalChats,
   })
 }
+
+export const getTop5RecentUsers = async (req, res) => {
+  try {
+    const topUsers = await User.find().sort({ createdAt: -1 }).limit(5)
+
+    return res.status(200).json(topUsers)
+  } catch (err) {
+    console.error(err)
+    return res.status(500).json({ error: 'Failed to fetch top 5 recent users' })
+  }
+}
