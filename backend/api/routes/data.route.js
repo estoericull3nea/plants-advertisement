@@ -4,6 +4,7 @@ import {
   countProducts,
   countUsers,
   getAllUsers,
+  getAverageChats,
   getAverageProductPosts,
   getLatestChats,
   getTop5RecentProducts,
@@ -24,5 +25,6 @@ router.get('/get-all-users', getAllUsers)
 
 router.get('/registration-data', getUserRegistrationsForChart)
 router.get('/average-product-posts', getAverageProductPosts)
+router.get('/average-chats', getAverageChats)
 
 export default router
