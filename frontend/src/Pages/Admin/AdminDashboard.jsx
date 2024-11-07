@@ -5,6 +5,7 @@ const AdminDashboard = () => {
   const [loading, setLoading] = useState(true)
   const [recentUsers, setRecentUsers] = useState([]) // For storing recent users
   const [recentProducts, setRecentProducts] = useState([]) // For storing recent products
+  const [latestChats, setLatestChats] = useState([]) // For storing the latest 5 chats
 
   const [userCountData, setUserCountData] = useState({
     userCount: null,
@@ -61,6 +62,12 @@ const AdminDashboard = () => {
           `${import.meta.env.VITE_DEV_BACKEND_URL}/datas/top-5-recent-products`
         )
         setRecentProducts(recentProductsResponse.data)
+
+        // Fetch latest chats (top 5 latest chats)
+        const latestChatsResponse = await axios.get(
+          `${import.meta.env.VITE_DEV_BACKEND_URL}/datas/latest-chats`
+        )
+        setLatestChats(latestChatsResponse.data)
 
         setLoading(false)
       } catch (err) {
@@ -365,6 +372,77 @@ const AdminDashboard = () => {
                     </td>
                     <td className='px-4 py-2'>
                       {new Date(product.createdAt).toLocaleString()}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
+      {/* Recent Chats Section */}
+      <div className='card shadow-lg bg-base-100 p-6 rounded-xl col-span-1 md:col-span-2 xl:col-span-1'>
+        <h2 className='text-xl font-medium text-gray-700 mb-4'>
+          Top 5 Recent Chats
+        </h2>
+        {loading ? (
+          <div className='flex w-full flex-col gap-4'>
+            <div className='skeleton h-32 w-full'></div>
+            <div className='skeleton h-4 w-28'></div>
+            <div className='skeleton h-4 w-full'></div>
+            <div className='skeleton h-4 w-full'></div>
+          </div>
+        ) : error ? (
+          <div className='text-red-500'>{error}</div>
+        ) : (
+          <div className='overflow-x-auto'>
+            <table className='min-w-full table-auto'>
+              <thead>
+                <tr className='border-b'>
+                  <th className='px-4 py-2 text-left text-sm font-semibold text-gray-600'>
+                    Sender
+                  </th>
+                  <th className='px-4 py-2 text-left text-sm font-semibold text-gray-600'>
+                    Receiver
+                  </th>
+                  <th className='px-4 py-2 text-left text-sm font-semibold text-gray-600'>
+                    Message
+                  </th>
+                  <th className='px-4 py-2 text-left text-sm font-semibold text-gray-600'>
+                    Product Preview
+                  </th>
+                  <th className='px-4 py-2 text-left text-sm font-semibold text-gray-600'>
+                    Date
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {latestChats.map((chat) => (
+                  <tr key={chat._id} className='border-b'>
+                    <td className='px-4 py-2'>
+                      {chat.sender[0]?.firstName +
+                        ' ' +
+                        chat.sender[0].lastName || 'Unknown'}
+                    </td>
+                    <td className='px-4 py-2'>
+                      {chat.receiver[0]?.firstName +
+                        ' ' +
+                        chat.receiver[0].lastName || 'Unknown'}
+                    </td>
+                    <td className='px-4 py-2'>{chat.text || 'No message'}</td>
+                    <td className='px-4 py-2'>
+                      {chat.productPreview ? (
+                        <>
+                          <strong>{chat.productPreview.title}</strong>
+                          <p>{chat.productPreview.description}</p>
+                        </>
+                      ) : (
+                        'No product preview'
+                      )}
+                    </td>
+                    <td className='px-4 py-2'>
+                      {new Date(chat.createdAt).toLocaleString()}
                     </td>
                   </tr>
                 ))}

@@ -37,14 +37,9 @@ export const countChats = async (req, res) => {
 }
 
 export const getTop5RecentUsers = async (req, res) => {
-  try {
-    const topUsers = await User.find().sort({ createdAt: -1 }).limit(5)
+  const topUsers = await User.find().sort({ createdAt: -1 }).limit(5)
 
-    return res.status(200).json(topUsers)
-  } catch (err) {
-    console.error(err)
-    return res.status(500).json({ error: 'Failed to fetch top 5 recent users' })
-  }
+  return res.status(200).json(topUsers)
 }
 
 export const getTop5RecentProducts = async (req, res) => {
@@ -55,4 +50,49 @@ export const getTop5RecentProducts = async (req, res) => {
     .exec()
 
   res.status(200).json(recentProducts)
+}
+
+export const getLatestChats = async (req, res) => {
+  const latestChats = await Message.aggregate([
+    {
+      $sort: { createdAt: -1 },
+    },
+    {
+      $limit: 5,
+    },
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'senderId',
+        foreignField: '_id',
+        as: 'sender',
+      },
+    },
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'receiverId',
+        foreignField: '_id',
+        as: 'receiver',
+      },
+    },
+    {
+      $project: {
+        senderId: 1,
+        receiverId: 1,
+        text: 1,
+        images: 1,
+        productPreview: 1,
+        sender: { firstName: 1, email: 1, lastName: 1 },
+        receiver: { firstName: 1, email: 1, lastName: 1 },
+        createdAt: 1,
+      },
+    },
+  ])
+
+  if (!latestChats || latestChats.length === 0) {
+    return res.status(404).json({ message: 'No chats found' })
+  }
+
+  return res.status(200).json(latestChats)
 }

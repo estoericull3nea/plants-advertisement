@@ -3,6 +3,7 @@ import {
   countChats,
   countProducts,
   countUsers,
+  getLatestChats,
   getTop5RecentProducts,
   getTop5RecentUsers,
 } from '../controllers/data.controller.js'
@@ -15,5 +16,6 @@ router.get('/count-products', countProducts)
 router.get('/count-chats', countChats)
 router.get('/top-5-recent-users', getTop5RecentUsers)
 router.get('/top-5-recent-products', getTop5RecentProducts)
+router.get('/latest-chats', getLatestChats)
 
 export default router
