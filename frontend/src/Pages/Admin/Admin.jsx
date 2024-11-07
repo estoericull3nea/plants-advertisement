@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useParams, Routes, Route, useNavigate } from 'react-router-dom'
 import Sidebar from './Sidebar'
 import AdminDashboard from './AdminDashboard'
+import Users from './Users'
 
 const Admin = () => {
   return (
@@ -11,6 +12,7 @@ const Admin = () => {
         <div className='main-content overflow-hidden w-full'>
           <Routes>
             <Route path='/dashboard' element={<AdminDashboard />} />
+            <Route path='/users' element={<Users />} />
           </Routes>
         </div>
       </div>

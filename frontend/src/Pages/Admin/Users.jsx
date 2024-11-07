@@ -1,0 +1,395 @@
+// Users.js
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
+import { DataTable } from 'primereact/datatable'
+import { Column } from 'primereact/column'
+import { Button } from 'primereact/button'
+import { Dialog } from 'primereact/dialog'
+import { InputText } from 'primereact/inputtext'
+import { toast } from 'react-hot-toast'
+import { InputNumber } from 'primereact/inputnumber'
+import { Calendar } from 'primereact/calendar'
+
+const Users = () => {
+  const [users, setUsers] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [selectedUser, setSelectedUser] = useState(null)
+  const [showDialog, setShowDialog] = useState(false)
+  const [isEditing, setIsEditing] = useState(false)
+  const [newUser, setNewUser] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    contactNumber: '',
+    municipality: '',
+    barangay: '',
+    password: '',
+    idImage: '',
+    dateOfBirth: null,
+    age: null,
+    picture: '',
+    lastActive: new Date(),
+    isVerified: true,
+  })
+
+  const [globalFilter, setGlobalFilter] = useState('') // Global search state
+
+  // Fetch users from backend
+  useEffect(() => {
+    axios
+      .get(`${import.meta.env.VITE_DEV_BACKEND_URL}/users`)
+      .then((response) => {
+        setUsers(response.data)
+        setLoading(false)
+      })
+      .catch((error) => {
+        console.error('Error fetching users:', error)
+        setLoading(false)
+      })
+  }, [])
+
+  // Handle adding a new user
+  const addUser = () => {
+    axios
+      .post(`${import.meta.env.VITE_DEV_BACKEND_URL}/users`, newUser)
+      .then((response) => {
+        setUsers([...users, response.data])
+        toast.success(`User ${response.data.firstName} added successfully!`)
+        setShowDialog(false)
+        setNewUser({
+          firstName: '',
+          lastName: '',
+          email: '',
+          contactNumber: '',
+          municipality: '',
+          barangay: '',
+          password: '',
+          idImage: '',
+          dateOfBirth: null,
+          age: null,
+          picture: '',
+          lastActive: new Date(),
+          isVerified: true,
+        })
+      })
+      .catch((error) => {
+        console.error('Error adding user:', error)
+        toast.error('Could not add user!')
+      })
+  }
+
+  // Handle deleting a user
+  const deleteUser = (userId) => {
+    axios
+      .delete(`${import.meta.env.VITE_DEV_BACKEND_URL}/users/${userId}`)
+      .then(() => {
+        setUsers(users.filter((user) => user._id !== userId))
+        toast.success('User deleted successfully!')
+      })
+      .catch((error) => {
+        console.error('Error deleting user:', error)
+        toast.error('Could not delete user!')
+      })
+  }
+
+  // Handle updating a user
+  const updateUser = () => {
+    axios
+      .put(
+        `${import.meta.env.VITE_DEV_BACKEND_URL}/users/${selectedUser._id}`,
+        selectedUser
+      )
+      .then((response) => {
+        setUsers(
+          users.map((user) =>
+            user._id === response.data._id ? response.data : user
+          )
+        )
+        toast.success('User updated successfully!')
+        setShowDialog(false)
+      })
+      .catch((error) => {
+        console.error('Error updating user:', error)
+        toast.error('Could not update user!')
+      })
+  }
+
+  // Handle viewing a single user
+  const viewUser = (userId) => {
+    axios
+      .get(`${import.meta.env.VITE_DEV_BACKEND_URL}/users/${userId}`)
+      .then((response) => {
+        setSelectedUser(response.data)
+        setShowDialog(true)
+        setIsEditing(false) // Set to view mode
+      })
+      .catch((error) => {
+        console.error('Error fetching user details:', error)
+        toast.error('Could not fetch user details!')
+      })
+  }
+
+  // Table Action Buttons
+  const actionBodyTemplate = (rowData) => {
+    return (
+      <div className='flex gap-2'>
+        {/* <Button
+          icon='pi pi-eye'
+          className='p-button-rounded p-button-info'
+          onClick={() => viewUser(rowData._id)}
+        /> */}
+        <Button
+          icon='pi pi-pencil'
+          className='p-button-rounded p-button-warning'
+          onClick={() => {
+            setSelectedUser(rowData)
+            setIsEditing(true)
+            setShowDialog(true)
+          }}
+        />
+        <Button
+          icon='pi pi-trash'
+          className='p-button-rounded p-button-danger'
+          onClick={() => deleteUser(rowData._id)}
+        />
+      </div>
+    )
+  }
+
+  // Skeleton loading while fetching users
+  const skeletonLoader = (
+    <div className='flex w-52 flex-col gap-4'>
+      <div className='skeleton h-32 w-full'></div>
+      <div className='skeleton h-4 w-28'></div>
+      <div className='skeleton h-4 w-full'></div>
+      <div className='skeleton h-4 w-full'></div>
+    </div>
+  )
+
+  // Dialog for adding or updating a user
+  const userDialog = (
+    <Dialog
+      visible={showDialog}
+      style={{ width: '450px' }}
+      header={isEditing ? 'Edit User' : 'Add User'}
+      modal
+      onHide={() => setShowDialog(false)}
+    >
+      <div className='p-fluid'>
+        <div className='p-field'>
+          <label htmlFor='firstName'>First Name</label>
+          <input
+            id='firstName'
+            type='text'
+            value={isEditing ? selectedUser.firstName : newUser.firstName}
+            onChange={(e) =>
+              isEditing
+                ? setSelectedUser({
+                    ...selectedUser,
+                    firstName: e.target.value,
+                  })
+                : setNewUser({ ...newUser, firstName: e.target.value })
+            }
+            className='input input-bordered w-full'
+          />
+        </div>
+        <div className='p-field'>
+          <label htmlFor='lastName'>Last Name</label>
+          <input
+            id='lastName'
+            type='text'
+            value={isEditing ? selectedUser.lastName : newUser.lastName}
+            onChange={(e) =>
+              isEditing
+                ? setSelectedUser({ ...selectedUser, lastName: e.target.value })
+                : setNewUser({ ...newUser, lastName: e.target.value })
+            }
+            className='input input-bordered w-full'
+          />
+        </div>
+        <div className='p-field'>
+          <label htmlFor='email'>Email</label>
+          <input
+            id='email'
+            type='email'
+            value={isEditing ? selectedUser.email : newUser.email}
+            onChange={(e) =>
+              isEditing
+                ? setSelectedUser({ ...selectedUser, email: e.target.value })
+                : setNewUser({ ...newUser, email: e.target.value })
+            }
+            className='input input-bordered w-full'
+          />
+        </div>
+        <div className='p-field'>
+          <label htmlFor='contactNumber'>Contact Number</label>
+          <input
+            id='contactNumber'
+            type='text'
+            value={
+              isEditing ? selectedUser.contactNumber : newUser.contactNumber
+            }
+            onChange={(e) =>
+              isEditing
+                ? setSelectedUser({
+                    ...selectedUser,
+                    contactNumber: e.target.value,
+                  })
+                : setNewUser({ ...newUser, contactNumber: e.target.value })
+            }
+            className='input input-bordered w-full'
+          />
+        </div>
+        <div className='p-field'>
+          <label htmlFor='municipality'>Municipality</label>
+          <input
+            id='municipality'
+            type='text'
+            value={isEditing ? selectedUser.municipality : newUser.municipality}
+            onChange={(e) =>
+              isEditing
+                ? setSelectedUser({
+                    ...selectedUser,
+                    municipality: e.target.value,
+                  })
+                : setNewUser({ ...newUser, municipality: e.target.value })
+            }
+            className='input input-bordered w-full'
+          />
+        </div>
+        <div className='p-field'>
+          <label htmlFor='barangay'>Barangay</label>
+          <input
+            id='barangay'
+            type='text'
+            value={isEditing ? selectedUser.barangay : newUser.barangay}
+            onChange={(e) =>
+              isEditing
+                ? setSelectedUser({ ...selectedUser, barangay: e.target.value })
+                : setNewUser({ ...newUser, barangay: e.target.value })
+            }
+            className='input input-bordered w-full'
+          />
+        </div>
+        <div className='p-field'>
+          <label htmlFor='dateOfBirth'>Date of Birth</label>
+          <input
+            id='dateOfBirth'
+            type='date'
+            value={isEditing ? selectedUser.dateOfBirth : newUser.dateOfBirth}
+            onChange={(e) =>
+              isEditing
+                ? setSelectedUser({
+                    ...selectedUser,
+                    dateOfBirth: e.target.value,
+                  })
+                : setNewUser({ ...newUser, dateOfBirth: e.target.value })
+            }
+            className='input input-bordered w-full'
+          />
+        </div>
+        <div className='p-field'>
+          <label htmlFor='age'>Age</label>
+          <input
+            id='age'
+            type='number'
+            value={isEditing ? selectedUser.age : newUser.age}
+            onChange={(e) =>
+              isEditing
+                ? setSelectedUser({ ...selectedUser, age: e.target.value })
+                : setNewUser({ ...newUser, age: e.target.value })
+            }
+            className='input input-bordered w-full'
+          />
+        </div>
+        <div className='p-field'>
+          <label htmlFor='isVerified'>Verified</label>
+          <select
+            id='isVerified'
+            value={isEditing ? selectedUser.isVerified : newUser.isVerified}
+            onChange={(e) =>
+              isEditing
+                ? setSelectedUser({
+                    ...selectedUser,
+                    isVerified: e.target.value,
+                  })
+                : setNewUser({ ...newUser, isVerified: e.target.value })
+            }
+            className='select select-bordered w-full'
+          >
+            <option value='true'>Verified</option>
+            <option value='false'>Not Verified</option>
+          </select>
+        </div>
+      </div>
+
+      <div className='p-d-flex p-jc-between'>
+        <Button
+          label={isEditing ? 'Update' : 'Add'}
+          icon='pi pi-check'
+          onClick={isEditing ? updateUser : addUser}
+          className='p-button-success'
+        />
+        <Button
+          label='Cancel'
+          icon='pi pi-times'
+          onClick={() => setShowDialog(false)}
+          className='p-button-secondary'
+        />
+      </div>
+    </Dialog>
+  )
+
+  return (
+    <div>
+      <Button
+        label='Add User'
+        icon='pi pi-plus'
+        className='p-button-primary mb-4 border p-3'
+        onClick={() => {
+          setIsEditing(false)
+          setShowDialog(true)
+        }}
+      />
+
+      {/* Global Search Field */}
+      <div className='p-inputgroup mb-4'>
+        <span className='p-inputgroup-addon'>
+          <i className='pi pi-search'></i>
+        </span>
+        <InputText
+          value={globalFilter}
+          onChange={(e) => setGlobalFilter(e.target.value)}
+          placeholder='Search users...'
+        />
+      </div>
+
+      {loading ? (
+        skeletonLoader
+      ) : (
+        <DataTable
+          value={users}
+          paginator
+          rows={10}
+          globalFilter={globalFilter} // Attach global filter
+          className='p-datatable-customers'
+        >
+          <Column field='firstName' header='First Name' sortable />
+          <Column field='lastName' header='Last Name' sortable />
+          <Column field='email' header='Email' sortable />
+          <Column field='contactNumber' header='Contact Number' sortable />
+          <Column field='municipality' header='Municipality' sortable />
+          <Column field='barangay' header='Barangay' sortable />
+          <Column field='dateOfBirth' header='Date of Birth' sortable />
+          <Column field='age' header='Age' sortable />
+          <Column field='isVerified' header='Verified' sortable />
+          <Column header='Actions' body={actionBodyTemplate} />
+        </DataTable>
+      )}
+
+      {userDialog}
+    </div>
+  )
+}
+
+export default Users

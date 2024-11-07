@@ -69,3 +69,49 @@ export const deleteUserById = async (req, res) => {
 
   return res.status(200).json({ message: 'User deleted successfully' })
 }
+
+export const addUser = async (req, res) => {
+  const {
+    firstName,
+    lastName,
+    email,
+    contactNumber,
+    municipality,
+    barangay,
+    password,
+    idImage,
+    dateOfBirth,
+    age,
+    picture,
+    isVerified,
+  } = req.body
+
+  const existingUser = await User.findOne({ email })
+  if (existingUser) {
+    return res.status(400).json({ msg: 'User with this email already exists.' })
+  }
+
+  // Hash password before saving to the database
+
+  const hashedPassword = await bcrypt.hash(password, 10)
+
+  // Create a new user
+  const newUser = new User({
+    firstName,
+    lastName,
+    email,
+    contactNumber,
+    idImage,
+    municipality,
+    barangay,
+    password: hashedPassword,
+    dateOfBirth,
+    age,
+    picture,
+    isVerified,
+  })
+
+  // Save the user to the database
+  await newUser.save()
+  res.status(201).json(newUser)
+}

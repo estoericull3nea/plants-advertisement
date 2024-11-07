@@ -3,6 +3,7 @@ import {
   countChats,
   countProducts,
   countUsers,
+  getAllUsers,
   getLatestChats,
   getTop5RecentProducts,
   getTop5RecentUsers,
@@ -17,5 +18,6 @@ router.get('/count-chats', countChats)
 router.get('/top-5-recent-users', getTop5RecentUsers)
 router.get('/top-5-recent-products', getTop5RecentProducts)
 router.get('/latest-chats', getLatestChats)
+router.get('/get-all-users', getAllUsers)
 
 export default router

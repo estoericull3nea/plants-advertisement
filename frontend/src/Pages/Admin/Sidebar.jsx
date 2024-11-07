@@ -26,7 +26,7 @@ const Sidebar = () => {
           <NavLink
             to={`/admin/users`}
             className={({ isActive }) =>
-              isActive ? 'text-main' : 'text-gray-700'
+              isActive ? 'bg-main' : 'text-gray-700'
             }
           >
             All Users
@@ -36,7 +36,7 @@ const Sidebar = () => {
           <NavLink
             to={`/admin/user-roles`}
             className={({ isActive }) =>
-              isActive ? 'text-main' : 'text-gray-700'
+              isActive ? 'bg-main' : 'text-gray-700'
             }
           >
             User Roles & Permissions
@@ -49,7 +49,7 @@ const Sidebar = () => {
           <NavLink
             to={`/admin/products`}
             className={({ isActive }) =>
-              isActive ? 'text-main' : 'text-gray-700'
+              isActive ? 'bg-main' : 'text-gray-700'
             }
           >
             All Products
@@ -59,7 +59,7 @@ const Sidebar = () => {
           <NavLink
             to={`/admin/product-categories`}
             className={({ isActive }) =>
-              isActive ? 'text-main' : 'text-gray-700'
+              isActive ? 'bg-main' : 'text-gray-700'
             }
           >
             Categories
@@ -69,7 +69,7 @@ const Sidebar = () => {
           <NavLink
             to={`/admin/product-listing-approval`}
             className={({ isActive }) =>
-              isActive ? 'text-main' : 'text-gray-700'
+              isActive ? 'bg-main' : 'text-gray-700'
             }
           >
             Product Approval
@@ -82,7 +82,7 @@ const Sidebar = () => {
           <NavLink
             to={`/admin/orders`}
             className={({ isActive }) =>
-              isActive ? 'text-main' : 'text-gray-700'
+              isActive ? 'bg-main' : 'text-gray-700'
             }
           >
             Orders List
@@ -92,7 +92,7 @@ const Sidebar = () => {
           <NavLink
             to={`/admin/order-details`}
             className={({ isActive }) =>
-              isActive ? 'text-main' : 'text-gray-700'
+              isActive ? 'bg-main' : 'text-gray-700'
             }
           >
             Order Details
@@ -102,7 +102,7 @@ const Sidebar = () => {
           <NavLink
             to={`/admin/payments`}
             className={({ isActive }) =>
-              isActive ? 'text-main' : 'text-gray-700'
+              isActive ? 'bg-main' : 'text-gray-700'
             }
           >
             Payment Management
@@ -112,7 +112,7 @@ const Sidebar = () => {
           <NavLink
             to={`/admin/refunds`}
             className={({ isActive }) =>
-              isActive ? 'text-main' : 'text-gray-700'
+              isActive ? 'bg-main' : 'text-gray-700'
             }
           >
             Refunds & Disputes
@@ -125,7 +125,7 @@ const Sidebar = () => {
           <NavLink
             to={`/admin/sales-reports`}
             className={({ isActive }) =>
-              isActive ? 'text-main' : 'text-gray-700'
+              isActive ? 'bg-main' : 'text-gray-700'
             }
           >
             Sales Analytics
@@ -135,7 +135,7 @@ const Sidebar = () => {
           <NavLink
             to={`/admin/user-engagement`}
             className={({ isActive }) =>
-              isActive ? 'text-main' : 'text-gray-700'
+              isActive ? 'bg-main' : 'text-gray-700'
             }
           >
             User Engagement
@@ -145,7 +145,7 @@ const Sidebar = () => {
           <NavLink
             to={`/admin/product-performance`}
             className={({ isActive }) =>
-              isActive ? 'text-main' : 'text-gray-700'
+              isActive ? 'bg-main' : 'text-gray-700'
             }
           >
             Product Performance
@@ -158,7 +158,7 @@ const Sidebar = () => {
           <NavLink
             to={`/admin/content-management`}
             className={({ isActive }) =>
-              isActive ? 'text-main' : 'text-gray-700'
+              isActive ? 'bg-main' : 'text-gray-700'
             }
           >
             How It Works
@@ -168,7 +168,7 @@ const Sidebar = () => {
           <NavLink
             to={`/admin/faq`}
             className={({ isActive }) =>
-              isActive ? 'text-main' : 'text-gray-700'
+              isActive ? 'bg-main' : 'text-gray-700'
             }
           >
             FAQ Management
@@ -181,7 +181,7 @@ const Sidebar = () => {
           <NavLink
             to={`/admin/reports`}
             className={({ isActive }) =>
-              isActive ? 'text-main' : 'text-gray-700'
+              isActive ? 'bg-main' : 'text-gray-700'
             }
           >
             Report Management
@@ -191,7 +191,7 @@ const Sidebar = () => {
           <NavLink
             to={`/admin/content-moderation`}
             className={({ isActive }) =>
-              isActive ? 'text-main' : 'text-gray-700'
+              isActive ? 'bg-main' : 'text-gray-700'
             }
           >
             Content Moderation
@@ -201,7 +201,7 @@ const Sidebar = () => {
           <NavLink
             to={`/admin/customer-support`}
             className={({ isActive }) =>
-              isActive ? 'text-main' : 'text-gray-700'
+              isActive ? 'bg-main' : 'text-gray-700'
             }
           >
             Customer Support
@@ -214,7 +214,7 @@ const Sidebar = () => {
           <NavLink
             to={`/admin/user-permissions`}
             className={({ isActive }) =>
-              isActive ? 'text-main' : 'text-gray-700'
+              isActive ? 'bg-main' : 'text-gray-700'
             }
           >
             User Permissions
@@ -224,7 +224,7 @@ const Sidebar = () => {
           <NavLink
             to={`/admin/site-branding`}
             className={({ isActive }) =>
-              isActive ? 'text-main' : 'text-gray-700'
+              isActive ? 'bg-main' : 'text-gray-700'
             }
           >
             Branding & Theme
@@ -234,7 +234,7 @@ const Sidebar = () => {
           <NavLink
             to={`/admin/security`}
             className={({ isActive }) =>
-              isActive ? 'text-main' : 'text-gray-700'
+              isActive ? 'bg-main' : 'text-gray-700'
             }
           >
             Security & Privacy
