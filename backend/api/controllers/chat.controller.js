@@ -83,3 +83,43 @@ export const getMessages = async (req, res) => {
 
   res.status(200).json(messages)
 }
+
+// Get a message by ID
+export const getMessageById = async (req, res) => {
+  const { id } = req.params
+  const message = await Message.findById(id).populate('senderId receiverId')
+  if (!message) {
+    return res.status(404).json({ error: 'Message not found' })
+  }
+  return res.status(200).json(message)
+}
+
+// Update a message
+export const updateMessage = async (req, res) => {
+  const { id } = req.params
+  const updates = req.body
+  const updatedMessage = await Message.findByIdAndUpdate(id, updates, {
+    new: true,
+  })
+  if (!updatedMessage) {
+    return res.status(404).json({ error: 'Message not found' })
+  }
+  return res.status(200).json(updatedMessage)
+}
+
+// Delete a message
+export const deleteMessage = async (req, res) => {
+  const { id } = req.params
+  const deletedMessage = await Message.findByIdAndDelete(id)
+  if (!deletedMessage) {
+    return res.status(404).json({ error: 'Message not found' })
+  }
+  return res.status(200).json({ message: 'Message deleted successfully' })
+}
+
+export const getAllMessages = async (req, res) => {
+  const messages = await Message.find()
+    .populate('senderId')
+    .populate('receiverId')
+  return res.status(200).json(messages)
+}

@@ -20,9 +20,17 @@ const storage = multer.diskStorage({
 const upload = multer({ storage })
 
 import verifyToken from '../middlewares/verifyToken.js'
-import { getMessages, sendMessage } from '../controllers/chat.controller.js'
+import {
+  deleteMessage,
+  getAllMessages,
+  getMessages,
+  sendMessage,
+} from '../controllers/chat.controller.js'
 
 router.post('/send', verifyToken, upload.array('images', 30), sendMessage)
 router.get('/:userId/messages', verifyToken, getMessages)
+
+router.get('/all', verifyToken, getAllMessages)
+router.delete('/:id', verifyToken, deleteMessage)
 
 export default router

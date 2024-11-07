@@ -14,7 +14,7 @@ const Sidebar = () => {
               isActive ? 'bg-main' : 'text-gray-700'
             }
           >
-            Dashboard Overview
+            Dashboard
           </NavLink>
         </li>
 
@@ -26,7 +26,7 @@ const Sidebar = () => {
               isActive ? 'bg-main' : 'text-gray-700'
             }
           >
-            All Users
+            Users
           </NavLink>
         </li>
 
@@ -38,187 +38,17 @@ const Sidebar = () => {
               isActive ? 'bg-main' : 'text-gray-700'
             }
           >
-            All Products
+            Products
           </NavLink>
         </li>
         <li>
           <NavLink
-            to={`/admin/product-categories`}
+            to={`/admin/chats`}
             className={({ isActive }) =>
               isActive ? 'bg-main' : 'text-gray-700'
             }
           >
-            Categories
-          </NavLink>
-        </li>
-        <li>
-          <NavLink
-            to={`/admin/product-listing-approval`}
-            className={({ isActive }) =>
-              isActive ? 'bg-main' : 'text-gray-700'
-            }
-          >
-            Product Approval
-          </NavLink>
-        </li>
-
-        {/* Order Management Section */}
-        <li>
-          <NavLink
-            to={`/admin/orders`}
-            className={({ isActive }) =>
-              isActive ? 'bg-main' : 'text-gray-700'
-            }
-          >
-            Orders List
-          </NavLink>
-        </li>
-        <li>
-          <NavLink
-            to={`/admin/order-details`}
-            className={({ isActive }) =>
-              isActive ? 'bg-main' : 'text-gray-700'
-            }
-          >
-            Order Details
-          </NavLink>
-        </li>
-        <li>
-          <NavLink
-            to={`/admin/payments`}
-            className={({ isActive }) =>
-              isActive ? 'bg-main' : 'text-gray-700'
-            }
-          >
-            Payment Management
-          </NavLink>
-        </li>
-        <li>
-          <NavLink
-            to={`/admin/refunds`}
-            className={({ isActive }) =>
-              isActive ? 'bg-main' : 'text-gray-700'
-            }
-          >
-            Refunds & Disputes
-          </NavLink>
-        </li>
-
-        {/* Reports & Analytics Section */}
-        <li>
-          <NavLink
-            to={`/admin/sales-reports`}
-            className={({ isActive }) =>
-              isActive ? 'bg-main' : 'text-gray-700'
-            }
-          >
-            Sales Analytics
-          </NavLink>
-        </li>
-        <li>
-          <NavLink
-            to={`/admin/user-engagement`}
-            className={({ isActive }) =>
-              isActive ? 'bg-main' : 'text-gray-700'
-            }
-          >
-            User Engagement
-          </NavLink>
-        </li>
-        <li>
-          <NavLink
-            to={`/admin/product-performance`}
-            className={({ isActive }) =>
-              isActive ? 'bg-main' : 'text-gray-700'
-            }
-          >
-            Product Performance
-          </NavLink>
-        </li>
-
-        {/* Content Management Section */}
-        <li>
-          <NavLink
-            to={`/admin/content-management`}
-            className={({ isActive }) =>
-              isActive ? 'bg-main' : 'text-gray-700'
-            }
-          >
-            How It Works
-          </NavLink>
-        </li>
-        <li>
-          <NavLink
-            to={`/admin/faq`}
-            className={({ isActive }) =>
-              isActive ? 'bg-main' : 'text-gray-700'
-            }
-          >
-            FAQ Management
-          </NavLink>
-        </li>
-
-        {/* Moderation & Support Section */}
-        <li>
-          <NavLink
-            to={`/admin/reports`}
-            className={({ isActive }) =>
-              isActive ? 'bg-main' : 'text-gray-700'
-            }
-          >
-            Report Management
-          </NavLink>
-        </li>
-        <li>
-          <NavLink
-            to={`/admin/content-moderation`}
-            className={({ isActive }) =>
-              isActive ? 'bg-main' : 'text-gray-700'
-            }
-          >
-            Content Moderation
-          </NavLink>
-        </li>
-        <li>
-          <NavLink
-            to={`/admin/customer-support`}
-            className={({ isActive }) =>
-              isActive ? 'bg-main' : 'text-gray-700'
-            }
-          >
-            Customer Support
-          </NavLink>
-        </li>
-
-        {/* Settings Section */}
-        <li>
-          <NavLink
-            to={`/admin/user-permissions`}
-            className={({ isActive }) =>
-              isActive ? 'bg-main' : 'text-gray-700'
-            }
-          >
-            User Permissions
-          </NavLink>
-        </li>
-        <li>
-          <NavLink
-            to={`/admin/site-branding`}
-            className={({ isActive }) =>
-              isActive ? 'bg-main' : 'text-gray-700'
-            }
-          >
-            Branding & Theme
-          </NavLink>
-        </li>
-        <li>
-          <NavLink
-            to={`/admin/security`}
-            className={({ isActive }) =>
-              isActive ? 'bg-main' : 'text-gray-700'
-            }
-          >
-            Security & Privacy
+            Chats
           </NavLink>
         </li>
       </ul>

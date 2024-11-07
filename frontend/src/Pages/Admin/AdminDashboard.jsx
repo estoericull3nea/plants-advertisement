@@ -234,6 +234,10 @@ const AdminDashboard = () => {
         </div>
       </div>
 
+      <RegistrationStats />
+      <ProductStats />
+      <ChatStats />
+
       {/* Recent Users Section */}
       <div className='card shadow-lg bg-base-100 p-6 rounded-xl col-span-1 md:col-span-2 xl:col-span-1'>
         <h2 className='text-xl font-medium text-gray-700 mb-4'>
@@ -454,10 +458,6 @@ const AdminDashboard = () => {
           </div>
         )}
       </div>
-
-      <RegistrationStats />
-      <ProductStats />
-      <ChatStats />
     </div>
   )
 }
