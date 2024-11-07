@@ -1,5 +1,3 @@
-// src/components/Chats.js
-
 import React, { useState, useEffect } from 'react'
 import { DataTable } from 'primereact/datatable'
 import { Column } from 'primereact/column'
@@ -17,8 +15,6 @@ const Chats = () => {
   const [loading, setLoading] = useState(true)
   const [globalFilter, setGlobalFilter] = useState('')
   const navigate = useNavigate()
-
-  const loggedInUserId = localStorage.getItem('userId') // Fetch user ID from local storage or auth state
 
   // Fetch messages between logged-in user and selected user
   const fetchMessages = async () => {

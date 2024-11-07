@@ -51,6 +51,16 @@ const Sidebar = () => {
             Chats
           </NavLink>
         </li>
+        <li>
+          <NavLink
+            to={`/admin/contacts`}
+            className={({ isActive }) =>
+              isActive ? 'bg-main' : 'text-gray-700'
+            }
+          >
+            Contacts
+          </NavLink>
+        </li>
       </ul>
     </aside>
   )
