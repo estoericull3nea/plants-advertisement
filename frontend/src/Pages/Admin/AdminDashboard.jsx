@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import RegistrationStats from '../../components/RegistrationStats'
+import ProductStats from '../../components/ProductStats'
 
 const AdminDashboard = () => {
   const [loading, setLoading] = useState(true)
@@ -454,6 +455,7 @@ const AdminDashboard = () => {
       </div>
 
       <RegistrationStats />
+      <ProductStats />
     </div>
   )
 }
