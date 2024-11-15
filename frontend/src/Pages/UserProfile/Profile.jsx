@@ -4,6 +4,7 @@ import { useParams, Routes, Route } from 'react-router-dom'
 import UserInfo from './UserInfo'
 import ProductTable from './ProductTable'
 import Cart from './Cart'
+import SharedPost from './SharedPost'
 
 const Profile = () => {
   const { userId } = useParams() // Get the userId from the URL
@@ -25,6 +26,10 @@ const Profile = () => {
               element={<ProductTable isVisitor={isVisitor} />}
             />
             <Route path='/cart' element={<Cart isVisitor={isVisitor} />} />
+            <Route
+              path='/shared'
+              element={<SharedPost isVisitor={isVisitor} />}
+            />
           </Routes>
         </div>
       </div>

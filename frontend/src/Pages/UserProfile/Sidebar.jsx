@@ -133,6 +133,9 @@ const Sidebar = ({ isVisitor }) => {
             Chats
           </NavLink>
         </li>
+        <li>
+          <NavLink to={`/profile/${userId}/shared`}>Shared Post</NavLink>
+        </li>
       </ul>
     </aside>
   )
