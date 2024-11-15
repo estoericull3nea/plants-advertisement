@@ -20,7 +20,6 @@ const SharedPost = ({ isVisitor }) => {
         setSharedPosts(response.data.shares)
       } catch (err) {
         setError('Failed to fetch shared posts.')
-        toast.error('Failed to fetch shared posts.') // Use hot toast for error
       } finally {
         setLoading(false)
       }
@@ -96,16 +95,20 @@ const SharedPost = ({ isVisitor }) => {
                         : 'No description available.'}
                     </p>
                     <div className='card-actions justify-end'>
-                      {!isVisitor && (
-                        <>
-                          <button
-                            onClick={() => handleDelete(post._id)}
-                            className='btn btn-error btn-sm'
-                          >
-                            Delete
-                          </button>
-                        </>
-                      )}
+                      <button
+                        onClick={() => handleDelete(post._id)}
+                        className={`btn btn-error btn-sm ${
+                          isVisitor ? 'cursor-not-allowed opacity-50' : ''
+                        }`}
+                        disabled={isVisitor} // Disable the button for visitors
+                        title={
+                          isVisitor
+                            ? 'You cannot delete this post as a visitor.'
+                            : 'Delete this post'
+                        }
+                      >
+                        Delete
+                      </button>
                     </div>
                   </div>
                 </div>
