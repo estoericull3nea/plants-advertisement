@@ -278,10 +278,19 @@ const Cart = ({ isVisitor }) => {
                         colSpan='7'
                         className='font-bold bg-gray-200 py-2 px-4'
                       >
-                        Posted by: {group.user.firstName} {group.user.lastName}{' '}
+                        Posted by:{' '}
+                        <a
+                          href={`/profile/${group.user._id}/user-info`}
+                          target='_blank'
+                          rel='noopener noreferrer'
+                          className='text-blue-600 underline hover:text-blue-800'
+                        >
+                          {group.user.firstName} {group.user.lastName}
+                        </a>{' '}
                         ({group.user.email})
                       </td>
                     </tr>
+
                     {/* Product rows for the user */}
                     {group.products.map((item) => (
                       <tr key={item._id}>
