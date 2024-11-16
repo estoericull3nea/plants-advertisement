@@ -1,40 +1,38 @@
-import {
-  createPaymentIntent,
-  confirmPayment,
-} from '../services/payment.service.js'
+import { createPaymentIntent } from '../services/payment.service.js'
+import { getTotalCart } from '../controllers/cart.controller.js' // Assuming getTotalCart is in the cart controller
+import mongoose from 'mongoose' // Import mongoose to work with ObjectId
 
+// Controller to create a payment intent using the user's cart total
 export const createPayment = async (req, res) => {
-  try {
-    const { amount } = req.body // Amount in cents (e.g., 1000 = 10.00 PHP)
+  let { userId } = req.params // Get userId from params (or req.body if using body)
 
-    if (!amount || isNaN(amount)) {
-      return res.status(400).json({ message: 'Invalid amount' })
-    }
-
-    const paymentIntent = await createPaymentIntent(amount)
-    res.status(200).json({ paymentIntent })
-  } catch (error) {
-    res
-      .status(500)
-      .json({ message: 'Error creating payment', error: error.message })
+  // If the userId is a number, cast it to an ObjectId
+  if (typeof userId === 'number') {
+    userId = mongoose.Types.ObjectId(userId.toString()) // Convert number to ObjectId
   }
-}
 
-export const confirmPaymentIntent = async (req, res) => {
   try {
-    const { paymentIntentId, paymentMethodId } = req.body
+    // Get the total cart amount for the user
 
-    if (!paymentIntentId || !paymentMethodId) {
-      return res
-        .status(400)
-        .json({ message: 'Missing payment intent or payment method' })
-    }
+    // // If the total cart amount is less than a certain value (e.g., 2000), reject it
+    // if (totalAmount < 2000) {
+    //   return res
+    //     .status(400)
+    //     .json({ message: 'Total amount must be at least 20 PHP' })
+    // }
 
-    const confirmation = await confirmPayment(paymentIntentId, paymentMethodId)
-    res.status(200).json({ confirmation })
+    // Create a payment intent using the cart total amount (in cents)
+    const paymentIntent = await createPaymentIntent(userId)
+
+    res.status(200).json({
+      success: true,
+      paymentIntent: paymentIntent,
+    })
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: 'Error confirming payment', error: error.message })
+    res.status(500).json({
+      success: false,
+      message: 'Error creating payment intent',
+      error: error.message,
+    })
   }
 }

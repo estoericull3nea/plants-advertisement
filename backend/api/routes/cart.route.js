@@ -21,6 +21,7 @@ router.put('/:id', updateCartItem)
 router.delete('/:id', deleteCartItem)
 router.get('/count/:userId', verifyToken, getCartCount)
 router.put('/:userId/update-quantity', updateCartItemQuantity)
+// router.post('/delete/selected', deleteSelgetTotalCartAmountectedItems)
 router.post('/delete/selected', deleteSelectedItems)
 router.get('/total/:userId', getTotalCartAmount)
 

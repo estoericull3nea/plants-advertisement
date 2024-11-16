@@ -1,5 +1,6 @@
 import axios from 'axios'
 import dotenv from 'dotenv'
+import { getTotalCart } from '../controllers/cart.controller.js'
 
 dotenv.config()
 
@@ -16,31 +17,33 @@ const axiosInstance = axios.create({
   },
 })
 
-// 1. Create Payment Intent
-// 1. Create Payment Intent
+// 1. Create Payment Intent using the cart total
 export const createPaymentIntent = async (
-  amount,
-  currency = 'PHP',
+  userId,
   paymentMethods = ['gcash', 'card']
 ) => {
-  // Ensure the amount is at least 2000 cents (PHP 20.00)
-  if (amount < 2000) {
-    throw new Error('Amount must be at least 2000 cents (PHP 20.00)')
-  }
-
   try {
+    // Step 1: Calculate the total amount from the user's cart
+    const totalAmount = await getTotalCart(userId)
+
+    // Ensure the amount is at least 2000 cents (PHP 20.00)
+    if (totalAmount < 2000) {
+      throw new Error('Amount must be at least 2000 cents (PHP 20.00)')
+    }
+
+    // Step 2: Create the payment intent with the total amount from the cart
     const response = await axiosInstance.post('/payment_intents', {
       data: {
         attributes: {
-          amount: amount,
-          currency: currency,
-          payment_method_allowed: paymentMethods, // Specify allowed payment methods
-          payment_method_types: paymentMethods, // This could be 'gcash', 'card', or both
+          amount: totalAmount, // Total amount in cents (e.g., 2000 = PHP 20.00)
+          currency: 'PHP',
+          payment_method_allowed: paymentMethods, // Allowed payment methods (e.g., "gcash", "card")
+          payment_method_types: paymentMethods, // Payment method types (e.g., "gcash", "card")
         },
       },
     })
 
-    return response.data.data
+    return response.data.data // Payment intent object
   } catch (error) {
     console.error(
       'Error creating payment intent:',

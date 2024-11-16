@@ -210,7 +210,6 @@ export const getTotalCart = async (userId) => {
   let totalAmount = 0
 
   cartItems.forEach((item) => {
-    console.log(item)
     totalAmount += item.quantity * item.productId.price
   })
 
@@ -219,7 +218,6 @@ export const getTotalCart = async (userId) => {
 
 export const getTotalCartAmount = async (req, res) => {
   const { userId } = req.params
-  console.log(userId)
 
   const totalAmount = await getTotalCart(userId)
 

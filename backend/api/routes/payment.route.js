@@ -1,15 +1,10 @@
 import express from 'express'
-import {
-  createPayment,
-  confirmPaymentIntent,
-} from '../controllers/payment.controller.js'
+import { createPayment } from '../controllers/payment.controller.js'
+import verifyToken from '../middlewares/verifyToken.js'
 
 const router = express.Router()
 
 // Route to create a payment intent
-router.post('/create-payment-intent', createPayment)
-
-// Route to confirm a payment intent
-router.post('/confirm-payment', confirmPaymentIntent)
+router.post('/create-payment-intent/:userId', verifyToken, createPayment)
 
 export default router
