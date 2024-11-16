@@ -85,6 +85,7 @@ import shareRouter from './api/routes/share.route.js'
 import contactRouter from './api/routes/contact.route.js'
 import plantRouter from './api/routes/plantCalendar.route.js'
 import dataRouter from './api/routes/data.route.js'
+import paymentRouter from './api/routes/payment.route.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -116,6 +117,7 @@ app.use('/api/v1/shares', shareRouter)
 app.use('/api/v1/contacts', contactRouter)
 app.use('/api/v1/plants', plantRouter)
 app.use('/api/v1/datas', dataRouter)
+app.use('/api/v1/payments', paymentRouter)
 
 // ================================== Connection to MongoDB ==================================
 connectDB()
