@@ -223,7 +223,6 @@ export const getTotalCartAmount = async (req, res) => {
 
   const totalAmount = await getTotalCart(userId)
 
-  // Send back the total amount
   res.status(200).json({
     totalAmount: totalAmount, // Return total amount in cents (e.g., 2000 cents = PHP 20.00)
   })
