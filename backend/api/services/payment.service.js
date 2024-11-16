@@ -52,7 +52,7 @@ export const confirmPayment = async (paymentIntentId, paymentMethodId) => {
       {
         data: {
           attributes: {
-            payment_method: paymentMethodId, // The payment method ID (e.g., GCash or card)
+            payment_method: paymentMethodId,
           },
         },
       }

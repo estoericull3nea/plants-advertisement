@@ -1,52 +1,34 @@
 import {
   createPaymentIntent,
   confirmPayment,
-} from '../services/payment.service.js'
+} from '../services/payment.service.js' // Import confirmPayment from service
 import mongoose from 'mongoose'
 
 export const createPayment = async (req, res) => {
-  let { userId, paymentMethodId } = req.body
+  const { userId } = req.body
 
-  console.log(req.body)
-
-  if (!userId || !paymentMethodId) {
+  if (!userId) {
     return res.status(400).json({
       success: false,
-      message: 'userId and paymentMethodId are required',
+      message: 'userId is required',
     })
-  }
-
-  if (typeof userId === 'number') {
-    userId = mongoose.Types.ObjectId(userId.toString())
   }
 
   try {
+    // 1. Create the payment intent
     const paymentIntent = await createPaymentIntent(userId)
 
-    const paymentConfirmation = await confirmPayment(
-      paymentIntent.id,
-      paymentMethodId
-    )
-
-    if (paymentConfirmation.status === 'succeeded') {
-      return res.status(200).json({
-        success: true,
-        message: 'Payment successfully confirmed',
-        paymentConfirmation,
-      })
-    } else {
-      return res.status(400).json({
-        success: false,
-        message: 'Payment confirmation failed',
-        paymentConfirmation,
-      })
-    }
+    res.status(200).json({
+      success: true,
+      paymentIntent, // Send back the payment intent object
+    })
   } catch (error) {
-    console.error('Error during payment process:', error)
+    console.error('Error creating payment intent:', error)
     res.status(500).json({
       success: false,
-      message: 'Error creating or confirming payment intent',
-      error: error.message,
+      message: error.message || 'Failed to create payment intent',
     })
   }
 }
+
+// Note: Don't export confirmPayment here; it should be imported from the service file.
