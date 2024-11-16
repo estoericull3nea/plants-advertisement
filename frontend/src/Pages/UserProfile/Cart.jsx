@@ -11,6 +11,8 @@ const Cart = ({ isVisitor }) => {
     return <div>You can't view this Cart</div>
   }
 
+  const [errorMessage, setErrorMessage] = useState(null)
+
   const { userId } = useParams()
   const [cartItems, setCartItems] = useState([])
   const [loading, setLoading] = useState(true)
@@ -27,17 +29,26 @@ const Cart = ({ isVisitor }) => {
 
   const fetchCartItems = async () => {
     setLoading(true)
+    setErrorMessage(null) // Clear any previous errors
     try {
       const response = await fetch(
         `${import.meta.env.VITE_DEV_BACKEND_URL}/carts/${userId}`
       )
+
       if (!response.ok) {
-        throw new Error('Failed to fetch cart items')
+        if (response.status === 404) {
+          setErrorMessage(
+            'One or more products in your cart are unavailable or deleted by the seller.'
+          )
+        } else {
+          throw new Error('Failed to fetch cart items')
+        }
+      } else {
+        const data = await response.json()
+        setCartItems(data)
       }
-      const data = await response.json()
-      setCartItems(data)
     } catch (err) {
-      toast.error(err.message)
+      setErrorMessage(err.message) // Save the error message
     } finally {
       setLoading(false)
     }
@@ -209,6 +220,11 @@ const Cart = ({ isVisitor }) => {
   return (
     <div className='container mx-auto px-4 bg-white p-5 border rounded-xl shadow-lg'>
       <h1 className='text-2xl font-bold mb-4'>Your Cart</h1>
+      {errorMessage && (
+        <div className='text-red-500 bg-red-100 p-3 rounded-md mb-4'>
+          {errorMessage}
+        </div>
+      )}
       {cartItems.length === 0 ? (
         <p className='text-gray-600'>Your cart is empty.</p>
       ) : (

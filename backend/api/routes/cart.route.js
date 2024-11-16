@@ -5,6 +5,7 @@ import {
   deleteSelectedItems,
   getCartCount,
   getCartItems,
+  getTotalCartAmount,
   updateCartItem,
   updateCartItemQuantity,
 } from '../controllers/cart.controller.js'
@@ -21,5 +22,6 @@ router.delete('/:id', deleteCartItem)
 router.get('/count/:userId', verifyToken, getCartCount)
 router.put('/:userId/update-quantity', updateCartItemQuantity)
 router.post('/delete/selected', deleteSelectedItems)
+router.get('/total/:userId', getTotalCartAmount)
 
 export default router

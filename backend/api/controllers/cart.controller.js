@@ -111,10 +111,33 @@ export const deleteCartItem = async (req, res) => {
 
 export const getCartItems = async (req, res) => {
   const { userId } = req.params
-  const cartItems = await Cart.find({ userId })
-    .populate('productId')
-    .populate('userId')
-  res.status(200).json(cartItems)
+
+  try {
+    // Get all cart items for the user, populating productId and userId
+    const cartItems = await Cart.find({ userId })
+      .populate('productId')
+      .populate('userId')
+
+    // Filter out cart items where productId is null and delete them from the database
+    const cartItemsToDelete = cartItems.filter((item) => !item.productId)
+
+    if (cartItemsToDelete.length > 0) {
+      // Delete cart items with null productId
+      const cartItemIdsToDelete = cartItemsToDelete.map((item) => item._id)
+      await Cart.deleteMany({ _id: { $in: cartItemIdsToDelete } })
+    }
+
+    // Get the updated list of cart items
+    const updatedCartItems = await Cart.find({ userId })
+      .populate('productId')
+      .populate('userId')
+
+    // Return the updated cart items
+    res.status(200).json(updatedCartItems)
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ message: 'Error fetching cart items' })
+  }
 }
 
 export const getCartCount = async (req, res) => {
@@ -169,19 +192,39 @@ export const deleteSelectedItems = async (req, res) => {
     return res.status(400).json({ message: 'Invalid request data' })
   }
 
-  try {
-    const result = await Cart.deleteMany({
-      userId: userId,
-      _id: { $in: cartIds },
-    })
+  const result = await Cart.deleteMany({
+    userId: userId,
+    _id: { $in: cartIds },
+  })
 
-    if (result.deletedCount === 0) {
-      return res.status(404).json({ message: 'No items found to delete' })
-    }
-
-    res.status(200).json({ message: 'Selected items deleted successfully' })
-  } catch (error) {
-    console.error(error)
-    res.status(500).json({ message: 'An error occurred while deleting items' })
+  if (result.deletedCount === 0) {
+    return res.status(404).json({ message: 'No items found to delete' })
   }
+
+  res.status(200).json({ message: 'Selected items deleted successfully' })
+}
+
+export const getTotalCart = async (userId) => {
+  const cartItems = await Cart.find({ userId }).populate('productId')
+
+  let totalAmount = 0
+
+  cartItems.forEach((item) => {
+    console.log(item)
+    totalAmount += item.quantity * item.productId.price
+  })
+
+  return totalAmount
+}
+
+export const getTotalCartAmount = async (req, res) => {
+  const { userId } = req.params
+  console.log(userId)
+
+  const totalAmount = await getTotalCart(userId)
+
+  // Send back the total amount
+  res.status(200).json({
+    totalAmount: totalAmount, // Return total amount in cents (e.g., 2000 cents = PHP 20.00)
+  })
 }
