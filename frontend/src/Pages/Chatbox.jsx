@@ -268,6 +268,14 @@ const Chatbox = () => {
     return 'Just now'
   }
 
+  useEffect(() => {
+    const textarea = document.querySelector('textarea')
+    if (textarea) {
+      textarea.style.height = 'auto' // Reset height to auto
+      textarea.style.height = `${textarea.scrollHeight}px` // Set height based on scrollHeight
+    }
+  }, [text]) // Trigger this effect when the `text` changes
+
   return (
     <div className='flex h-screen container my-10 gap-3'>
       <div className='w-1/5 border-r p-4'>
@@ -402,14 +410,15 @@ const Chatbox = () => {
             {/* Empty div to act as a scroll target */}
           </div>
           <form onSubmit={handleSendMessage} className='flex mt-10 w-full'>
-            <input
-              type='text'
+            <textarea
               value={text}
               onChange={(e) => setText(e.target.value)}
               placeholder='Type a message...'
-              className='border border-gray-300 rounded-l-lg p-2 flex-1'
+              className='border border-gray-300 rounded-l-lg p-2 flex-1 resize-none' // `resize-none` disables manual resizing (optional)
+              rows={3} // Set a default row height
               disabled={!selectedUserId}
             />
+
             <input
               type='file'
               multiple
