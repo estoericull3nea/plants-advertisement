@@ -11,8 +11,6 @@ const Cart = ({ isVisitor }) => {
     return <div>You can't view this Cart</div>
   }
 
-  const [errorMessage, setErrorMessage] = useState(null)
-
   const { userId } = useParams()
   const [cartItems, setCartItems] = useState([])
   const [loading, setLoading] = useState(true)
@@ -29,26 +27,18 @@ const Cart = ({ isVisitor }) => {
 
   const fetchCartItems = async () => {
     setLoading(true)
-    setErrorMessage(null) // Clear any previous errors
     try {
       const response = await fetch(
         `${import.meta.env.VITE_DEV_BACKEND_URL}/carts/${userId}`
       )
-
       if (!response.ok) {
-        if (response.status === 404) {
-          setErrorMessage(
-            'One or more products in your cart are unavailable or deleted by the seller.'
-          )
-        } else {
-          throw new Error('Failed to fetch cart items')
-        }
-      } else {
-        const data = await response.json()
-        setCartItems(data)
+        throw new Error('Failed to fetch cart items')
       }
+      const data = await response.json()
+      setCartItems(data)
+      console.log(data)
     } catch (err) {
-      setErrorMessage(err.message) // Save the error message
+      toast.error(err.message)
     } finally {
       setLoading(false)
     }
@@ -217,14 +207,24 @@ const Cart = ({ isVisitor }) => {
     )
   }
 
+  const groupByUser = (cartItems) => {
+    return cartItems.reduce((acc, item) => {
+      const userId = item.productId.userId
+      if (!acc[userId]) {
+        acc[userId] = {
+          user: item.userId,
+          products: [],
+        }
+      }
+      acc[userId].products.push(item)
+
+      return acc
+    }, {})
+  }
+
   return (
     <div className='container mx-auto px-4 bg-white p-5 border rounded-xl shadow-lg'>
       <h1 className='text-2xl font-bold mb-4'>Your Cart</h1>
-      {errorMessage && (
-        <div className='text-red-500 bg-red-100 p-3 rounded-md mb-4'>
-          {errorMessage}
-        </div>
-      )}
       {cartItems.length === 0 ? (
         <p className='text-gray-600'>Your cart is empty.</p>
       ) : (
@@ -266,78 +266,90 @@ const Cart = ({ isVisitor }) => {
               </tr>
             </thead>
             <tbody className='bg-white divide-y divide-gray-200'>
-              {cartItems.map((item) => (
-                <tr key={item._id}>
-                  <td className='px-2 py-2'>
-                    <input
-                      type='checkbox'
-                      checked={selectedItems.has(item._id)}
-                      onChange={() => toggleSelectItem(item._id)}
-                    />
-                  </td>
-                  <td className='flex items-center px-2 py-2'>
-                    <img
-                      src={`http://localhost:5000/${
-                        item.productId.images &&
-                        item.productId.images.length > 0
-                          ? item.productId.images[0]
-                          : 'placeholder-image-url.jpg'
-                      }`}
-                      alt={item.productId.title || 'Product Image'}
-                      className='h-20 w-20 object-cover rounded-lg mr-4'
-                    />
-                    <span>{item.productId.title || 'Untitled Product'}</span>
-                  </td>
-                  <td className='font-bold px-2 py-2'>
-                    ₱{' '}
-                    {item.productId.price
-                      ? item.productId.price.toLocaleString()
-                      : 'N/A'}
-                  </td>
-                  <td className='px-2 py-2'>
-                    {editableItemId === item._id ? (
-                      <input
-                        type='number'
-                        min='1'
-                        defaultValue={item.quantity}
-                        onKeyPress={(e) =>
-                          handleKeyPress(e, item.productId._id)
-                        }
-                        onBlur={() => setEditableItemId(null)}
-                        className='input input-bordered w-20'
-                        disabled={updating || deleting}
-                      />
-                    ) : (
-                      <div className='flex items-center'>
-                        <span className='mr-2'>{item.quantity}</span>
-                        <button
-                          className='btn btn-outline btn-sm'
-                          onClick={() => handleEditClick(item._id)}
-                          disabled={updating || deleting}
-                        >
-                          Edit
-                        </button>
-                      </div>
-                    )}
-                  </td>
-                  <td className='font-bold px-2 py-2'>
-                    {item.productId.stock ? item.productId.stock : 'N/A'}
-                  </td>
-                  <td className='font-bold px-2 py-2'>
-                    ₱ {item.total.toLocaleString()}
-                  </td>
-                  <td className='px-2 py-2'>
-                    <div className='tooltip' data-tip='Remove'>
-                      <button
-                        className='p-2 rounded-lg border-main bg-red-500 text-white shadow-lg'
-                        onClick={() => openConfirmModal(item._id)}
-                        disabled={updating || deleting}
-                      >
-                        <FaRegTrashAlt />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
+              {Object.values(groupByUser(cartItems)).map((group, index) => (
+                <React.Fragment key={index}>
+                  <tr>
+                    <td colSpan='7' className='font-bold bg-gray-200 py-2 px-4'>
+                      Posted by: {group.user.firstName} {group.user.lastName} (
+                      {group.user.email})
+                    </td>
+                  </tr>
+                  {group.products.map((item) => (
+                    <tr key={item._id}>
+                      <td className='px-2 py-2'>
+                        <input
+                          type='checkbox'
+                          checked={selectedItems.has(item._id)}
+                          onChange={() => toggleSelectItem(item._id)}
+                        />
+                      </td>
+                      <td className='flex items-center px-2 py-2'>
+                        <img
+                          src={`http://localhost:5000/${
+                            item.productId.images &&
+                            item.productId.images.length > 0
+                              ? item.productId.images[0]
+                              : 'placeholder-image-url.jpg'
+                          }`}
+                          alt={item.productId.title || 'Product Image'}
+                          className='h-20 w-20 object-cover rounded-lg mr-4'
+                        />
+                        <span>
+                          {item.productId.title || 'Untitled Product'}
+                        </span>
+                      </td>
+                      <td className='font-bold px-2 py-2'>
+                        ₱{' '}
+                        {item.productId.price
+                          ? item.productId.price.toLocaleString()
+                          : 'N/A'}
+                      </td>
+                      <td className='px-2 py-2'>
+                        {editableItemId === item._id ? (
+                          <input
+                            type='number'
+                            min='1'
+                            defaultValue={item.quantity}
+                            onKeyPress={(e) =>
+                              handleKeyPress(e, item.productId._id)
+                            }
+                            onBlur={() => setEditableItemId(null)}
+                            className='input input-bordered w-20'
+                            disabled={updating || deleting}
+                          />
+                        ) : (
+                          <div className='flex items-center'>
+                            <span className='mr-2'>{item.quantity}</span>
+                            <button
+                              className='btn btn-outline btn-sm'
+                              onClick={() => handleEditClick(item._id)}
+                              disabled={updating || deleting}
+                            >
+                              Edit
+                            </button>
+                          </div>
+                        )}
+                      </td>
+                      <td className='font-bold px-2 py-2'>
+                        {item.productId.stock ? item.productId.stock : 'N/A'}
+                      </td>
+                      <td className='font-bold px-2 py-2'>
+                        ₱ {item.total.toLocaleString()}
+                      </td>
+                      <td className='px-2 py-2'>
+                        <div className='tooltip' data-tip='Remove'>
+                          <button
+                            className='p-2 rounded-lg border-main bg-red-500 text-white shadow-lg'
+                            onClick={() => openConfirmModal(item._id)}
+                            disabled={updating || deleting}
+                          >
+                            <FaRegTrashAlt />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </React.Fragment>
               ))}
             </tbody>
           </table>
