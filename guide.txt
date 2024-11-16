@@ -5,4 +5,3 @@ py-1 rounded-lg border-main bg-main text-white shadow-lg px-3
 
 integrate map
 paymongo
-in chats remove the link (implementing but there is a bug on that)
