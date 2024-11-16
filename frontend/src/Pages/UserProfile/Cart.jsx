@@ -19,6 +19,8 @@ const Cart = ({ isVisitor }) => {
   const [confirmDeleteId, setConfirmDeleteId] = useState(null)
   const [selectedItems, setSelectedItems] = useState(new Set())
   const [editableItemId, setEditableItemId] = useState(null)
+  const [selectedTotal, setSelectedTotal] = useState(0)
+
   const [viewingDetails, setViewingDetails] = useState(null)
 
   useEffect(() => {
@@ -167,17 +169,17 @@ const Cart = ({ isVisitor }) => {
     }
   }
 
-  const toggleSelectItem = (itemId) => {
-    setSelectedItems((prevSelected) => {
-      const newSelected = new Set(prevSelected)
-      if (newSelected.has(itemId)) {
-        newSelected.delete(itemId)
-      } else {
-        newSelected.add(itemId)
-      }
-      return newSelected
-    })
-  }
+  // const toggleSelectItem = (itemId) => {
+  //   setSelectedItems((prevSelected) => {
+  //     const newSelected = new Set(prevSelected)
+  //     if (newSelected.has(itemId)) {
+  //       newSelected.delete(itemId)
+  //     } else {
+  //       newSelected.add(itemId)
+  //     }
+  //     return newSelected
+  //   })
+  // }
 
   const toggleDetails = (itemId) => {
     setViewingDetails((prev) => (prev === itemId ? null : itemId))
@@ -223,6 +225,36 @@ const Cart = ({ isVisitor }) => {
       acc[userKey].total += item.total // Increment the user's total
       return acc
     }, {})
+  }
+
+  const toggleSelectItem = (itemId) => {
+    setSelectedItems((prevSelected) => {
+      const newSelected = new Set(prevSelected)
+      let newTotal = selectedTotal
+
+      const selectedItem = cartItems.find((item) => item._id === itemId)
+
+      if (newSelected.has(itemId)) {
+        newSelected.delete(itemId)
+        newTotal -= selectedItem.total
+      } else {
+        newSelected.add(itemId)
+        newTotal += selectedItem.total
+      }
+
+      setSelectedTotal(newTotal)
+      return newSelected
+    })
+  }
+
+  const handleCheckout = () => {
+    const selectedCartItems = cartItems.filter((item) =>
+      selectedItems.has(item._id)
+    )
+
+    // Perform checkout logic here
+    console.log('Checkout items:', selectedCartItems)
+    toast.success('Checkout successful!')
   }
 
   return (
@@ -485,6 +517,19 @@ const Cart = ({ isVisitor }) => {
           </div>
         </div>
       )}
+      <div className='mt-4'>
+        <button
+          className={`py-2 px-4 rounded-lg ${
+            selectedItems.size > 0
+              ? 'bg-blue-600 text-white hover:bg-blue-800'
+              : 'bg-gray-300 text-gray-600 cursor-not-allowed'
+          }`}
+          disabled={selectedItems.size === 0}
+          onClick={() => handleCheckout()}
+        >
+          Checkout
+        </button>
+      </div>
     </div>
   )
 }
