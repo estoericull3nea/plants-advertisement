@@ -12,9 +12,19 @@ import { io } from 'socket.io-client'
 import { useNavigate } from 'react-router-dom'
 const socket = io('http://localhost:5000')
 
-const containsLink = (text) => {
+const extractLink = (text) => {
   const urlRegex = /https?:\/\/[^\s]+/g
-  return urlRegex.test(text) // Returns true if a link is present
+  const match = text.match(urlRegex)
+  return match ? match[0] : null // Return the first link if it exists, otherwise null
+}
+
+const extractDomain = (url) => {
+  try {
+    const domain = new URL(url).hostname // Extracts the domain from the URL
+    return domain
+  } catch (e) {
+    return null // In case the URL is invalid
+  }
 }
 
 const ImageModal = ({ images, isOpen, onClose, startIndex }) => {
@@ -328,15 +338,22 @@ const Chatbox = () => {
 
                     {/* Conditionally render message text */}
                     <div>
-                      {/* Check if the message contains a URL */}
-                      {containsLink(message.text) ? (
-                        // You can choose to display a message preview here instead of the link
-                        <div className='text-blue-500'>
-                          <Link to={message.text} target='_blank'>
-                            Click here to view the link
-                          </Link>
-                        </div>
+                      {extractLink(message.text) ? (
+                        <>
+                          {message.text.replace(extractLink(message.text), '')}{' '}
+                          {/* Display text without the link */}
+                          <a
+                            href={extractLink(message.text)}
+                            target='_blank'
+                            rel='noopener noreferrer'
+                            className='text-blue-500'
+                          >
+                            {extractDomain(extractLink(message.text))}{' '}
+                            {/* Display the domain name */}
+                          </a>
+                        </>
                       ) : (
+                        // If no link is found, display the message as is
                         message.text
                       )}
                     </div>
