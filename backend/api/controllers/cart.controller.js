@@ -210,7 +210,8 @@ export const getTotalCart = async (userId) => {
   let totalAmount = 0
 
   cartItems.forEach((item) => {
-    totalAmount += item.quantity * item.productId.price
+    // totalAmount += item.quantity * item.productId.price
+    totalAmount += item.quantity * item.productId.price * 100
   })
 
   return totalAmount

@@ -17,33 +17,25 @@ const axiosInstance = axios.create({
   },
 })
 
-// 1. Create Payment Intent using the cart total
 export const createPaymentIntent = async (
   userId,
   paymentMethods = ['gcash', 'card']
 ) => {
   try {
-    // Step 1: Calculate the total amount from the user's cart
     const totalAmount = await getTotalCart(userId)
 
-    // Ensure the amount is at least 2000 cents (PHP 20.00)
-    if (totalAmount < 2000) {
-      throw new Error('Amount must be at least 2000 cents (PHP 20.00)')
-    }
-
-    // Step 2: Create the payment intent with the total amount from the cart
     const response = await axiosInstance.post('/payment_intents', {
       data: {
         attributes: {
-          amount: totalAmount, // Total amount in cents (e.g., 2000 = PHP 20.00)
+          amount: totalAmount,
           currency: 'PHP',
-          payment_method_allowed: paymentMethods, // Allowed payment methods (e.g., "gcash", "card")
-          payment_method_types: paymentMethods, // Payment method types (e.g., "gcash", "card")
+          payment_method_allowed: paymentMethods,
+          payment_method_types: paymentMethods,
         },
       },
     })
 
-    return response.data.data // Payment intent object
+    return response.data.data
   } catch (error) {
     console.error(
       'Error creating payment intent:',
@@ -53,7 +45,6 @@ export const createPaymentIntent = async (
   }
 }
 
-// 2. Confirm Payment
 export const confirmPayment = async (paymentIntentId, paymentMethodId) => {
   try {
     const response = await axiosInstance.post(
@@ -61,12 +52,11 @@ export const confirmPayment = async (paymentIntentId, paymentMethodId) => {
       {
         data: {
           attributes: {
-            payment_method: paymentMethodId,
+            payment_method: paymentMethodId, // The payment method ID (e.g., GCash or card)
           },
         },
       }
     )
-
     return response.data.data
   } catch (error) {
     console.error(
