@@ -114,9 +114,7 @@ export const getCartItems = async (req, res) => {
 
   try {
     // Get all cart items for the user, populating productId and userId
-    const cartItems = await Cart.find({ userId })
-      .populate('productId')
-      .populate('userId')
+    const cartItems = await Cart.find({ userId }).populate('productId')
 
     // Filter out cart items where productId is null and delete them from the database
     const cartItemsToDelete = cartItems.filter((item) => !item.productId)
@@ -128,9 +126,13 @@ export const getCartItems = async (req, res) => {
     }
 
     // Get the updated list of cart items
-    const updatedCartItems = await Cart.find({ userId })
-      .populate('productId')
-      .populate('userId')
+    const updatedCartItems = await Cart.find({ userId }).populate({
+      path: 'productId',
+      populate: {
+        path: 'userId',
+        model: 'User',
+      },
+    })
 
     // Return the updated cart items
     res.status(200).json(updatedCartItems)

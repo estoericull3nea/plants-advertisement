@@ -36,7 +36,6 @@ const Cart = ({ isVisitor }) => {
       }
       const data = await response.json()
       setCartItems(data)
-      console.log(data)
     } catch (err) {
       toast.error(err.message)
     } finally {
@@ -209,15 +208,19 @@ const Cart = ({ isVisitor }) => {
 
   const groupByUser = (cartItems) => {
     return cartItems.reduce((acc, item) => {
-      const userId = item.productId.userId
-      if (!acc[userId]) {
-        acc[userId] = {
-          user: item.userId,
+      const user = item.productId.userId // Extract user details
+      const userKey = user._id // Use the user's unique `_id` as the key
+
+      if (!acc[userKey]) {
+        acc[userKey] = {
+          user, // Store user details
           products: [],
+          total: 0, // Initialize total for the user group
         }
       }
-      acc[userId].products.push(item)
 
+      acc[userKey].products.push(item) // Add product to user's group
+      acc[userKey].total += item.total // Increment the user's total
       return acc
     }, {})
   }
@@ -266,91 +269,110 @@ const Cart = ({ isVisitor }) => {
               </tr>
             </thead>
             <tbody className='bg-white divide-y divide-gray-200'>
-              {Object.values(groupByUser(cartItems)).map((group, index) => (
-                <React.Fragment key={index}>
-                  <tr>
-                    <td colSpan='7' className='font-bold bg-gray-200 py-2 px-4'>
-                      Posted by: {group.user.firstName} {group.user.lastName} (
-                      {group.user.email})
-                    </td>
-                  </tr>
-                  {group.products.map((item) => (
-                    <tr key={item._id}>
-                      <td className='px-2 py-2'>
-                        <input
-                          type='checkbox'
-                          checked={selectedItems.has(item._id)}
-                          onChange={() => toggleSelectItem(item._id)}
-                        />
-                      </td>
-                      <td className='flex items-center px-2 py-2'>
-                        <img
-                          src={`http://localhost:5000/${
-                            item.productId.images &&
-                            item.productId.images.length > 0
-                              ? item.productId.images[0]
-                              : 'placeholder-image-url.jpg'
-                          }`}
-                          alt={item.productId.title || 'Product Image'}
-                          className='h-20 w-20 object-cover rounded-lg mr-4'
-                        />
-                        <span>
-                          {item.productId.title || 'Untitled Product'}
-                        </span>
-                      </td>
-                      <td className='font-bold px-2 py-2'>
-                        ₱{' '}
-                        {item.productId.price
-                          ? item.productId.price.toLocaleString()
-                          : 'N/A'}
-                      </td>
-                      <td className='px-2 py-2'>
-                        {editableItemId === item._id ? (
-                          <input
-                            type='number'
-                            min='1'
-                            defaultValue={item.quantity}
-                            onKeyPress={(e) =>
-                              handleKeyPress(e, item.productId._id)
-                            }
-                            onBlur={() => setEditableItemId(null)}
-                            className='input input-bordered w-20'
-                            disabled={updating || deleting}
-                          />
-                        ) : (
-                          <div className='flex items-center'>
-                            <span className='mr-2'>{item.quantity}</span>
-                            <button
-                              className='btn btn-outline btn-sm'
-                              onClick={() => handleEditClick(item._id)}
-                              disabled={updating || deleting}
-                            >
-                              Edit
-                            </button>
-                          </div>
-                        )}
-                      </td>
-                      <td className='font-bold px-2 py-2'>
-                        {item.productId.stock ? item.productId.stock : 'N/A'}
-                      </td>
-                      <td className='font-bold px-2 py-2'>
-                        ₱ {item.total.toLocaleString()}
-                      </td>
-                      <td className='px-2 py-2'>
-                        <div className='tooltip' data-tip='Remove'>
-                          <button
-                            className='p-2 rounded-lg border-main bg-red-500 text-white shadow-lg'
-                            onClick={() => openConfirmModal(item._id)}
-                            disabled={updating || deleting}
-                          >
-                            <FaRegTrashAlt />
-                          </button>
-                        </div>
+              {Object.values(groupByUser(cartItems)).map(
+                (group, groupIndex) => (
+                  <React.Fragment key={groupIndex}>
+                    {/* User header row */}
+                    <tr>
+                      <td
+                        colSpan='7'
+                        className='font-bold bg-gray-200 py-2 px-4'
+                      >
+                        Posted by: {group.user.firstName} {group.user.lastName}{' '}
+                        ({group.user.email})
                       </td>
                     </tr>
-                  ))}
-                </React.Fragment>
-              ))}
+                    {/* Product rows for the user */}
+                    {group.products.map((item) => (
+                      <tr key={item._id}>
+                        <td className='px-2 py-2'>
+                          <input
+                            type='checkbox'
+                            checked={selectedItems.has(item._id)}
+                            onChange={() => toggleSelectItem(item._id)}
+                          />
+                        </td>
+                        <td className='flex items-center px-2 py-2'>
+                          <img
+                            src={`http://localhost:5000/${
+                              item.productId.images &&
+                              item.productId.images.length > 0
+                                ? item.productId.images[0]
+                                : 'placeholder-image-url.jpg'
+                            }`}
+                            alt={item.productId.title || 'Product Image'}
+                            className='h-20 w-20 object-cover rounded-lg mr-4'
+                          />
+                          <span>
+                            {item.productId.title || 'Untitled Product'}
+                          </span>
+                        </td>
+                        <td className='font-bold px-2 py-2'>
+                          ₱{' '}
+                          {item.productId.price
+                            ? item.productId.price.toLocaleString()
+                            : 'N/A'}
+                        </td>
+                        <td className='px-2 py-2'>
+                          {editableItemId === item._id ? (
+                            <input
+                              type='number'
+                              min='1'
+                              defaultValue={item.quantity}
+                              onKeyPress={(e) =>
+                                handleKeyPress(e, item.productId._id)
+                              }
+                              onBlur={() => setEditableItemId(null)}
+                              className='input input-bordered w-20'
+                              disabled={updating || deleting}
+                            />
+                          ) : (
+                            <div className='flex items-center'>
+                              <span className='mr-2'>{item.quantity}</span>
+                              <button
+                                className='btn btn-outline btn-sm'
+                                onClick={() => handleEditClick(item._id)}
+                                disabled={updating || deleting}
+                              >
+                                Edit
+                              </button>
+                            </div>
+                          )}
+                        </td>
+                        <td className='font-bold px-2 py-2'>
+                          {item.productId.stock ? item.productId.stock : 'N/A'}
+                        </td>
+                        <td className='font-bold px-2 py-2'>
+                          ₱ {item.total.toLocaleString()}
+                        </td>
+                        <td className='px-2 py-2'>
+                          <div className='tooltip' data-tip='Remove'>
+                            <button
+                              className='p-2 rounded-lg border-main bg-red-500 text-white shadow-lg'
+                              onClick={() => openConfirmModal(item._id)}
+                              disabled={updating || deleting}
+                            >
+                              <FaRegTrashAlt />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                    {/* Total row for the user */}
+                    <tr>
+                      <td
+                        colSpan='6'
+                        className='text-right font-bold py-2 px-4'
+                      >
+                        Total for {group.user.firstName} {group.user.lastName}:
+                      </td>
+                      <td className='font-bold py-2 px-4'>
+                        ₱ {group.total.toLocaleString()}
+                      </td>
+                    </tr>
+                  </React.Fragment>
+                )
+              )}
             </tbody>
           </table>
 
