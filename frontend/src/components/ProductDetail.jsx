@@ -60,7 +60,7 @@ const ProductDetail = () => {
       socket.emit('message', response.data) // Emit the newly created message
 
       // Reset the input field
-      toast.success('Sent')
+      toast.success('Message Sent Successfully')
     } catch (error) {
       if (
         error.response &&

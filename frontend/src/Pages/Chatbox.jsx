@@ -12,9 +12,9 @@ import { io } from 'socket.io-client'
 import { useNavigate } from 'react-router-dom'
 const socket = io('http://localhost:5000')
 
-const removeLinks = (text) => {
+const containsLink = (text) => {
   const urlRegex = /https?:\/\/[^\s]+/g
-  return text.replace(urlRegex, '').trim() // Remove URLs and trim extra spaces
+  return urlRegex.test(text) // Returns true if a link is present
 }
 
 const ImageModal = ({ images, isOpen, onClose, startIndex }) => {
@@ -325,9 +325,25 @@ const Chatbox = () => {
                     <div className='font-semibold'>
                       {message.senderId.firstName} {message.senderId.lastName}
                     </div>
-                    <div>{message.text}</div>
-                    {message.productPreview ? (
-                      <div className='rounded-2xl bg-main border shadow border-black w-max my-3 p-3  transition-all duration-300 hover:translate-y-[-2px] hover:shadow-lg'>
+
+                    {/* Conditionally render message text */}
+                    <div>
+                      {/* Check if the message contains a URL */}
+                      {containsLink(message.text) ? (
+                        // You can choose to display a message preview here instead of the link
+                        <div className='text-blue-500'>
+                          <Link to={message.text} target='_blank'>
+                            Click here to view the link
+                          </Link>
+                        </div>
+                      ) : (
+                        message.text
+                      )}
+                    </div>
+
+                    {/* Product Preview */}
+                    {message.productPreview && (
+                      <div className='rounded-2xl bg-main border shadow border-black w-max my-3 p-3 transition-all duration-300 hover:translate-y-[-2px] hover:shadow-lg'>
                         <Link to={message?.productPreview?.url}>
                           <h3 className='text-lg font-semibold hover:text-blue-500 transition-all'>
                             {message?.productPreview?.title}
@@ -338,14 +354,15 @@ const Chatbox = () => {
                             className='h-36 w-full rounded-lg transition-transform transform hover:scale-105'
                           />
                           <p>{message?.productPreview?.description}</p>
-                          <p>{message?.productPreview?.url}</p>
                         </Link>
                       </div>
-                    ) : null}
+                    )}
 
                     <div className='text-xs text-gray-500'>
                       {new Date(message.createdAt).toLocaleString()}
                     </div>
+
+                    {/* Images */}
                     {Array.isArray(message.images) &&
                       message.images.length > 0 && (
                         <div className='flex space-x-2 mt-2'>
