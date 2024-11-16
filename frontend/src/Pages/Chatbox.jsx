@@ -414,9 +414,15 @@ const Chatbox = () => {
               value={text}
               onChange={(e) => setText(e.target.value)}
               placeholder='Type a message...'
-              className='border border-gray-300 rounded-l-lg p-2 flex-1 resize-none' // `resize-none` disables manual resizing (optional)
-              rows={3} // Set a default row height
+              className='border border-gray-300 rounded-l-lg p-2 flex-1 resize-none'
               disabled={!selectedUserId}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  // Check if Enter is pressed without Shift (to avoid new line)
+                  e.preventDefault() // Prevent adding a new line
+                  handleSendMessage(e) // Call the send message function
+                }
+              }}
             />
 
             <input
