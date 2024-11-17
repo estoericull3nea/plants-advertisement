@@ -11,7 +11,6 @@ const PostProduct = () => {
   const [stock, setStock] = useState(0)
   const [price, setPrice] = useState(0)
   const [images, setImages] = useState([])
-  const [address, setAddress] = useState('')
   const [message, setMessage] = useState('')
   const [trigger, setTrigger] = useState(1)
   const [showForm, setShowForm] = useState(false)
@@ -20,10 +19,51 @@ const PostProduct = () => {
   const [loading, setLoading] = useState(false)
   const [notFoundSearch, setNotFoundSearch] = useState(false)
 
-  const handleImageChange = (e) => {
-    setImages(Array.from(e.target.files))
-  }
+  // State for municipality and barangay selection
+  const [municipalities, setMunicipalities] = useState([])
+  const [barangays, setBarangays] = useState([])
+  const [selectedMunicipality, setSelectedMunicipality] = useState('')
+  const [selectedMunicipalityName, setSelectedMunicipalityName] = useState('') // Store municipality name
+  const [selectedBarangay, setSelectedBarangay] = useState('')
+  const [selectedBarangayName, setSelectedBarangayName] = useState('') // Store barangay name
 
+  // Fetch municipalities on component mount
+  useEffect(() => {
+    const fetchMunicipalities = async () => {
+      try {
+        const response = await fetch(
+          'https://psgc.cloud/api/regions/0100000000/municipalities'
+        )
+        const data = await response.json()
+        setMunicipalities(data)
+      } catch (error) {
+        console.error('Error fetching municipalities:', error)
+      }
+    }
+
+    fetchMunicipalities()
+  }, [])
+
+  // Fetch barangays based on selected municipality
+  useEffect(() => {
+    if (!selectedMunicipality) return // Don't fetch if no municipality is selected
+
+    const fetchBarangays = async () => {
+      try {
+        const response = await fetch(
+          `https://psgc.cloud/api/municipalities/${selectedMunicipality}/barangays`
+        )
+        const data = await response.json()
+        setBarangays(data)
+      } catch (error) {
+        console.error('Error fetching barangays:', error)
+      }
+    }
+
+    fetchBarangays()
+  }, [selectedMunicipality])
+
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault()
     const productData = new FormData()
@@ -32,7 +72,12 @@ const PostProduct = () => {
     productData.append('category', category)
     productData.append('stock', stock)
     productData.append('price', price)
-    productData.append('address', address)
+
+    // Send names, not codes for municipality and barangay
+    productData.append(
+      'address',
+      `${selectedMunicipalityName}, ${selectedBarangayName}`
+    )
 
     images.forEach((image) => {
       productData.append('images', image)
@@ -59,21 +104,28 @@ const PostProduct = () => {
     }
   }
 
+  // Reset the form after successful submission
   const resetForm = () => {
     setTitle('')
     setCaption('')
     setStock(0)
     setPrice(0)
     setImages([])
-    setAddress('')
+    setSelectedMunicipality('')
+    setSelectedBarangay('')
     setShowForm(false)
   }
 
+  // Handle image file selection
+  const handleImageChange = (e) => {
+    setImages(Array.from(e.target.files))
+  }
+
+  // Handle search for products
   const handleSearch = async (e) => {
     const query = e.target.value
     setSearchQuery(query)
 
-    // If the search query is empty, reset search results to an empty array
     if (!query) {
       setSearchResults([])
       setNotFoundSearch('')
@@ -91,9 +143,6 @@ const PostProduct = () => {
         }
       )
 
-      console.log(response.data.length)
-
-      // Decode the logged-in user's ID from the token
       const token = localStorage.getItem('token')
       let userIdToExclude = null
 
@@ -102,12 +151,10 @@ const PostProduct = () => {
         userIdToExclude = decodedToken.id
       }
 
-      // Filter out products by the logged-in user (if any)
       const filteredResults = response.data.filter(
         (product) => product.userId._id !== userIdToExclude
       )
 
-      // Set the filtered search results
       setSearchResults(filteredResults)
       setNotFoundSearch('') // Reset not found message if search results exist
     } catch (error) {
@@ -240,21 +287,62 @@ const PostProduct = () => {
             </div>
             <div>
               <label
-                htmlFor='address'
+                htmlFor='municipality'
                 className='block mb-2 text-sm font-medium text-gray-900'
               >
-                Address
+                Municipality
               </label>
-              <input
-                type='text'
-                id='address'
-                className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5'
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-                placeholder='Enter address'
+              <select
+                id='municipality'
+                className='select select-bordered w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 p-2.5'
+                value={selectedMunicipality}
+                onChange={(e) => {
+                  const selected = municipalities.find(
+                    (municipality) => municipality.code === e.target.value
+                  )
+                  setSelectedMunicipality(e.target.value)
+                  setSelectedMunicipalityName(selected.name) // Set name of selected municipality
+                }}
                 required
-              />
+              >
+                <option value=''>Select Municipality</option>
+                {municipalities.map((municipality) => (
+                  <option key={municipality.code} value={municipality.code}>
+                    {municipality.name}
+                  </option>
+                ))}
+              </select>
             </div>
+            {selectedMunicipality && (
+              <div>
+                <label
+                  htmlFor='barangay'
+                  className='block mb-2 text-sm font-medium text-gray-900'
+                >
+                  Barangay
+                </label>
+                <select
+                  id='barangay'
+                  className='select select-bordered w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 p-2.5'
+                  value={selectedBarangay}
+                  onChange={(e) => {
+                    const selected = barangays.find(
+                      (barangay) => barangay.code === e.target.value
+                    )
+                    setSelectedBarangay(e.target.value)
+                    setSelectedBarangayName(selected.name) // Set name of selected barangay
+                  }}
+                  required
+                >
+                  <option value=''>Select Barangay</option>
+                  {barangays.map((barangay) => (
+                    <option key={barangay.code} value={barangay.code}>
+                      {barangay.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
             <button
               type='submit'
               className='py-1 px-3 rounded-lg border-main bg-main text-white shadow-lg'
