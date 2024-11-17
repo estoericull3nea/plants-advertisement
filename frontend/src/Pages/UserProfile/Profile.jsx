@@ -5,6 +5,7 @@ import UserInfo from './UserInfo'
 import ProductTable from './ProductTable'
 import Cart from './Cart'
 import SharedPost from './SharedPost'
+import PaymentHistory from './PaymentHistory'
 
 const Profile = () => {
   const { userId } = useParams() // Get the userId from the URL
@@ -26,6 +27,11 @@ const Profile = () => {
               element={<ProductTable isVisitor={isVisitor} />}
             />
             <Route path='/cart' element={<Cart isVisitor={isVisitor} />} />
+            <Route
+              path='/payment-history'
+              element={<PaymentHistory isVisitor={isVisitor} />}
+            />
+
             <Route
               path='/shared'
               element={<SharedPost isVisitor={isVisitor} />}

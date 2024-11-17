@@ -136,6 +136,11 @@ const Sidebar = ({ isVisitor }) => {
         <li>
           <NavLink to={`/profile/${userId}/shared`}>Shared Post</NavLink>
         </li>
+        <li>
+          <NavLink to={`/profile/${userId}/payment-history`}>
+            Payment History
+          </NavLink>
+        </li>
       </ul>
     </aside>
   )
