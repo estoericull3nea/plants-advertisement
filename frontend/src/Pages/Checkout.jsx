@@ -3,37 +3,36 @@ import { useLocation } from 'react-router-dom'
 import { toast } from 'react-hot-toast'
 import { FaRegCreditCard } from 'react-icons/fa'
 
-// Utility to convert amount to cents
 const convertToCents = (amount) => Math.round(amount * 100)
 
 const Checkout = () => {
   const location = useLocation()
   const { items } = location.state || {}
 
-  const [isModalOpen, setIsModalOpen] = useState(false) // Modal visibility state
-  const [isPlacingOrder, setIsPlacingOrder] = useState(false) // Order placement state
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isPlacingOrder, setIsPlacingOrder] = useState(false)
 
   if (!items || items.length === 0) {
     return <p className='text-center'>No items selected for checkout.</p>
   }
 
-  const totalAmount = items.reduce((sum, item) => sum + item.total, 0) // total in PHP (PHP amount)
+  const totalAmount = items.reduce((sum, item) => sum + item.total, 0)
 
   const handlePlaceOrder = async () => {
     setIsPlacingOrder(true)
-    const amountInCents = convertToCents(totalAmount) // Convert total to cents
+    const amountInCents = convertToCents(totalAmount)
 
-    const description = 'Order from E-commerce site' // You can adjust this description as needed
+    const description = 'Order from E-commerce site'
     const remarks = 'Payment for selected items'
 
     try {
-      // Make API call to create payment link
       const response = await fetch(
         `${import.meta.env.VITE_DEV_BACKEND_URL}/payments/create-payment-link`,
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
           body: JSON.stringify({
             amount: amountInCents,
@@ -44,24 +43,23 @@ const Checkout = () => {
       )
 
       const data = await response.json()
-      const checkout_url = data.data.attributes.checkout_url
 
       if (response.ok) {
-        // Payment link created successfully, redirect to the payment page
-        window.location.href = checkout_url // Assuming the response contains the payment link
+        const checkout_url = data.payment_url
+
+        window.location.href = checkout_url
       } else {
-        // Handle error in payment link creation
         toast.error(data.error || 'Failed to create payment link')
       }
 
-      setIsModalOpen(false) // Close modal after processing
+      setIsModalOpen(false)
     } catch (error) {
       toast.error(
         'An error occurred while placing your order. Please try again.'
       )
-      setIsModalOpen(false) // Close modal in case of error
+      setIsModalOpen(false)
     } finally {
-      setIsPlacingOrder(false) // Hide the loading state
+      setIsPlacingOrder(false)
     }
   }
 
@@ -104,7 +102,6 @@ const Checkout = () => {
           </p>
         </div>
 
-        {/* Payment Method Section */}
         <div className='mt-6'>
           <h3 className='font-semibold'>Payment Method</h3>
           <div className='flex justify-between items-center mt-3'>
@@ -114,7 +111,7 @@ const Checkout = () => {
             </div>
             <button
               className='btn btn-primary'
-              onClick={() => setIsModalOpen(true)} // Open modal on button click
+              onClick={() => setIsModalOpen(true)}
             >
               Place Order
             </button>
@@ -122,7 +119,6 @@ const Checkout = () => {
         </div>
       </div>
 
-      {/* DaisyUI Modal */}
       {isModalOpen && (
         <div className='modal modal-open'>
           <div className='modal-box'>
@@ -131,18 +127,17 @@ const Checkout = () => {
               Are you sure you want to place the order for the selected items?
             </p>
 
-            {/* Actions: Confirm or Cancel */}
             <div className='modal-action'>
               <button
                 className='btn btn-secondary'
-                onClick={() => setIsModalOpen(false)} // Close modal without placing the order
+                onClick={() => setIsModalOpen(false)}
               >
                 Cancel
               </button>
               <button
                 className='btn btn-primary'
-                onClick={handlePlaceOrder} // Confirm and place the order
-                disabled={isPlacingOrder} // Disable button while order is being placed
+                onClick={handlePlaceOrder}
+                disabled={isPlacingOrder}
               >
                 {isPlacingOrder ? 'Placing Order...' : 'Place Order'}
               </button>
