@@ -1,11 +1,14 @@
-import React from 'react'
-import { useLocation } from 'react-router-dom' // To access passed state
+import React, { useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import { toast } from 'react-hot-toast'
 import { FaRegCreditCard } from 'react-icons/fa'
 
 const Checkout = () => {
   const location = useLocation()
-  const { items } = location.state || {} // Get selected items from state
+  const { items } = location.state || {}
+
+  const [isModalOpen, setIsModalOpen] = useState(false) // Modal visibility state
+  const [isPlacingOrder, setIsPlacingOrder] = useState(false) // Order placement state
 
   if (!items || items.length === 0) {
     return <p className='text-center'>No items selected for checkout.</p>
@@ -13,10 +16,18 @@ const Checkout = () => {
 
   const totalAmount = items.reduce((sum, item) => sum + item.total, 0)
 
-  const handlePlaceOrder = () => {
-    // Here you can integrate the payment gateway or any backend API
-    toast.success('Order placed successfully!')
-    // Redirect user to a confirmation page or home page after successful checkout
+  const handlePlaceOrder = async () => {
+    setIsPlacingOrder(true)
+    try {
+      // Simulate placing the order (you can integrate with your backend here)
+      toast.success('Order placed successfully!')
+      setIsModalOpen(false) // Close the modal after placing the order
+      // Redirect user to a confirmation page or home page
+    } catch (error) {
+      toast.error('Order failed. Please try again.')
+    } finally {
+      setIsPlacingOrder(false)
+    }
   }
 
   return (
@@ -66,12 +77,44 @@ const Checkout = () => {
               <FaRegCreditCard className='mr-2' />
               <span>Credit/Debit Card</span>
             </div>
-            <button className='btn btn-primary' onClick={handlePlaceOrder}>
+            <button
+              className='btn btn-primary'
+              onClick={() => setIsModalOpen(true)} // Open modal on button click
+            >
               Place Order
             </button>
           </div>
         </div>
       </div>
+
+      {/* DaisyUI Modal */}
+      {isModalOpen && (
+        <div className='modal modal-open'>
+          <div className='modal-box'>
+            <h2 className='text-lg font-semibold'>Confirm Your Order</h2>
+            <p>
+              Are you sure you want to place the order for the selected items?
+            </p>
+
+            {/* Actions: Confirm or Cancel */}
+            <div className='modal-action'>
+              <button
+                className='btn btn-secondary'
+                onClick={() => setIsModalOpen(false)} // Close modal without placing the order
+              >
+                Cancel
+              </button>
+              <button
+                className='btn btn-primary'
+                onClick={handlePlaceOrder} // Confirm and place the order
+                disabled={isPlacingOrder} // Disable button while order is being placed
+              >
+                {isPlacingOrder ? 'Placing Order...' : 'Place Order'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
