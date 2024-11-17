@@ -19,6 +19,7 @@ import ContactUsForm from './components/ContactUsForm'
 import About from './Pages/About'
 import Admin from './Pages/Admin/Admin'
 import CropsPlanning from './Pages/CropsPlanning'
+import Checkout from './Pages/Checkout'
 
 const App = () => {
   return (
@@ -76,6 +77,7 @@ const App = () => {
           <Route path='/about' element={<About />} />
 
           <Route path='/crops-planning' element={<CropsPlanning />} />
+          <Route path='/checkout' element={<Checkout />} />
 
           <Route path='/admin/*' element={<Admin />} />
 

@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom'
 import { io } from 'socket.io-client'
 import { toast } from 'react-hot-toast'
 import { FaRegTrashAlt } from 'react-icons/fa'
+import { useNavigate } from 'react-router-dom' // Import useNavigate hook
 
 const socket = io('http://localhost:5000')
 
@@ -22,6 +23,7 @@ const Cart = ({ isVisitor }) => {
   const [selectedTotal, setSelectedTotal] = useState(0)
 
   const [viewingDetails, setViewingDetails] = useState(null)
+  const navigate = useNavigate()
 
   useEffect(() => {
     fetchCartItems()
@@ -252,9 +254,10 @@ const Cart = ({ isVisitor }) => {
       selectedItems.has(item._id)
     )
 
-    // Perform checkout logic here
-    console.log('Checkout items:', selectedCartItems)
-    toast.success('Checkout successful!')
+    // Navigate to the checkout page and pass the selected items in state
+    navigate('/checkout', { state: { items: selectedCartItems } })
+
+    toast.success('Proceeding to checkout!')
   }
 
   return (
