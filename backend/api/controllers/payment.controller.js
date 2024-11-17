@@ -1,6 +1,7 @@
 import {
   createPaymentLink,
   getAllPaymentLinks,
+  getPaymentLinkById,
 } from '../services/payment.service.js'
 
 export const createPaymentLinkController = async (req, res) => {
