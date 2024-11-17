@@ -7,8 +7,8 @@ const Checkout = () => {
   const location = useLocation()
   const { items } = location.state || {}
 
-  const [isModalOpen, setIsModalOpen] = useState(false) // Modal visibility state
-  const [isPlacingOrder, setIsPlacingOrder] = useState(false) // Order placement state
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isPlacingOrder, setIsPlacingOrder] = useState(false)
 
   if (!items || items.length === 0) {
     return <p className='text-center'>No items selected for checkout.</p>
@@ -19,10 +19,8 @@ const Checkout = () => {
   const handlePlaceOrder = async () => {
     setIsPlacingOrder(true)
     try {
-      // Simulate placing the order (you can integrate with your backend here)
       toast.success('Order placed successfully!')
-      setIsModalOpen(false) // Close the modal after placing the order
-      // Redirect user to a confirmation page or home page
+      setIsModalOpen(false)
     } catch (error) {
       toast.error('Order failed. Please try again.')
     } finally {
@@ -69,7 +67,6 @@ const Checkout = () => {
           </p>
         </div>
 
-        {/* Payment Method Section */}
         <div className='mt-6'>
           <h3 className='font-semibold'>Payment Method</h3>
           <div className='flex justify-between items-center mt-3'>
@@ -79,7 +76,7 @@ const Checkout = () => {
             </div>
             <button
               className='btn btn-primary'
-              onClick={() => setIsModalOpen(true)} // Open modal on button click
+              onClick={() => setIsModalOpen(true)}
             >
               Place Order
             </button>
@@ -87,7 +84,6 @@ const Checkout = () => {
         </div>
       </div>
 
-      {/* DaisyUI Modal */}
       {isModalOpen && (
         <div className='modal modal-open'>
           <div className='modal-box'>
@@ -96,18 +92,17 @@ const Checkout = () => {
               Are you sure you want to place the order for the selected items?
             </p>
 
-            {/* Actions: Confirm or Cancel */}
             <div className='modal-action'>
               <button
                 className='btn btn-secondary'
-                onClick={() => setIsModalOpen(false)} // Close modal without placing the order
+                onClick={() => setIsModalOpen(false)}
               >
                 Cancel
               </button>
               <button
                 className='btn btn-primary'
-                onClick={handlePlaceOrder} // Confirm and place the order
-                disabled={isPlacingOrder} // Disable button while order is being placed
+                onClick={handlePlaceOrder}
+                disabled={isPlacingOrder}
               >
                 {isPlacingOrder ? 'Placing Order...' : 'Place Order'}
               </button>
