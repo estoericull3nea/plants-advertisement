@@ -10,7 +10,7 @@ import { Link } from 'react-router-dom'
 
 import { io } from 'socket.io-client'
 import { useNavigate } from 'react-router-dom'
-const socket = io('http://localhost:5000')
+const socket = io('https://plants-advertisement.onrender.com')
 
 const extractLink = (text) => {
   const urlRegex = /https?:\/\/[^\s]+/g
@@ -78,7 +78,7 @@ const Chatbox = () => {
   const messagesEndRef = useRef(null) // Reference for scrolling
 
   useEffect(() => {
-    const socket = io('http://localhost:5000')
+    const socket = io('https://plants-advertisement.onrender.com')
 
     fetchCurrentUser()
     fetchUsers()
@@ -241,7 +241,7 @@ const Chatbox = () => {
   }
 
   const getFullImageUrl = (filename) => {
-    return `http://localhost:5000/${filename}`
+    return `https://plants-advertisement.onrender.com/${filename}`
   }
 
   const handleImageClick = (index) => {
@@ -374,7 +374,7 @@ const Chatbox = () => {
                             {message?.productPreview?.title}
                           </h3>
                           <img
-                            src={`http://localhost:5000/${message?.productPreview?.image}`}
+                            src={`https://plants-advertisement.onrender.com/${message?.productPreview?.image}`}
                             alt={message?.productPreview?.image}
                             className='h-36 w-full rounded-lg transition-transform transform hover:scale-105'
                           />

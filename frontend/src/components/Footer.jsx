@@ -3,23 +3,6 @@ import React from 'react'
 const Footer = () => {
   const footerNavs = [
     {
-      label: 'Explore',
-      items: [
-        { href: 'http://localhost:5173/crops', name: 'Crops' },
-        { href: 'http://localhost:5173/livestock', name: 'Livestock' },
-        { href: 'http://localhost:5173/fisheries', name: 'Fisheries' },
-      ],
-    },
-    {
-      label: 'Quick Links',
-      items: [
-        { href: 'http://localhost:5173/', name: 'Home' },
-        { href: 'http://localhost:5173/posts', name: 'Posts' },
-        { href: 'http://localhost:5173/about', name: 'About' },
-        { href: 'http://localhost:5173/contact', name: 'Contact' },
-      ],
-    },
-    {
       label: 'Connect',
       items: [
         { href: 'javascript:void(0)', name: 'Instagram' },

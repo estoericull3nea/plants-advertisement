@@ -4,7 +4,7 @@ import { MdOutlineMailOutline } from 'react-icons/md'
 import { jwtDecode } from 'jwt-decode'
 import { io } from 'socket.io-client'
 
-const socket = io('http://localhost:5000')
+const socket = io('https://plants-advertisement.onrender.com')
 
 const Sidebar = ({ isVisitor }) => {
   const { userId } = useParams()

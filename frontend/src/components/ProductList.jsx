@@ -124,7 +124,7 @@ const ProductList = ({ trigger, productsTest }) => {
             >
               <Link to={`/products/${product._id}`}>
                 <img
-                  src={`http://localhost:5000/${product.images[0]}`}
+                  src={`https://plants-advertisement.onrender.com/${product.images[0]}`}
                   alt={product.title}
                   className='w-full h-48 object-cover'
                 />

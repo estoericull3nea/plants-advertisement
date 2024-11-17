@@ -101,7 +101,7 @@ const Checkout = () => {
             <div key={item._id} className='flex justify-between items-center'>
               <div className='flex items-center'>
                 <img
-                  src={`http://localhost:5000/${
+                  src={`https://plants-advertisement.onrender.com/${
                     item.productId.images && item.productId.images.length > 0
                       ? item.productId.images[0]
                       : 'placeholder-image-url.jpg'

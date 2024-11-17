@@ -8,7 +8,7 @@ import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { jwtDecode } from 'jwt-decode'
 
 import { io } from 'socket.io-client'
-const socket = io('http://localhost:5000', {
+const socket = io('https://plants-advertisement.onrender.com', {
   transports: ['websocket'],
 })
 

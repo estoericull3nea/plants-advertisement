@@ -67,7 +67,7 @@ const RelatedProducts = ({ category, productId }) => {
             className='border rounded p-4 shadow hover:bg-gray-100 transition'
           >
             <img
-              src={`http://localhost:5000/${product.images[0]}`}
+              src={`https://plants-advertisement.onrender.com/${product.images[0]}`}
               alt={product.title}
               className='w-full h-32 object-cover mb-2 rounded'
             />

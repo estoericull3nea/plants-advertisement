@@ -5,7 +5,7 @@ import { toast } from 'react-hot-toast'
 import { FaRegTrashAlt } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom' // Import useNavigate hook
 
-const socket = io('http://localhost:5000')
+const socket = io('https://plants-advertisement.onrender.com')
 
 const Cart = ({ isVisitor }) => {
   if (isVisitor) {
@@ -338,7 +338,7 @@ const Cart = ({ isVisitor }) => {
                         </td>
                         <td className='flex items-center px-2 py-2'>
                           <img
-                            src={`http://localhost:5000/${
+                            src={`https://plants-advertisement.onrender.com/${
                               item.productId.images &&
                               item.productId.images.length > 0
                                 ? item.productId.images[0]
@@ -426,7 +426,7 @@ const Cart = ({ isVisitor }) => {
               <div key={item._id} className='border-b py-4'>
                 <div className='flex items-center'>
                   <img
-                    src={`http://localhost:5000/${
+                    src={`https://plants-advertisement.onrender.com/${
                       item.productId.images && item.productId.images.length > 0
                         ? item.productId.images[0]
                         : 'placeholder-image-url.jpg'

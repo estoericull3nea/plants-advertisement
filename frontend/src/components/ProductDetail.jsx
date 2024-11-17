@@ -9,7 +9,7 @@ import { IoIosShareAlt } from 'react-icons/io'
 import 'swiper/css'
 import 'swiper/css/pagination'
 import RelatedProducts from './RelatedProducts'
-const socket = io('http://localhost:5000')
+const socket = io('https://plants-advertisement.onrender.com')
 import { io } from 'socket.io-client'
 
 const ProductDetail = () => {
@@ -310,7 +310,7 @@ const ProductDetail = () => {
             {product.images.map((image, index) => (
               <SwiperSlide key={index}>
                 <img
-                  src={`http://localhost:5000/${image}`}
+                  src={`https://plants-advertisement.onrender.com/${image}`}
                   className='rounded-box w-full h-full object-cover'
                   alt={`Product Image ${index + 1}`}
                 />

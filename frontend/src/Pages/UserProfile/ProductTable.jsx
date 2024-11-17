@@ -116,7 +116,7 @@ const ProductTable = ({ isVisitor }) => {
       {rowData.images.map((image, index) => (
         <img
           key={index}
-          src={`http://localhost:5000/${image}`}
+          src={`https://plants-advertisement.onrender.com/${image}`}
           alt={`Product Image ${index + 1}`}
           className='h-20 w-20 object-cover'
         />
@@ -339,14 +339,14 @@ const ProductTable = ({ isVisitor }) => {
               selectedProduct.map((image, index) => (
                 <img
                   key={index}
-                  src={`http://localhost:5000/${image}`}
+                  src={`https://plants-advertisement.onrender.com/${image}`}
                   alt={`Product Image ${index + 1}`}
                   className='h-40 w-40 object-cover'
                 />
               ))
             ) : (
               <img
-                src={`http://localhost:5000/${selectedProduct}`}
+                src={`https://plants-advertisement.onrender.com/${selectedProduct}`}
                 alt='Product Image'
                 className='h-40 w-40 object-cover'
               />
