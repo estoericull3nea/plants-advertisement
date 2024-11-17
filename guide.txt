@@ -4,6 +4,4 @@ https://psgc.cloud/docs/psgc-regions-api-documentation/ (api for location)
 py-1 rounded-lg border-main bg-main text-white shadow-lg px-3
 
 integrate map
-paymongo
-
-https://developers.paymongo.com/reference/create-a-link (current)
+history of payments

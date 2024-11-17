@@ -5,6 +5,8 @@ import {
   updatePaymentStatus,
 } from '../services/payment.service.js'
 
+import axios from 'axios'
+
 export const createPaymentLinkController = async (req, res) => {
   const { amount, description, remarks } = req.body
   const userId = req.user
@@ -65,12 +67,31 @@ export const paymentWebhook = async (req, res) => {
 
   console.log('Payment status:', status, 'PayMongo ID:', id)
 
-  try {
-    // Try to update the payment status in the database
-    await updatePaymentStatus(id, status)
-    res.status(200).send('Webhook processed successfully')
-  } catch (error) {
-    console.log('Error updating payment status:', error)
-    res.status(500).json({ error: 'Failed to update payment status' })
+  await updatePaymentStatus(id, status)
+  res.status(200).send('Webhook processed successfully')
+}
+
+export const checkStatusOfPaymentById = async (req, res) => {
+  const { paymentLinkId } = req.params
+
+  // Validate the paymentLinkId
+  if (!paymentLinkId) {
+    return res.status(400).json({ error: 'Payment link ID is required' })
   }
+
+  const options = {
+    method: 'GET',
+    url: `https://api.paymongo.com/v1/links/${paymentLinkId}`,
+    headers: {
+      accept: 'application/json',
+      authorization: 'Basic c2tfdGVzdF9tNkF4UnlRV2NQa2d6cmM1Y3RGVDR6UXA6',
+    },
+  }
+
+  const response = await axios.request(options)
+
+  const paymentLink = response.data.data
+
+  const paymentStatus = paymentLink.attributes.status
+  return res.status(200).json(response.data.data)
 }

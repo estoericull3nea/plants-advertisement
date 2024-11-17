@@ -1,5 +1,6 @@
 import express from 'express'
 import {
+  checkStatusOfPaymentById,
   createPaymentLinkController,
   getAllPaymentLinksController,
   getPaymentLinkByIdController,
@@ -14,5 +15,10 @@ router.get('/payment-links', getAllPaymentLinksController)
 router.get('/payment-links/:paymentLinkId', getPaymentLinkByIdController)
 
 router.post('/payment-webhook', paymentWebhook)
+router.get(
+  '/payment-links/:paymentLinkId/status',
+  verifyToken,
+  checkStatusOfPaymentById
+)
 
 export default router
