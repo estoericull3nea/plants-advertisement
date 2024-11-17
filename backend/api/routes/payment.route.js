@@ -1,10 +1,9 @@
+// routes/paymentRoutes.js
 import express from 'express'
-import { createPayment } from '../controllers/payment.controller.js' // Only import createPayment from controller
-import verifyToken from '../middlewares/verifyToken.js'
+import { createPaymentLinkController } from '../controllers/payment.controller.js'
 
 const router = express.Router()
 
-router.post('/create-payment-intent', verifyToken, createPayment) // This is correct
-router.post('/confirm-payment', verifyToken, createPayment) // Use createPayment since it already handles confirm
+router.post('/create-payment-link', createPaymentLinkController)
 
 export default router

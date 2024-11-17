@@ -1,34 +1,20 @@
-import {
-  createPaymentIntent,
-  confirmPayment,
-} from '../services/payment.service.js' // Import confirmPayment from service
-import mongoose from 'mongoose'
+import { createPaymentLink } from '../services/payment.service.js'
 
-export const createPayment = async (req, res) => {
-  const { userId } = req.body
+export const createPaymentLinkController = async (req, res) => {
+  const { amount, description, remarks } = req.body
 
-  if (!userId) {
-    return res.status(400).json({
-      success: false,
-      message: 'userId is required',
-    })
+  // Validate inputs
+  if (!amount || !description || !remarks) {
+    return res.status(400).json({ error: 'Missing required fields' })
   }
 
   try {
-    // 1. Create the payment intent
-    const paymentIntent = await createPaymentIntent(userId)
-
-    res.status(200).json({
-      success: true,
-      paymentIntent, // Send back the payment intent object
-    })
-  } catch (error) {
-    console.error('Error creating payment intent:', error)
-    res.status(500).json({
-      success: false,
-      message: error.message || 'Failed to create payment intent',
-    })
+    // Call the model function to create the payment link
+    const linkData = await createPaymentLink(amount, description, remarks)
+    res.status(200).json(linkData) // Return the PayMongo response to the client
+  } catch (err) {
+    res
+      .status(500)
+      .json({ error: 'Failed to create payment link', details: err.message })
   }
 }
-
-// Note: Don't export confirmPayment here; it should be imported from the service file.
