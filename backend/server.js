@@ -11,7 +11,10 @@ import http from 'http'
 
 import User from './api/models/user.model.js'
 
-const allowedOrigins = [process.env.VITE_DEV_FRONTEND_URL]
+const allowedOrigins = [
+  process.env.VITE_DEV_FRONTEND_URL,
+  'http://localhost:5173',
+]
 
 dotenv.config()
 
