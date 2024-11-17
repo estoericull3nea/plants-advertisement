@@ -377,12 +377,12 @@ const Register = () => {
                 </div>
 
                 <span></span>
-
+                {/* 
                 <div className='text-end'>
                   <Link to='/forgot' className='text-sm text-end'>
                     Forgot password?
                   </Link>
-                </div>
+                </div> */}
 
                 <button
                   type='submit'

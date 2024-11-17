@@ -147,7 +147,7 @@ const HowItWorks = () => {
   ]
 
   return (
-    <div className='my-12'>
+    <div className='my-12 container'>
       <h2 className='text-center text-xl font-semibold text-main'>
         How It Works
       </h2>

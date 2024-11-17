@@ -5,7 +5,7 @@ export default function JoinTheFarmMart() {
   const token = localStorage.getItem('token')
 
   return (
-    <section className='bg-zinc-900 py-20'>
+    <section className='bg-zinc-900 py-20 container'>
       <div className='w-full lg:w-9/12 mx-auto flex flex-col items-center gap-8'>
         <p className='text-zinc-100 w-full lg:w-9/12 text-4xl md:text-6xl text-center'>
           Join the FarmMart Community Today!
