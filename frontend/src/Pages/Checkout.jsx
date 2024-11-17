@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { toast } from 'react-hot-toast'
 import { FaRegCreditCard } from 'react-icons/fa'
@@ -11,6 +11,8 @@ const Checkout = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isPlacingOrder, setIsPlacingOrder] = useState(false)
+  const [paymentStatus, setPaymentStatus] = useState(null)
+  const [paymentLinkId, setPaymentLinkId] = useState(null)
 
   if (!items || items.length === 0) {
     return <p className='text-center'>No items selected for checkout.</p>
@@ -45,9 +47,9 @@ const Checkout = () => {
       const data = await response.json()
 
       if (response.ok) {
-        const checkout_url = data.payment_url
-
-        window.location.href = checkout_url
+        const checkoutUrl = data.payment_url
+        setPaymentLinkId(data.paymongo_id) // Save the payment link ID for polling
+        window.location.href = checkoutUrl // Redirect to payment page
       } else {
         toast.error(data.error || 'Failed to create payment link')
       }
@@ -62,6 +64,31 @@ const Checkout = () => {
       setIsPlacingOrder(false)
     }
   }
+
+  // Polling for the payment status
+  useEffect(() => {
+    if (paymentLinkId) {
+      const intervalId = setInterval(async () => {
+        try {
+          const response = await fetch(
+            `${
+              import.meta.env.VITE_DEV_BACKEND_URL
+            }/payments/payment-links/${paymentLinkId}`
+          )
+          const data = await response.json()
+
+          if (data.status === 'successful' || data.status === 'failed') {
+            setPaymentStatus(data.status)
+            clearInterval(intervalId) // Stop polling once the status is determined
+          }
+        } catch (error) {
+          console.error('Error fetching payment status:', error)
+        }
+      }, 5000) // Poll every 5 seconds
+
+      return () => clearInterval(intervalId) // Clean up the polling interval
+    }
+  }, [paymentLinkId])
 
   return (
     <div className='container mx-auto px-4 py-6'>
@@ -143,6 +170,19 @@ const Checkout = () => {
               </button>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Show Payment Status */}
+      {paymentStatus && (
+        <div className='mt-4'>
+          {paymentStatus === 'successful' ? (
+            <p className='text-green-500'>Payment was successful! Thank you.</p>
+          ) : paymentStatus === 'failed' ? (
+            <p className='text-red-500'>Payment failed. Please try again.</p>
+          ) : (
+            <p>Checking payment status...</p>
+          )}
         </div>
       )}
     </div>

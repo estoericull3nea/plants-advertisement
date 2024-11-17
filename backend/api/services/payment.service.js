@@ -55,3 +55,19 @@ export const getPaymentLinkById = async (paymentLinkId) => {
   )
   return paymentLink
 }
+
+export const updatePaymentStatus = async (paymongoId, status) => {
+  const paymentLink = await PaymentLink.findOne({ paymongo_id: paymongoId })
+
+  console.log(paymentLink)
+
+  if (!paymentLink) {
+    throw new Error('Payment link not found')
+  }
+
+  // Update the status of the payment link
+  paymentLink.status = status
+  await paymentLink.save()
+
+  console.log('Payment status updated successfully')
+}
