@@ -47,7 +47,7 @@ const ImageModal = ({ images, isOpen, onClose, startIndex }) => {
             <img
               src={image}
               alt='Full size'
-              className='max-w-full max-h-screen object-cover'
+              className='max-w-full max-h-auto object-cover'
             />
           </SwiperSlide>
         ))}
@@ -277,8 +277,8 @@ const Chatbox = () => {
   }, [text]) // Trigger this effect when the `text` changes
 
   return (
-    <div className='flex h-screen container my-10 gap-3'>
-      <div className='w-1/5 border-r p-4'>
+    <div className='flex flex-col md:flex-row h-auto container my-10 gap-3'>
+      <div className='md:w-1/5 border-r p-4'>
         <h2 className='text-xl font-bold'>Users</h2>
         {loadingUsers ? (
           <div className='flex flex-col gap-4'>
@@ -409,7 +409,10 @@ const Chatbox = () => {
             <div ref={messagesEndRef} />{' '}
             {/* Empty div to act as a scroll target */}
           </div>
-          <form onSubmit={handleSendMessage} className='flex mt-10 w-full'>
+          <form
+            onSubmit={handleSendMessage}
+            className='flex flex-col gap-3 md:flex-row mt-10 w-full'
+          >
             <textarea
               value={text}
               onChange={(e) => setText(e.target.value)}
@@ -433,7 +436,7 @@ const Chatbox = () => {
             />
             <button
               type='submit'
-              className='bg-blue-500 text-white rounded-lg px-4'
+              className='bg-blue-500 text-white rounded-lg px-4 py-3'
               disabled={!selectedUserId}
             >
               Send
