@@ -92,15 +92,15 @@ function Navbar() {
   return (
     <>
       <div className='flex justify-between items-center text-black px-4 sm:px-6 md:px-10 lg:px-16 xl:px-28 h-[60px] container'>
-        <Link
-          to='/'
+        <a
+          href='/'
           className='flex items-center justify-center cursor-pointer h-9 w-28'
         >
           <span className='flex items-center gap-2'>
             <img src={Logo} alt='' className='h-10' />
             <h3 className='text-xl font-bold'>FarmMart</h3>
           </span>
-        </Link>
+        </a>
         <div className='hidden md:flex items-center gap-14'>
           <div className='flex gap-12 md:gap-14'>
             {navItems.map((item, index) => (
@@ -117,8 +117,8 @@ function Navbar() {
           </div>
           <div className='flex items-center gap-4 '>
             {isAuthenticated && (
-              <Link
-                to={`/profile/${localStorage.getItem('userId')}/cart`}
+              <a
+                href={`/profile/${localStorage.getItem('userId')}/cart`}
                 className='relative flex items-center text-sm text-black'
               >
                 <FaShoppingCart className='text-xl' />
@@ -127,7 +127,7 @@ function Navbar() {
                     {cartCount}
                   </span>
                 )}
-              </Link>
+              </a>
             )}
             {isAuthenticated ? (
               <div className='flex items-center justify-center gap-3'>
@@ -137,20 +137,20 @@ function Navbar() {
                 >
                   Logout
                 </button>
-                <Link
-                  to={`/profile/${localStorage.getItem('userId')}/user-info`}
+                <a
+                  href={`/profile/${localStorage.getItem('userId')}/user-info`}
                   className='py-1 rounded-lg border-main bg-main text-white shadow-lg px-3'
                 >
                   Profile
-                </Link>
+                </a>
               </div>
             ) : (
-              <Link
-                to='/register'
+              <a
+                href='/register'
                 className='bg-gradient-to-l from-[#202752] to-main hover:bg-[#1d20e4] py-2 px-6 rounded-3xl flex items-center text-white'
               >
                 Get Started
-              </Link>
+              </a>
             )}
           </div>
         </div>
@@ -193,22 +193,22 @@ function Navbar() {
               <motion.div variants={listItemVariants}>
                 {isAuthenticated ? (
                   <div className='flex items-center flex-col gap-8 '>
-                    <Link
-                      to={`/profile/${localStorage.getItem(
+                    <a
+                      href={`/profile/${localStorage.getItem(
                         'userId'
                       )}/user-info`}
                       className='py-1 rounded-lg border-main bg-main text-white shadow-lg px-3 '
                     >
                       Profile
-                    </Link>
+                    </a>
                     <button
                       onClick={handleLogout}
                       className='py-1 rounded-lg border-main bg-main text-white shadow-lg px-3'
                     >
                       Logout
                     </button>
-                    <Link
-                      to='/cart'
+                    <a
+                      href='/cart'
                       className='relative text-xl whitespace-nowrap text-white'
                     >
                       <FaShoppingCart className='text-2xl' />
@@ -217,15 +217,15 @@ function Navbar() {
                           {cartCount}
                         </span>
                       )}
-                    </Link>
+                    </a>
                   </div>
                 ) : (
-                  <Link
-                    to='/register'
+                  <a
+                    href='/register'
                     className='bg-gradient-to-l from-[#202752] to-main hover:bg-[#1d20e4] py-2 px-6 rounded-3xl flex items-center text-white'
                   >
                     Get Started
-                  </Link>
+                  </a>
                 )}
               </motion.div>
             </motion.div>
