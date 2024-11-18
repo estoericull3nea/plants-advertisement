@@ -242,7 +242,7 @@ const ProductDetail = () => {
           <div className='skeleton rounded-md h-[500px] w-full md:w-1/2 mr-4 mt-12'></div>
           <div className='w-full md:w-1/2'>
             <div className='flex justify-end'>
-              <div className='skeleton rounded-md h-8 w-32 mb-4'></div>
+              <div className='skeleton rounded-md h-8 w-32 mb-4 mt-3'></div>
             </div>
             <div className='skeleton rounded-md h-[300px] w-full mb-4'></div>
             <div className='flex gap-x-3'>
@@ -348,7 +348,7 @@ const ProductDetail = () => {
             />
             <button
               onClick={handleAddToCart}
-              className='px-3 rounded-lg border-main bg-main text-white shadow-lg'
+              className='px-3 py-3 rounded-lg border-main bg-main text-white shadow-lg'
               disabled={addingToCart || product.stock === 0}
             >
               {addingToCart ? 'Adding...' : 'Add to Cart'}
@@ -552,7 +552,7 @@ const ProductDetail = () => {
             </dialog>
           )}
 
-          <div className='flex items-center flex-wrap mt-4 gap-3  justify-center lg:justify-between w-full'>
+          <div className='flex items-center flex-wrap mt-4 gap-3  justify-start lg:justify-between w-full'>
             <button
               onClick={handleToggleLike}
               className={`py-1 px-3 flex gap-2 items-center rounded-lg border-main bg-main text-white shadow-lg ${
@@ -569,7 +569,7 @@ const ProductDetail = () => {
 
             <form
               onSubmit={handleAddComment}
-              className='flex items-center flex-wrap gap-3 ml-4'
+              className='flex items-center flex-wrap gap-3 lg:ml-4'
             >
               <textarea
                 value={newComment}
@@ -590,7 +590,7 @@ const ProductDetail = () => {
             <div className='tooltip' data-tip='Share this Post'>
               <button
                 onClick={handleShare}
-                className={`py-1 rounded-lg border-main bg-main text-white shadow-lg px-3 ${
+                className={`py-1 rounded-lg border-main bg-main text-white shadow-lg px-3  ${
                   sharing ? 'opacity-50 cursor-not-allowed' : ''
                 }`}
                 disabled={sharing}
