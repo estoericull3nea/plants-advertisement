@@ -220,7 +220,7 @@ const UserInfo = ({ isVisitor }) => {
             className='py-1 px-3 rounded-lg border-main bg-main text-white shadow-lg'
             disabled={isUpdating}
           >
-            {isUpdating ? 'Updating...' : 'Update User'}
+            {isUpdating ? 'Updating...' : 'Update'}
           </button>
         )}
       </form>
