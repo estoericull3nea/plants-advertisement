@@ -425,6 +425,13 @@ const Cart = ({ isVisitor }) => {
             {cartItems.map((item) => (
               <div key={item._id} className='border-b py-4'>
                 <div className='flex items-center'>
+                  {/* Checkbox for mobile view */}
+                  <input
+                    type='checkbox'
+                    checked={selectedItems.has(item._id)}
+                    onChange={() => toggleSelectItem(item._id)}
+                    className='mr-2'
+                  />
                   <img
                     src={`https://plants-advertisement.onrender.com/${
                       item.productId.images && item.productId.images.length > 0

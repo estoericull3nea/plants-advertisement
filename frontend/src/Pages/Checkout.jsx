@@ -134,7 +134,7 @@ const Checkout = () => {
           <div className='flex justify-between items-center mt-3'>
             <div className='flex items-center'>
               <FaRegCreditCard className='mr-2' />
-              <span>Credit/Debit Card</span>
+              <span>Credit/Debit Card/Gcash</span>
             </div>
             <button
               className='btn btn-primary'
