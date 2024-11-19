@@ -83,7 +83,7 @@ const AdminDashboard = () => {
   }, [])
 
   return (
-    <div className='p-6 space-y-6'>
+    <div className='py-6 space-y-6'>
       <h1 className='text-3xl font-semibold text-gray-800'>Admin Dashboard</h1>
       <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3'>
         {/* User Count Section */}

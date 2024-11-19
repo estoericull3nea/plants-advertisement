@@ -24,7 +24,7 @@ const Footer = () => {
   return (
     <footer className='pt-10 container'>
       <div className='max-w-screen-xl mx-auto px-4 md:px-8'>
-        <div className='flex-1 mt-16 space-y-6 justify-between sm:flex md:space-y-0'>
+        {/* <div className='flex-1 mt-16 space-y-6 justify-between sm:flex md:space-y-0'>
           {footerNavs.map((nav, idx) => (
             <ul className='space-y-4 text-gray-600' key={idx}>
               <h4 className='text-gray-800 font-semibold sm:pb-2'>
@@ -42,7 +42,7 @@ const Footer = () => {
               ))}
             </ul>
           ))}
-        </div>
+        </div> */}
         <div className='mt-10 py-10 border-t items-center justify-between sm:flex'>
           <p className='text-gray-600'>
             © 2024 Plants Advertisement | All rights reserved.

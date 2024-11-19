@@ -1,67 +1,155 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { NavLink } from 'react-router-dom'
+import { HiChevronLeft, HiChevronRight } from 'react-icons/hi' // Import arrow icons
 
 const Sidebar = () => {
+  // State to manage the mobile menu visibility
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+
+  // Toggle menu visibility for mobile
+  const toggleMenu = () => {
+    setIsMenuOpen((prevState) => !prevState)
+  }
+
   return (
-    <aside className='min-w-[300px] rounded-xl border shadow-lg bg-gray-50 p-5 z-10'>
-      <h1 className='text-2xl font-semibold'>Welcome Admin</h1>
+    <aside className='relative'>
+      {/* Mobile Icon (Hamburger Menu) */}
+      <div className='sm:hidden'>
+        <button className='text-2xl text-gray-700 p-2' onClick={toggleMenu}>
+          {/* Show left arrow when the menu is open, right arrow when closed */}
+          {isMenuOpen ? (
+            <HiChevronLeft className='text-2xl' />
+          ) : (
+            <HiChevronRight className='text-2xl' />
+          )}
+        </button>
+      </div>
 
-      <ul className='menu rounded-box mt-4'>
-        <li>
-          <NavLink
-            to={`/admin/dashboard`}
-            className={({ isActive }) =>
-              isActive ? 'bg-main' : 'text-gray-700'
-            }
-          >
-            Dashboard
-          </NavLink>
-        </li>
+      {/* Mobile Sidebar Menu */}
+      <div
+        className={`sm:hidden absolute top-0 left-0 w-64 h-full bg-base-200 p-5 transition-transform duration-300 z-10 ${
+          isMenuOpen ? 'transform translate-x-0' : 'transform -translate-x-full'
+        }`}
+      >
+        {/* Close Button */}
+        <button
+          className='absolute top-4 right-4 text-2xl text-gray-700'
+          onClick={toggleMenu}
+        >
+          <HiChevronLeft />
+        </button>
 
-        {/* User Management Section */}
-        <li>
-          <NavLink
-            to={`/admin/users`}
-            className={({ isActive }) =>
-              isActive ? 'bg-main' : 'text-gray-700'
-            }
-          >
-            Users
-          </NavLink>
-        </li>
+        <ul className='menu'>
+          <li>
+            <NavLink
+              to={`/admin/dashboard`}
+              className={({ isActive }) =>
+                isActive ? 'bg-main' : 'text-gray-700'
+              }
+            >
+              Dashboard
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to={`/admin/users`}
+              className={({ isActive }) =>
+                isActive ? 'bg-main' : 'text-gray-700'
+              }
+            >
+              Users
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to={`/admin/products`}
+              className={({ isActive }) =>
+                isActive ? 'bg-main' : 'text-gray-700'
+              }
+            >
+              Products
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to={`/admin/chats`}
+              className={({ isActive }) =>
+                isActive ? 'bg-main' : 'text-gray-700'
+              }
+            >
+              Chats
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to={`/admin/contacts`}
+              className={({ isActive }) =>
+                isActive ? 'bg-main' : 'text-gray-700'
+              }
+            >
+              Contacts
+            </NavLink>
+          </li>
+        </ul>
+      </div>
 
-        {/* Product Management Section */}
-        <li>
-          <NavLink
-            to={`/admin/products`}
-            className={({ isActive }) =>
-              isActive ? 'bg-main' : 'text-gray-700'
-            }
-          >
-            Products
-          </NavLink>
-        </li>
-        <li>
-          <NavLink
-            to={`/admin/chats`}
-            className={({ isActive }) =>
-              isActive ? 'bg-main' : 'text-gray-700'
-            }
-          >
-            Chats
-          </NavLink>
-        </li>
-        <li>
-          <NavLink
-            to={`/admin/contacts`}
-            className={({ isActive }) =>
-              isActive ? 'bg-main' : 'text-gray-700'
-            }
-          >
-            Contacts
-          </NavLink>
-        </li>
-      </ul>
+      {/* Desktop Sidebar (hidden on mobile) */}
+      <div className='hidden sm:block p-5'>
+        <h1 className='text-2xl font-semibold'>Welcome Admin</h1>
+
+        <ul className='menu rounded-box mt-4'>
+          <li>
+            <NavLink
+              to={`/admin/dashboard`}
+              className={({ isActive }) =>
+                isActive ? 'bg-main' : 'text-gray-700'
+              }
+            >
+              Dashboard
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to={`/admin/users`}
+              className={({ isActive }) =>
+                isActive ? 'bg-main' : 'text-gray-700'
+              }
+            >
+              Users
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to={`/admin/products`}
+              className={({ isActive }) =>
+                isActive ? 'bg-main' : 'text-gray-700'
+              }
+            >
+              Products
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to={`/admin/chats`}
+              className={({ isActive }) =>
+                isActive ? 'bg-main' : 'text-gray-700'
+              }
+            >
+              Chats
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to={`/admin/contacts`}
+              className={({ isActive }) =>
+                isActive ? 'bg-main' : 'text-gray-700'
+              }
+            >
+              Contacts
+            </NavLink>
+          </li>
+        </ul>
+      </div>
     </aside>
   )
 }

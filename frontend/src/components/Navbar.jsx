@@ -91,7 +91,7 @@ function Navbar() {
 
   return (
     <>
-      <div className='flex justify-between items-center text-black px-4 sm:px-6 md:px-10 lg:px-16 xl:px-28 h-[60px] container'>
+      <div className='flex justify-between items-center text-black px-4 sm:px-6 md:px-10 lg:px-16 xl:px-28 h-[60px] '>
         <a
           href='/'
           className='flex items-center justify-center cursor-pointer h-9 w-28'
