@@ -171,14 +171,13 @@ const Users = () => {
   const userDialog = (
     <Dialog
       visible={showDialog}
-      style={{ width: '450px' }}
+      style={{ width: '90vw', maxWidth: '450px' }} // Make dialog width responsive
       header={isEditing ? 'Edit User' : 'Add User'}
       modal
       onHide={() => setShowDialog(false)}
     >
-      <div className='p-fluid'>
-        {/* Existing fields */}
-        <div className='p-field'>
+      <div className='p-fluid grid'>
+        <div className='p-field col-12 md:col-6'>
           <label htmlFor='firstName'>First Name</label>
           <input
             id='firstName'
@@ -195,7 +194,7 @@ const Users = () => {
             className='input input-bordered w-full'
           />
         </div>
-        <div className='p-field'>
+        <div className='p-field col-12 md:col-6'>
           <label htmlFor='lastName'>Last Name</label>
           <input
             id='lastName'
@@ -209,172 +208,6 @@ const Users = () => {
             className='input input-bordered w-full'
           />
         </div>
-        <div className='p-field'>
-          <label htmlFor='email'>Email</label>
-          <input
-            id='email'
-            type='email'
-            value={isEditing ? selectedUser.email : newUser.email}
-            onChange={(e) =>
-              isEditing
-                ? setSelectedUser({ ...selectedUser, email: e.target.value })
-                : setNewUser({ ...newUser, email: e.target.value })
-            }
-            className='input input-bordered w-full'
-          />
-        </div>
-        <div className='p-field'>
-          <label htmlFor='contactNumber'>Contact Number</label>
-          <input
-            id='contactNumber'
-            type='text'
-            value={
-              isEditing ? selectedUser.contactNumber : newUser.contactNumber
-            }
-            onChange={(e) =>
-              isEditing
-                ? setSelectedUser({
-                    ...selectedUser,
-                    contactNumber: e.target.value,
-                  })
-                : setNewUser({ ...newUser, contactNumber: e.target.value })
-            }
-            className='input input-bordered w-full'
-          />
-        </div>
-        <div className='p-field'>
-          <label htmlFor='municipality'>Municipality</label>
-          <input
-            id='municipality'
-            type='text'
-            value={isEditing ? selectedUser.municipality : newUser.municipality}
-            onChange={(e) =>
-              isEditing
-                ? setSelectedUser({
-                    ...selectedUser,
-                    municipality: e.target.value,
-                  })
-                : setNewUser({ ...newUser, municipality: e.target.value })
-            }
-            className='input input-bordered w-full'
-          />
-        </div>
-        <div className='p-field'>
-          <label htmlFor='barangay'>Barangay</label>
-          <input
-            id='barangay'
-            type='text'
-            value={isEditing ? selectedUser.barangay : newUser.barangay}
-            onChange={(e) =>
-              isEditing
-                ? setSelectedUser({ ...selectedUser, barangay: e.target.value })
-                : setNewUser({ ...newUser, barangay: e.target.value })
-            }
-            className='input input-bordered w-full'
-          />
-        </div>
-        <div className='p-field'>
-          <label htmlFor='dateOfBirth'>Date of Birth</label>
-          <input
-            id='dateOfBirth'
-            type='date'
-            value={isEditing ? selectedUser.dateOfBirth : newUser.dateOfBirth}
-            onChange={(e) =>
-              isEditing
-                ? setSelectedUser({
-                    ...selectedUser,
-                    dateOfBirth: e.target.value,
-                  })
-                : setNewUser({ ...newUser, dateOfBirth: e.target.value })
-            }
-            className='input input-bordered w-full'
-          />
-        </div>
-        <div className='p-field'>
-          <label htmlFor='age'>Age</label>
-          <input
-            id='age'
-            type='number'
-            value={isEditing ? selectedUser.age : newUser.age}
-            onChange={(e) =>
-              isEditing
-                ? setSelectedUser({ ...selectedUser, age: e.target.value })
-                : setNewUser({ ...newUser, age: e.target.value })
-            }
-            className='input input-bordered w-full'
-          />
-        </div>
-        <div className='p-field'>
-          <label htmlFor='isVerified'>Verified</label>
-          <select
-            id='isVerified'
-            value={isEditing ? selectedUser.isVerified : newUser.isVerified}
-            onChange={(e) =>
-              isEditing
-                ? setSelectedUser({
-                    ...selectedUser,
-                    isVerified: e.target.value,
-                  })
-                : setNewUser({ ...newUser, isVerified: e.target.value })
-            }
-            className='select select-bordered w-full'
-          >
-            <option value='true'>Verified</option>
-            <option value='false'>Not Verified</option>
-          </select>
-        </div>
-
-        {/* Password Fields for Edit User */}
-        {isEditing && (
-          <>
-            <div className='p-field'>
-              <label htmlFor='newPassword'>New Password</label>
-              <input
-                id='newPassword'
-                type='password'
-                value={selectedUser.newPassword || ''}
-                onChange={(e) =>
-                  setSelectedUser({
-                    ...selectedUser,
-                    newPassword: e.target.value,
-                  })
-                }
-                className='input input-bordered w-full'
-                placeholder='Enter new password (leave blank to keep current)'
-              />
-            </div>
-          </>
-        )}
-
-        {/* Password Fields for Add User */}
-        {!isEditing && (
-          <>
-            <div className='p-field'>
-              <label htmlFor='password'>Password</label>
-              <input
-                id='password'
-                type='password'
-                value={newUser.password}
-                onChange={(e) =>
-                  setNewUser({ ...newUser, password: e.target.value })
-                }
-                className='input input-bordered w-full'
-              />
-            </div>
-            <div className='p-field'>
-              <label htmlFor='confirmPassword'>Confirm Password</label>
-              <input
-                id='confirmPassword'
-                type='password'
-                value={newUser.confirmPassword}
-                onChange={(e) =>
-                  setNewUser({ ...newUser, confirmPassword: e.target.value })
-                }
-                className='input input-bordered w-full'
-              />
-            </div>
-          </>
-        )}
       </div>
 
       <div className='p-d-flex p-jc-between'>
@@ -415,6 +248,7 @@ const Users = () => {
           value={globalFilter}
           onChange={(e) => setGlobalFilter(e.target.value)}
           placeholder='Search users...'
+          className='w-full' // Ensure input takes full width on smaller screens
         />
       </div>
 
@@ -426,6 +260,9 @@ const Users = () => {
           paginator
           rows={10}
           globalFilter={globalFilter}
+          scrollable
+          scrollHeight='400px' // Adjust as needed for mobile screens
+          className='p-datatable-responsive' // Add this class for additional responsiveness
         >
           <Column
             field='firstName'
@@ -450,7 +287,9 @@ const Users = () => {
             header='Contact Number'
             sortable
             body={(rowData) => rowData.contactNumber || 'N/A'}
+            className='md:col-6' // Make the column visible only on medium and larger screens
           />
+
           <Column
             field='municipality'
             header='Municipality'

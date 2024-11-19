@@ -6,3 +6,17 @@
   font-family: Poppins;
   font-size: 0.9rem;
 }
+
+@media (max-width: 768px) {
+  .p-datatable-responsive {
+    font-size: 12px; /* Reduce font size on mobile */
+  }
+
+  .p-dialog {
+    width: 90vw !important; /* Dialog width adjustment */
+  }
+
+  .p-button {
+    width: 100% !important; /* Make buttons full width on small screens */
+  }
+}

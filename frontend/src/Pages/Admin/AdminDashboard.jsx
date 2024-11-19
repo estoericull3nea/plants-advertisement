@@ -85,9 +85,9 @@ const AdminDashboard = () => {
   return (
     <div className='p-6 space-y-6'>
       <h1 className='text-3xl font-semibold text-gray-800'>Admin Dashboard</h1>
-      <div className='grid grid-cols-1 gap-3 md:grid-cols-3 xl:grid-cols-5'>
+      <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3'>
         {/* User Count Section */}
-        <div className='card shadow-lg bg-base-100 p-6 rounded-xl'>
+        <div className='card shadow-lg bg-base-100 p-6 rounded-xl w-full sm:max-w-xs'>
           <h2 className='text-xl font-medium text-gray-700 mb-4'>
             Total Users
           </h2>
@@ -101,14 +101,14 @@ const AdminDashboard = () => {
           ) : error ? (
             <div className='text-red-500'>{error}</div>
           ) : (
-            <div className='text-4xl font-semibold text-main'>
+            <div className='text-2xl sm:text-3xl md:text-4xl font-semibold text-main'>
               {userCountData.userCount}
             </div>
           )}
         </div>
 
         {/* Verified Users Section */}
-        <div className='card shadow-lg bg-base-100 p-6 rounded-xl'>
+        <div className='card shadow-lg bg-base-100 p-6 rounded-xl w-full sm:max-w-xs'>
           <h2 className='text-xl font-medium text-gray-700 mb-4'>
             Verified Users
           </h2>
@@ -122,14 +122,14 @@ const AdminDashboard = () => {
           ) : error ? (
             <div className='text-red-500'>{error}</div>
           ) : (
-            <div className='text-4xl font-semibold text-main'>
+            <div className='text-2xl sm:text-3xl md:text-4xl font-semibold text-main'>
               {userCountData.verifiedCount}
             </div>
           )}
         </div>
 
         {/* Non-Verified Users Section */}
-        <div className='card shadow-lg bg-base-100 p-6 rounded-xl'>
+        <div className='card shadow-lg bg-base-100 p-6 rounded-xl w-full sm:max-w-xs'>
           <h2 className='text-xl font-medium text-gray-700 mb-4'>
             Non-Verified Users
           </h2>
@@ -143,14 +143,14 @@ const AdminDashboard = () => {
           ) : error ? (
             <div className='text-red-500'>{error}</div>
           ) : (
-            <div className='text-4xl font-semibold text-main'>
+            <div className='text-2xl sm:text-3xl md:text-4xl font-semibold text-main'>
               {userCountData.nonVerifiedCount}
             </div>
           )}
         </div>
 
         {/* Total Products Section */}
-        <div className='card shadow-lg bg-base-100 p-6 rounded-xl'>
+        <div className='card shadow-lg bg-base-100 p-6 rounded-xl w-full sm:max-w-xs'>
           <h2 className='text-xl font-medium text-gray-700 mb-4'>
             Total Products
           </h2>
@@ -164,14 +164,14 @@ const AdminDashboard = () => {
           ) : error ? (
             <div className='text-red-500'>{error}</div>
           ) : (
-            <div className='text-4xl font-semibold text-main'>
+            <div className='text-2xl sm:text-3xl md:text-4xl font-semibold text-main'>
               {productCountData.productCount}
             </div>
           )}
         </div>
 
         {/* Available Products Section */}
-        <div className='card shadow-lg bg-base-100 p-6 rounded-xl'>
+        <div className='card shadow-lg bg-base-100 p-6 rounded-xl w-full sm:max-w-xs'>
           <h2 className='text-xl font-medium text-gray-700 mb-4'>
             Available Products
           </h2>
@@ -185,14 +185,14 @@ const AdminDashboard = () => {
           ) : error ? (
             <div className='text-red-500'>{error}</div>
           ) : (
-            <div className='text-4xl font-semibold text-main'>
+            <div className='text-2xl sm:text-3xl md:text-4xl font-semibold text-main'>
               {productCountData.availableCount}
             </div>
           )}
         </div>
 
         {/* Unavailable Products Section */}
-        <div className='card shadow-lg bg-base-100 p-6 rounded-xl'>
+        <div className='card shadow-lg bg-base-100 p-6 rounded-xl w-full sm:max-w-xs'>
           <h2 className='text-xl font-medium text-gray-700 mb-4'>
             Unavailable Products
           </h2>
@@ -206,14 +206,14 @@ const AdminDashboard = () => {
           ) : error ? (
             <div className='text-red-500'>{error}</div>
           ) : (
-            <div className='text-4xl font-semibold text-main'>
+            <div className='text-2xl sm:text-3xl md:text-4xl font-semibold text-main'>
               {productCountData.unavailableCount}
             </div>
           )}
         </div>
 
         {/* Total Chats Section */}
-        <div className='card shadow-lg bg-base-100 p-6 rounded-xl'>
+        <div className='card shadow-lg bg-base-100 p-6 rounded-xl w-full sm:max-w-xs'>
           <h2 className='text-xl font-medium text-gray-700 mb-4'>
             Total Chats
           </h2>
@@ -227,7 +227,7 @@ const AdminDashboard = () => {
           ) : error ? (
             <div className='text-red-500'>{error}</div>
           ) : (
-            <div className='text-4xl font-semibold text-main'>
+            <div className='text-2xl sm:text-3xl md:text-4xl font-semibold text-main'>
               {chatCountData.totalChats}
             </div>
           )}
@@ -253,7 +253,7 @@ const AdminDashboard = () => {
         ) : error ? (
           <div className='text-red-500'>{error}</div>
         ) : (
-          <div className='overflow-x-auto'>
+          <div className='overflow-x-auto sm:w-full'>
             <table className='min-w-full table-auto'>
               <thead>
                 <tr className='border-b'>
