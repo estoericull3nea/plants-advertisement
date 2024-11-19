@@ -146,7 +146,7 @@ function Navbar() {
               </div>
             ) : (
               <a
-                href='/register'
+                href='/login'
                 className='bg-gradient-to-l from-[#202752] to-main hover:bg-[#1d20e4] py-2 px-6 rounded-3xl flex items-center text-white'
               >
                 Get Started
@@ -221,7 +221,7 @@ function Navbar() {
                   </div>
                 ) : (
                   <a
-                    href='/register'
+                    href='/login'
                     className='bg-gradient-to-l from-[#202752] to-main hover:bg-[#1d20e4] py-2 px-6 rounded-3xl flex items-center text-white'
                   >
                     Get Started
