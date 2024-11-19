@@ -257,9 +257,9 @@ const AdminDashboard = () => {
             <table className='min-w-full table-auto'>
               <thead>
                 <tr className='border-b'>
-                  <th className='px-4 py-2 text-left text-sm font-semibold text-gray-600'>
+                  {/* <th className='px-4 py-2 text-left text-sm font-semibold text-gray-600'>
                     Profile
-                  </th>
+                  </th> */}
                   <th className='px-4 py-2 text-left text-sm font-semibold text-gray-600'>
                     First Name
                   </th>
@@ -295,13 +295,13 @@ const AdminDashboard = () => {
               <tbody>
                 {recentUsers.map((user) => (
                   <tr key={user._id} className='border-b'>
-                    <td className='px-4 py-2'>
+                    {/* <td className='px-4 py-2'>
                       <img
                         src={user.picture || 'default-avatar.jpg'} // Fallback if no profile picture
                         alt={`${user.firstName} ${user.lastName}`}
                         className='w-10 h-10 rounded-full object-cover'
                       />
-                    </td>
+                    </td> */}
                     <td className='px-4 py-2'>{user.firstName}</td>
                     <td className='px-4 py-2'>{user.lastName}</td>
                     <td className='px-4 py-2'>{user.email}</td>
