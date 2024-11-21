@@ -5,3 +5,5 @@ py-1 rounded-lg border-main bg-main text-white shadow-lg px-3
 
 integrate map
 login admin redirect
+add speedinsights in vercel
+save all the images on cloudflare
