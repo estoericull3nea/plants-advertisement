@@ -34,19 +34,33 @@ const UserInfo = ({ isVisitor }) => {
     e.preventDefault()
     setIsUpdating(true)
     setError(null)
-    try {
-      const updateData = {
-        firstName: e.target.firstName.value,
-        lastName: e.target.lastName.value,
-        age: e.target.age.value,
-        dateOfBirth: e.target.dob.value,
-        contactNumber: e.target.contactNumber.value,
-        password: e.target.password.value,
-      }
 
+    const formData = new FormData()
+    formData.append('firstName', e.target.firstName.value)
+    formData.append('lastName', e.target.lastName.value)
+    formData.append('age', e.target.age.value)
+    formData.append('dateOfBirth', e.target.dob.value)
+    formData.append('contactNumber', e.target.contactNumber.value)
+    formData.append('password', e.target.password.value)
+
+    const profilePicture = e.target.profilePicture.files[0]
+    if (profilePicture) {
+      formData.append('profilePicture', profilePicture)
+    }
+
+    const validId = e.target.validId.files[0]
+    if (validId) {
+      formData.append('validId', validId)
+    }
+
+    console.log(formData)
+    return
+
+    try {
       await axios.put(
         `${import.meta.env.VITE_DEV_BACKEND_URL}/users/${userId}`,
-        updateData
+        formData,
+        { headers: { 'Content-Type': 'multipart/form-data' } }
       )
       toast.success('User updated successfully!')
 
@@ -94,125 +108,187 @@ const UserInfo = ({ isVisitor }) => {
       <p className='mt-10'>Personal Information</p>
       <hr />
       <form className='p-3 space-y-4' onSubmit={handleUpdate}>
-        <div>
-          <label
-            htmlFor='first-name'
-            className='block mb-2 text-sm font-medium text-gray-900 mt-5'
-          >
-            First Name
-          </label>
-          <input
-            type='text'
-            name='firstName'
-            id='first-name'
-            className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5'
-            placeholder='John'
-            defaultValue={userData?.firstName || ''}
-            required
-            disabled={isVisitor}
-          />
-        </div>
-
-        <div>
-          <label
-            htmlFor='last-name'
-            className='block mb-2 text-sm font-medium text-gray-900'
-          >
-            Last Name
-          </label>
-          <input
-            type='text'
-            name='lastName'
-            id='last-name'
-            className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5'
-            placeholder='Doe'
-            defaultValue={userData?.lastName || ''}
-            required
-            disabled={isVisitor}
-          />
-        </div>
-
-        <div>
-          <label
-            htmlFor='age'
-            className='block mb-2 text-sm font-medium text-gray-900'
-          >
-            Age
-          </label>
-          <input
-            type='text'
-            inputMode='numeric'
-            name='age'
-            pattern='[0-9]*'
-            id='age'
-            min='1'
-            className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5'
-            placeholder='25'
-            defaultValue={userData?.age || ''}
-            required
-            disabled={isVisitor}
-          />
-        </div>
-
-        <div>
-          <label
-            htmlFor='dob'
-            className='block mb-2 text-sm font-medium text-gray-900'
-          >
-            Date of Birth
-          </label>
-          <input
-            type='date'
-            name='dob'
-            id='dob'
-            className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5'
-            defaultValue={
-              userData?.dateOfBirth ? userData.dateOfBirth.split('T')[0] : ''
-            }
-            required
-            disabled={isVisitor}
-          />
-        </div>
-
-        <div>
-          <label
-            htmlFor='contact-number'
-            className='block mb-2 text-sm font-medium text-gray-900'
-          >
-            Contact Number
-          </label>
-          <input
-            type='text'
-            name='contactNumber'
-            id='contact-number'
-            className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5'
-            placeholder='123-456-7890'
-            defaultValue={userData?.contactNumber || ''}
-            required
-            disabled={isVisitor}
-          />
-        </div>
-
-        {!isVisitor && (
-          <div>
+        {/* Profile Picture */}
+        <div className='flex gap-3 items-center'>
+          <div className='w-full'>
             <label
-              htmlFor='password'
+              htmlFor='profile-picture'
               className='block mb-2 text-sm font-medium text-gray-900'
             >
-              Password
+              Profile Picture
             </label>
             <input
-              type='password'
-              name='password'
-              id='password'
+              type='file'
+              name='profilePicture'
+              id='profile-picture'
+              accept='image/*'
               className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5'
-              placeholder='••••••••'
+              disabled={isVisitor}
             />
-            <p className='text-sm text-gray-500 mt-1'>
-              If you don't want to change your password, leave this field empty.
-            </p>
+            {userData?.profilePicture && (
+              <div className='mt-3'>
+                <img
+                  src={userData.profilePicture}
+                  alt='Profile Picture'
+                  className='w-20 h-20 rounded-full object-cover'
+                />
+              </div>
+            )}
           </div>
-        )}
+
+          {/* Valid ID Upload */}
+          <div className='w-full'>
+            <label
+              htmlFor='valid-id'
+              className='block mb-2 text-sm font-medium text-gray-900'
+            >
+              Upload Valid ID
+            </label>
+            <input
+              type='file'
+              name='validId'
+              id='valid-id'
+              accept='image/*'
+              className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5'
+              disabled={isVisitor}
+            />
+            {userData?.validId && (
+              <div className='mt-3'>
+                <img
+                  src={userData.validId}
+                  alt='Valid ID'
+                  className='w-20 h-20 rounded-full object-cover'
+                />
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* first name and last name */}
+        <div className='flex gap-3 items-center'>
+          <div className='w-full'>
+            <label
+              htmlFor='first-name'
+              className='block mb-2 text-sm font-medium text-gray-900'
+            >
+              First Name
+            </label>
+            <input
+              type='text'
+              name='firstName'
+              id='first-name'
+              className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5'
+              placeholder='John'
+              defaultValue={userData?.firstName || ''}
+              required
+              disabled={isVisitor}
+            />
+          </div>
+
+          <div className='w-full'>
+            <label
+              htmlFor='last-name'
+              className='block mb-2 text-sm font-medium text-gray-900'
+            >
+              Last Name
+            </label>
+            <input
+              type='text'
+              name='lastName'
+              id='last-name'
+              className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5'
+              placeholder='Doe'
+              defaultValue={userData?.lastName || ''}
+              required
+              disabled={isVisitor}
+            />
+          </div>
+        </div>
+
+        {/* age and dob */}
+        <div className='flex gap-3 items-center'>
+          <div className='w-full'>
+            <label
+              htmlFor='age'
+              className='block mb-2 text-sm font-medium text-gray-900'
+            >
+              Age
+            </label>
+            <input
+              type='text'
+              inputMode='numeric'
+              name='age'
+              pattern='[0-9]*'
+              id='age'
+              min='1'
+              className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5'
+              placeholder='25'
+              defaultValue={userData?.age || ''}
+              required
+              disabled={isVisitor}
+            />
+          </div>
+
+          <div className='w-full'>
+            <label
+              htmlFor='dob'
+              className='block mb-2 text-sm font-medium text-gray-900'
+            >
+              Date of Birth
+            </label>
+            <input
+              type='date'
+              name='dob'
+              id='dob'
+              className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5'
+              defaultValue={
+                userData?.dateOfBirth ? userData.dateOfBirth.split('T')[0] : ''
+              }
+              required
+              disabled={isVisitor}
+            />
+          </div>
+        </div>
+
+        {/* contact number and password */}
+        <div className='flex gap-3 items-center'>
+          <div className='w-full'>
+            <label
+              htmlFor='contact-number'
+              className='block mb-2 text-sm font-medium text-gray-900'
+            >
+              Contact Number
+            </label>
+            <input
+              type='text'
+              name='contactNumber'
+              id='contact-number'
+              className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5'
+              placeholder='123-456-7890'
+              defaultValue={userData?.contactNumber || ''}
+              required
+              disabled={isVisitor}
+            />
+          </div>
+
+          {!isVisitor && (
+            <div className='w-full'>
+              <label
+                htmlFor='password'
+                className='block mb-2 text-sm font-medium text-gray-900'
+              >
+                Password
+              </label>
+              <input
+                type='password'
+                name='password'
+                id='password'
+                className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5'
+                placeholder='••••••••'
+              />
+            </div>
+          )}
+        </div>
 
         {!isVisitor && (
           <button
