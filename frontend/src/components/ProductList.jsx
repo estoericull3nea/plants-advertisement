@@ -21,8 +21,14 @@ const ProductList = ({ trigger, productsTest }) => {
             },
           }
         )
-        setProducts(response.data)
-        applyFilter(response.data)
+
+        // Filter products to only include those with 'approved' status
+        const approvedProducts = response.data.filter(
+          (product) => product.status === 'approved'
+        )
+
+        setProducts(approvedProducts)
+        applyFilter(approvedProducts)
       } catch (error) {
         console.error('Error fetching products:', error)
       } finally {
@@ -42,10 +48,14 @@ const ProductList = ({ trigger, productsTest }) => {
       userIdToExclude = decodedToken.id
     }
 
-    // Filter to include only available products
+    // Filter to only include approved products
     const filtered = products.filter(
-      (product) => product.isAvailable && product.userId._id !== userIdToExclude
+      (product) =>
+        product.status === 'approved' && // Ensure only approved products are shown
+        product.isAvailable &&
+        product.userId._id !== userIdToExclude
     )
+
     setFilteredProducts(filtered)
   }
 
@@ -75,11 +85,9 @@ const ProductList = ({ trigger, productsTest }) => {
   }
 
   const productsToDisplay =
-    productsTest.length > 0 ? productsTest : filteredProducts
-  console.log('filteredProducts')
-  console.log(filteredProducts)
-  console.log('productsTest')
-  console.log(productsTest)
+    productsTest.length > 0
+      ? productsTest.filter((product) => product.status === 'approved') // Ensure only approved products are displayed
+      : filteredProducts
 
   return (
     <div className='container mx-auto p-4'>
