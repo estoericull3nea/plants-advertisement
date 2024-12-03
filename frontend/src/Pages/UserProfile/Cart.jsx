@@ -338,7 +338,7 @@ const Cart = ({ isVisitor }) => {
                         </td>
                         <td className='flex items-center px-2 py-2'>
                           <img
-                            src={`https://plants-advertisement.onrender.com/${
+                            src={`${
                               item.productId.images &&
                               item.productId.images.length > 0
                                 ? item.productId.images[0]
@@ -433,7 +433,7 @@ const Cart = ({ isVisitor }) => {
                     className='mr-2'
                   />
                   <img
-                    src={`https://plants-advertisement.onrender.com/${
+                    src={`${
                       item.productId.images && item.productId.images.length > 0
                         ? item.productId.images[0]
                         : 'placeholder-image-url.jpg'
