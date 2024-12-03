@@ -8,14 +8,16 @@ const PostProduct = () => {
   const [title, setTitle] = useState('')
   const [caption, setCaption] = useState('')
   const [category, setCategory] = useState('crops')
-  const [stock, setStock] = useState(0)
-  const [price, setPrice] = useState(0)
+  const [stock, setStock] = useState('')
+  const [price, setPrice] = useState('')
   const [images, setImages] = useState([])
   const [message, setMessage] = useState('')
   const [trigger, setTrigger] = useState(1)
   const [showForm, setShowForm] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [searchResults, setSearchResults] = useState([])
+  const [userStatus, setUserStatus] = useState(null) // Stores the user verification status
+
   const [loading, setLoading] = useState(false)
   const [notFoundSearch, setNotFoundSearch] = useState(false)
 
@@ -26,6 +28,35 @@ const PostProduct = () => {
   const [selectedMunicipalityName, setSelectedMunicipalityName] = useState('') // Store municipality name
   const [selectedBarangay, setSelectedBarangay] = useState('')
   const [selectedBarangayName, setSelectedBarangayName] = useState('') // Store barangay name
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const token = localStorage.getItem('token')
+
+      if (!token) return
+
+      try {
+        const decodedToken = jwtDecode(token)
+        const userId = decodedToken.id
+
+        // Fetch user data by userId
+        const response = await axios.get(
+          `${import.meta.env.VITE_DEV_BACKEND_URL}/users/${userId}`
+        )
+
+        // Check if the user is verified
+        if (response.data.isVerified !== true) {
+          setUserStatus('not_verified')
+        } else {
+          setUserStatus('verified')
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error)
+      }
+    }
+
+    fetchUserData()
+  }, [])
 
   // Fetch municipalities on component mount
   useEffect(() => {
@@ -108,8 +139,8 @@ const PostProduct = () => {
   const resetForm = () => {
     setTitle('')
     setCaption('')
-    setStock(0)
-    setPrice(0)
+    setStock('')
+    setPrice('')
     setImages([])
     setSelectedMunicipality('')
     setSelectedBarangay('')
@@ -173,11 +204,11 @@ const PostProduct = () => {
         <button
           onClick={() => setShowForm(!showForm)}
           className='py-1 px-3 rounded-lg border-main bg-main text-white shadow-lg'
+          disabled={userStatus === 'not_verified'} // Disable button if not verified
         >
           {showForm ? 'Hide Form' : 'Do you like to post your product?'}
         </button>
       </div>
-
       {showForm && (
         <div className='max-w-lg mx-auto p-4 border rounded-lg shadow-md bg-white my-10'>
           <h2 className='text-xl font-bold mb-4'>Post Your Product</h2>
@@ -353,7 +384,6 @@ const PostProduct = () => {
           </form>
         </div>
       )}
-
       <div className='my-4 container px-4 mt-10'>
         <input
           type='text'
@@ -363,7 +393,6 @@ const PostProduct = () => {
           className='input input-bordered w-full'
         />
       </div>
-
       {notFoundSearch ? (
         <div className='text-red-500 font-bold container px-4'>
           Product Not Found
@@ -371,15 +400,18 @@ const PostProduct = () => {
       ) : (
         ''
       )}
-
       {loading ? (
         <div className='flex flex-col space-y-4'>
           <div className='h-10 bg-gray-200 rounded-lg animate-pulse'></div>
           <div className='h-10 bg-gray-200 rounded-lg animate-pulse'></div>
           <div className='h-10 bg-gray-200 rounded-lg animate-pulse'></div>
         </div>
-      ) : (
+      ) : userStatus !== 'not_verified' ? (
         <ProductList productsTest={searchResults} trigger={trigger} />
+      ) : (
+        <div className='text-red-500 font-bold text-center'>
+          You need to verify your account before posting a product.
+        </div>
       )}
     </div>
   )
