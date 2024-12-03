@@ -136,3 +136,22 @@ export const addUser = async (req, res) => {
   await newUser.save()
   res.status(201).json(newUser)
 }
+
+export const searchUsers = async (req, res) => {
+  const searchQuery = req.query.q || '' // Extract the search query from the request
+
+  try {
+    // Perform a case-insensitive search on firstName and lastName fields
+    const users = await User.find({
+      $or: [
+        { firstName: { $regex: searchQuery, $options: 'i' } },
+        { lastName: { $regex: searchQuery, $options: 'i' } },
+      ],
+    }).select('firstName lastName email profilePictureUrl lastActive') // Select specific fields
+
+    res.status(200).json(users)
+  } catch (error) {
+    console.error('Error searching users:', error)
+    res.status(500).json({ message: 'Internal server error' })
+  }
+}

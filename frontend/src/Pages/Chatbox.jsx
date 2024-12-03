@@ -156,7 +156,7 @@ const Chatbox = () => {
       const response = await axios.get(
         `${
           import.meta.env.VITE_DEV_BACKEND_URL
-        }/chats/users-with-conversations`,
+        }/users/search-users?q=${searchQuery}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -170,11 +170,16 @@ const Chatbox = () => {
         localStorage.clear()
         navigate('/login')
       }
-      console.error('Error fetching users with conversations:', error)
+      console.error('Error fetching users:', error)
     } finally {
       setLoadingUsers(false)
     }
   }
+
+  // Call fetchUsers whenever searchQuery changes
+  useEffect(() => {
+    fetchUsers()
+  }, [searchQuery])
 
   const fetchMessages = async (userId) => {
     const token = localStorage.getItem('token')

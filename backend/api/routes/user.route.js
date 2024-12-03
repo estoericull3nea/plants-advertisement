@@ -6,6 +6,7 @@ import {
   deleteUserById,
   getAllUsers,
   getUserById,
+  searchUsers,
   updateUserById,
 } from '../controllers/user.controller.js'
 
@@ -15,6 +16,8 @@ const upload = multer({
   storage: multer.memoryStorage(),
   limits: { fileSize: 10 * 1024 * 1024 },
 })
+
+router.get('/search-users', searchUsers)
 
 router.delete('/', deleteAllUsers)
 router.post('/', addUser)
