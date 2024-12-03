@@ -1,5 +1,6 @@
 import User from '../models/user.model.js'
 import bcrypt from 'bcryptjs'
+import { uploadImage } from '../services/imageKit.service.js'
 
 export const deleteAllUsers = async (req, res) => {
   const result = await User.deleteMany()
@@ -20,25 +21,50 @@ export const updateUserById = async (req, res) => {
   const { userId } = req.params
   let updateData = { ...req.body }
 
-  if (updateData.newPassword) {
-    const hashedPassword = await bcrypt.hash(updateData.newPassword, 10)
-    updateData.password = hashedPassword
-    delete updateData.newPassword
+  // Handle profile picture upload (if present)
+  if (req.files && req.files.profilePicture) {
+    try {
+      const profilePictureUrl = await uploadImage(
+        req.files.profilePicture[0].buffer,
+        req.files.profilePicture[0].originalname
+      )
+      // Push the new profile picture URL into the existing array
+      updateData.$push = { profilePictureUrl: profilePictureUrl }
+    } catch (error) {
+      return res
+        .status(500)
+        .json({ message: 'Failed to upload profile picture' })
+    }
   }
 
-  if (!updateData.newPassword) {
-    delete updateData.newPassword
+  // Handle valid ID upload (if present)
+  if (req.files && req.files.validId) {
+    try {
+      const validIdUrl = await uploadImage(
+        req.files.validId[0].buffer,
+        req.files.validId[0].originalname
+      )
+      updateData.validIdUrl = validIdUrl
+    } catch (error) {
+      return res.status(500).json({ message: 'Failed to upload valid ID' })
+    }
   }
 
-  const updatedUser = await User.findByIdAndUpdate(userId, updateData, {
-    new: true,
-  })
+  try {
+    // Update the user in the database
+    const updatedUser = await User.findByIdAndUpdate(userId, updateData, {
+      new: true,
+    })
 
-  if (!updatedUser) {
-    return res.status(404).json({ message: 'User not found' })
+    if (!updatedUser) {
+      return res.status(404).json({ message: 'User not found' })
+    }
+
+    return res.status(200).json(updatedUser)
+  } catch (error) {
+    console.error(error)
+    return res.status(500).json({ message: 'Failed to update user' })
   }
-
-  return res.status(200).json(updatedUser)
 }
 
 export const getUserById = async (req, res) => {

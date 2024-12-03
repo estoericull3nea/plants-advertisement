@@ -17,7 +17,7 @@ const UserSchema = new mongoose.Schema(
 
     isVerified: { type: Boolean, default: false },
     validIdUrl: { type: String, required: false },
-    profilePictureUrl: { type: String, required: false },
+    profilePictureUrl: { type: [String], required: false },
   },
   { timestamps: true }
 )
