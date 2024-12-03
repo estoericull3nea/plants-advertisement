@@ -24,6 +24,7 @@ import {
   deleteMessage,
   getAllMessages,
   getMessages,
+  getUsersWithConversations,
   sendMessage,
 } from '../controllers/chat.controller.js'
 
@@ -32,5 +33,7 @@ router.get('/:userId/messages', verifyToken, getMessages)
 
 router.get('/all', verifyToken, getAllMessages)
 router.delete('/:id', verifyToken, deleteMessage)
+
+router.get('/users-with-conversations', verifyToken, getUsersWithConversations)
 
 export default router

@@ -74,6 +74,9 @@ const Chatbox = () => {
   const currentUserId = localStorage.getItem('userId')
   const navigate = useNavigate()
   const [onlineUsers, setOnlineUsers] = useState(new Set())
+  const [filteredUsers, setFilteredUsers] = useState([])
+
+  const [searchQuery, setSearchQuery] = useState('')
 
   const messagesEndRef = useRef(null) // Reference for scrolling
 
@@ -151,24 +154,23 @@ const Chatbox = () => {
     setLoadingUsers(true)
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_DEV_BACKEND_URL}/users`,
+        `${
+          import.meta.env.VITE_DEV_BACKEND_URL
+        }/chats/users-with-conversations`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
         }
       )
-      const filteredUsers = response.data.filter(
-        (user) => user._id !== currentUserId
-      )
-      setUsers(filteredUsers)
+      setUsers(response.data)
     } catch (error) {
-      if (error.response.data.message === 'Unauthorized! Invalid token.') {
+      if (error.response?.data?.message === 'Unauthorized! Invalid token.') {
         toast.error('Please login again')
         localStorage.clear()
         navigate('/login')
       }
-      console.error(error)
+      console.error('Error fetching users with conversations:', error)
     } finally {
       setLoadingUsers(false)
     }
@@ -235,6 +237,20 @@ const Chatbox = () => {
     }
   }
 
+  useEffect(() => {
+    setFilteredUsers(
+      users.filter((user) =>
+        `${user.firstName} ${user.lastName}`
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase())
+      )
+    )
+  }, [searchQuery, users])
+
+  useEffect(() => {
+    console.log('Filtered Users:', filteredUsers) // Debugging: Ensure this is updating as expected
+  }, [filteredUsers])
+
   const handleUserSelect = (userId) => {
     setSelectedUserId(userId)
     fetchMessages(userId)
@@ -280,6 +296,35 @@ const Chatbox = () => {
     <div className='flex flex-col md:flex-row h-auto container my-10 gap-3'>
       <div className='md:w-1/5 border-r p-4'>
         <h2 className='text-xl font-bold'>Users</h2>
+
+        <input
+          type='text'
+          placeholder='Search users...'
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className='mb-4 p-2 border border-gray-300 rounded w-full'
+        />
+
+        {filteredUsers.map((user) => (
+          <div
+            key={user._id}
+            className='p-2 border-b hover:bg-gray-100 cursor-pointer flex justify-between items-center'
+            onClick={() => handleUserSelect(user._id)}
+          >
+            <span>
+              {user.firstName} {user.lastName}
+            </span>
+            <span className='text-gray-500 text-sm'>
+              {formatLastActive(user.lastActive)}
+            </span>
+            {onlineUsers.has(user._id) ? (
+              <span className='text-green-500'>●</span> // Green dot for online
+            ) : (
+              <span className='text-red-500'>●</span> // Red dot for offline
+            )}
+          </div>
+        ))}
+
         {loadingUsers ? (
           <div className='flex flex-col gap-4'>
             <div className='skeleton h-32 w-full'></div>
@@ -288,7 +333,7 @@ const Chatbox = () => {
             <div className='skeleton h-4 w-full'></div>
           </div>
         ) : (
-          users.map((user) => (
+          filteredUsers.map((user) => (
             <div
               key={user._id}
               className='p-2 border-b hover:bg-gray-100 cursor-pointer flex justify-between items-center'

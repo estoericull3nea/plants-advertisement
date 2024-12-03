@@ -123,3 +123,33 @@ export const getAllMessages = async (req, res) => {
     .populate('receiverId')
   return res.status(200).json(messages)
 }
+
+export const getUsersWithConversations = async (req, res) => {
+  const loggedInUserId = req.user
+
+  // Get distinct user IDs that are part of conversations with the logged-in user
+  const userIds = await Message.find({
+    $or: [{ senderId: loggedInUserId }, { receiverId: loggedInUserId }],
+  })
+    .distinct('senderId')
+    .exec()
+
+  const receiverIds = await Message.find({
+    $or: [{ senderId: loggedInUserId }, { receiverId: loggedInUserId }],
+  })
+    .distinct('receiverId')
+    .exec()
+
+  const allUserIds = new Set([...userIds, ...receiverIds])
+
+  // Remove the logged-in user's ID
+  allUserIds.delete(loggedInUserId.toString())
+
+  // Fetch user details for the conversation partners
+  const users = await User.find(
+    { _id: { $in: Array.from(allUserIds) } },
+    'firstName lastName email profilePictureUrl lastActive' // Adjust fields as necessary
+  )
+
+  res.status(200).json(users)
+}
