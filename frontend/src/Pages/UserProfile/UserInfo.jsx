@@ -7,6 +7,9 @@ const UserInfo = ({ isVisitor }) => {
   const { userId } = useParams()
   const navigate = useNavigate()
   const [userData, setUserData] = useState(null)
+  const [cameraStream, setCameraStream] = useState(null)
+  const [capturedImage, setCapturedImage] = useState(null)
+
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [isUpdating, setIsUpdating] = useState(false)
@@ -20,7 +23,6 @@ const UserInfo = ({ isVisitor }) => {
           `${import.meta.env.VITE_DEV_BACKEND_URL}/users/${userId}`
         )
 
-        console.log(response.data)
         setUserData(response.data)
       } catch (err) {
         setError('Failed to fetch user data')
@@ -52,9 +54,10 @@ const UserInfo = ({ isVisitor }) => {
     const validId = e.target.validId.files[0]
     if (validId) {
       formData.append('validId', validId)
+    } else if (capturedImage) {
+      const blob = await fetch(capturedImage).then((r) => r.blob())
+      formData.append('validId', blob, 'valid-id.png')
     }
-
-    console.log(formData)
 
     try {
       await axios.put(
@@ -69,6 +72,7 @@ const UserInfo = ({ isVisitor }) => {
         `${import.meta.env.VITE_DEV_BACKEND_URL}/users/${userId}`
       )
       setUserData(response.data)
+      setCapturedImage(null)
     } catch (err) {
       toast.error('Failed to update user data')
     } finally {
@@ -100,6 +104,41 @@ const UserInfo = ({ isVisitor }) => {
 
   if (error) {
     return <div className='text-red-500'>{error}</div>
+  }
+
+  const startCamera = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+      })
+      setCameraStream(stream)
+    } catch (err) {
+      toast.error('Failed to access camera')
+    }
+  }
+
+  const captureImage = () => {
+    const video = document.getElementById('camera-video')
+    const canvas = document.createElement('canvas')
+    const ctx = canvas.getContext('2d')
+
+    // Set canvas size to video dimensions
+    canvas.width = video.videoWidth
+    canvas.height = video.videoHeight
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
+
+    // Convert canvas to data URL (image)
+    const dataUrl = canvas.toDataURL('image/png')
+    setCapturedImage(dataUrl)
+  }
+
+  const stopCamera = () => {
+    if (cameraStream) {
+      cameraStream.getTracks().forEach((track) => track.stop())
+      setCameraStream(null)
+    }
+
+    setCapturedImage(null)
   }
 
   return (
@@ -134,9 +173,9 @@ const UserInfo = ({ isVisitor }) => {
       <hr />
 
       <form className='p-3 space-y-4' onSubmit={handleUpdate}>
-        <div className='flex gap-3 items-center'>
+        <div className='flex gap-3 items-center justify-center'>
           {userData?.profilePictureUrl?.length > 0 && (
-            <div className='mt-3 text-center'>
+            <div className='mt-3 text-center w-1/2'>
               <label className='block text-sm font-medium mb-2'>
                 Profile Picture
               </label>
@@ -147,20 +186,78 @@ const UserInfo = ({ isVisitor }) => {
                   ]
                 }
                 alt='Profile Picture'
-                className='w-50 h-50 rounded-full object-cover'
+                className='w-full h-96  object-cover'
               />
             </div>
           )}
 
           {userData?.validIdUrl?.length > 0 && (
-            <div className='mt-3 text-center'>
+            <div className='mt-3 text-center w-1/2'>
               <label className='block text-sm font-medium mb-2'>Valid ID</label>
               <img
                 src={userData.validIdUrl}
                 alt='Valid ID'
+                className='w-full h-96 rounded object-cover'
+              />
+            </div>
+          )}
+        </div>
+
+        <div className='w-full'>
+          <label
+            htmlFor='valid-id-camera'
+            className='block mb-2 text-sm font-medium text-gray-900'
+          >
+            Or Use Camera to Capture Valid ID
+          </label>
+
+          {capturedImage ? (
+            <div className='mt-3'>
+              <img
+                src={capturedImage}
+                alt='Captured ID'
                 className='w-50 h-50 rounded object-cover'
               />
             </div>
+          ) : (
+            <>
+              <button
+                type='button'
+                onClick={startCamera}
+                className='py-1 px-3 rounded-lg border-main bg-main text-white shadow-lg'
+              >
+                Open Camera
+              </button>
+              {cameraStream && (
+                <div className='mt-3'>
+                  <video
+                    id='camera-video'
+                    autoPlay
+                    playsInline
+                    className='w-full h-auto rounded-lg'
+                    ref={(videoElement) => {
+                      if (videoElement && cameraStream) {
+                        videoElement.srcObject = cameraStream
+                      }
+                    }}
+                  ></video>
+                  <button
+                    type='button'
+                    onClick={captureImage}
+                    className='py-1 px-3 mr-3 rounded-lg border-main bg-main text-white shadow-lg mt-2'
+                  >
+                    Capture ID
+                  </button>
+                  <button
+                    type='button'
+                    onClick={stopCamera}
+                    className='py-1 px-3 rounded-lg border-main bg-main text-white shadow-lg mt-2'
+                  >
+                    Stop Camera
+                  </button>
+                </div>
+              )}
+            </>
           )}
         </div>
 
