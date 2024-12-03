@@ -115,9 +115,19 @@ const UserInfo = ({ isVisitor }) => {
         {userData?.isVerified ? 'Verified' : 'Not Verified'}
       </div>
       {!userData?.isVerified ? (
-        <p className='text-red-500 font-medium'>
-          Tip: Upload Valid ID then wait for verification 24-48 hours.
-        </p>
+        <div>
+          <p className='text-red-500 font-medium'>
+            Tip 1: Upload Valid ID then wait for verification 24-48 hours.
+          </p>
+          <p className='text-red-500 font-medium'>
+            Possible errors: <span className='font-bold'>No Valid ID</span>,
+            <span className='font-bold'>
+              {' '}
+              Valid ID is not match in credentials{' '}
+            </span>
+            , <span className='font-bold'>Valid ID is not you</span>.
+          </p>
+        </div>
       ) : (
         ''
       )}
@@ -187,7 +197,7 @@ const UserInfo = ({ isVisitor }) => {
               id='valid-id'
               accept='image/*'
               className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5'
-              disabled={isVisitor}
+              disabled={userData?.isVerified || isVisitor}
             />
             {userData?.validId && (
               <div className='mt-3'>
