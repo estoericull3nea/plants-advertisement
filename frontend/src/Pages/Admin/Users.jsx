@@ -17,6 +17,9 @@ const Users = () => {
   const [selectedUser, setSelectedUser] = useState(null)
   const [showDialog, setShowDialog] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
+  const [showValidIdDialog, setShowValidIdDialog] = useState(false)
+  const [validIdUrl, setValidIdUrl] = useState('')
+
   const [newUser, setNewUser] = useState({
     firstName: '',
     lastName: '',
@@ -152,6 +155,15 @@ const Users = () => {
           icon='pi pi-trash'
           className='p-button-rounded p-button-danger'
           onClick={() => deleteUser(rowData._id)}
+        />
+        <Button
+          label='View Valid ID'
+          icon='pi pi-eye'
+          className='p-button-rounded p-button-info'
+          onClick={() => {
+            setValidIdUrl(rowData.validIdUrl)
+            setShowValidIdDialog(true)
+          }}
         />
       </div>
     )
@@ -417,6 +429,22 @@ const Users = () => {
           placeholder='Search users...'
         />
       </div>
+
+      <Dialog
+        visible={showValidIdDialog}
+        style={{ width: '50vw' }}
+        header='Valid ID'
+        modal
+        onHide={() => setShowValidIdDialog(false)}
+      >
+        <div className='p-d-flex p-jc-center'>
+          <img
+            src={validIdUrl}
+            alt='Valid ID'
+            className='w-full max-h-96 object-contain'
+          />
+        </div>
+      </Dialog>
 
       {loading ? (
         skeletonLoader

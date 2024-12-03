@@ -114,9 +114,13 @@ const UserInfo = ({ isVisitor }) => {
       >
         {userData?.isVerified ? 'Verified' : 'Not Verified'}
       </div>
-      <p className='text-red-500 font-medium'>
-        Tip: Upload Valid ID then wait for verification 24-48 hours.
-      </p>
+      {!userData?.isVerified ? (
+        <p className='text-red-500 font-medium'>
+          Tip: Upload Valid ID then wait for verification 24-48 hours.
+        </p>
+      ) : (
+        ''
+      )}
       <hr />
 
       <form className='p-3 space-y-4' onSubmit={handleUpdate}>
