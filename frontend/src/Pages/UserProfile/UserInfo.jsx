@@ -19,6 +19,8 @@ const UserInfo = ({ isVisitor }) => {
         const response = await axios.get(
           `${import.meta.env.VITE_DEV_BACKEND_URL}/users/${userId}`
         )
+
+        console.log(response.data)
         setUserData(response.data)
       } catch (err) {
         setError('Failed to fetch user data')
@@ -104,8 +106,50 @@ const UserInfo = ({ isVisitor }) => {
     <div className='bg-white border p-10 shadow-xl rounded-xl'>
       <h2 className='text-3xl font-bold'>My Details</h2>
       <p className='mt-10'>Personal Information</p>
+      <div
+        id='is-verified'
+        className={`text-sm font-bold ${
+          userData?.isVerified ? 'text-green-500' : 'text-red-500'
+        }`}
+      >
+        {userData?.isVerified ? 'Verified' : 'Not Verified'}
+      </div>
+      <p className='text-red-500 font-medium'>
+        Tip: Upload Valid ID then wait for verification 24-48 hours.
+      </p>
       <hr />
+
       <form className='p-3 space-y-4' onSubmit={handleUpdate}>
+        <div className='flex gap-3 items-center'>
+          {userData?.profilePictureUrl?.length > 0 && (
+            <div className='mt-3 text-center'>
+              <label className='block text-sm font-medium mb-2'>
+                Profile Picture
+              </label>
+              <img
+                src={
+                  userData.profilePictureUrl[
+                    userData.profilePictureUrl.length - 1
+                  ]
+                }
+                alt='Profile Picture'
+                className='w-50 h-50 rounded-full object-cover'
+              />
+            </div>
+          )}
+
+          {userData?.validIdUrl?.length > 0 && (
+            <div className='mt-3 text-center'>
+              <label className='block text-sm font-medium mb-2'>Valid ID</label>
+              <img
+                src={userData.validIdUrl}
+                alt='Valid ID'
+                className='w-50 h-50 rounded object-cover'
+              />
+            </div>
+          )}
+        </div>
+
         {/* Profile Picture */}
         <div className='flex gap-3 items-center'>
           <div className='w-full'>
@@ -123,15 +167,6 @@ const UserInfo = ({ isVisitor }) => {
               className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5'
               disabled={isVisitor}
             />
-            {userData?.profilePicture && (
-              <div className='mt-3'>
-                <img
-                  src={userData.profilePicture}
-                  alt='Profile Picture'
-                  className='w-20 h-20 rounded-full object-cover'
-                />
-              </div>
-            )}
           </div>
 
           {/* Valid ID Upload */}
