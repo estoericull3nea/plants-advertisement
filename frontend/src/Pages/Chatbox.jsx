@@ -156,7 +156,7 @@ const Chatbox = () => {
       const response = await axios.get(
         `${
           import.meta.env.VITE_DEV_BACKEND_URL
-        }/users/search-users?q=${searchQuery}`,
+        }/chats/users-with-conversations`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -164,6 +164,7 @@ const Chatbox = () => {
         }
       )
       setUsers(response.data)
+      setFilteredUsers(response.data) // Initialize filtered users
     } catch (error) {
       if (error.response?.data?.message === 'Unauthorized! Invalid token.') {
         toast.error('Please login again')
@@ -178,8 +179,9 @@ const Chatbox = () => {
 
   // Call fetchUsers whenever searchQuery changes
   useEffect(() => {
-    fetchUsers()
-  }, [searchQuery])
+    fetchCurrentUser()
+    fetchUsers() // Fetch only users with conversations
+  }, [])
 
   const fetchMessages = async (userId) => {
     const token = localStorage.getItem('token')

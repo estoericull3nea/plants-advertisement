@@ -127,29 +127,26 @@ export const getAllMessages = async (req, res) => {
 export const getUsersWithConversations = async (req, res) => {
   const loggedInUserId = req.user
 
-  // Get distinct user IDs that are part of conversations with the logged-in user
-  const userIds = await Message.find({
-    $or: [{ senderId: loggedInUserId }, { receiverId: loggedInUserId }],
-  })
-    .distinct('senderId')
-    .exec()
+  try {
+    const messages = await Message.find({
+      $or: [{ senderId: loggedInUserId }, { receiverId: loggedInUserId }],
+    }).select('senderId receiverId')
 
-  const receiverIds = await Message.find({
-    $or: [{ senderId: loggedInUserId }, { receiverId: loggedInUserId }],
-  })
-    .distinct('receiverId')
-    .exec()
+    const userIds = new Set()
+    messages.forEach((message) => {
+      userIds.add(message.senderId.toString())
+      userIds.add(message.receiverId.toString())
+    })
 
-  const allUserIds = new Set([...userIds, ...receiverIds])
+    userIds.delete(loggedInUserId.toString()) // Remove the logged-in user's ID
 
-  // Remove the logged-in user's ID
-  allUserIds.delete(loggedInUserId.toString())
+    const users = await User.find({ _id: { $in: Array.from(userIds) } })
+      .select('firstName lastName email profilePictureUrl lastActive')
+      .exec()
 
-  // Fetch user details for the conversation partners
-  const users = await User.find(
-    { _id: { $in: Array.from(allUserIds) } },
-    'firstName lastName email profilePictureUrl lastActive' // Adjust fields as necessary
-  )
-
-  res.status(200).json(users)
+    res.status(200).json(users)
+  } catch (error) {
+    console.error('Error fetching users with conversations:', error)
+    res.status(500).json({ message: 'Internal server error' })
+  }
 }
