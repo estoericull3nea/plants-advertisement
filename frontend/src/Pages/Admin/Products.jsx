@@ -14,6 +14,8 @@ const Products = () => {
   const [globalFilter, setGlobalFilter] = useState('') // State for global search
   const [selectedProduct, setSelectedProduct] = useState(null) // State for selected product for editing
   const [displayDialog, setDisplayDialog] = useState(false) // Dialog for updating product
+  const [displayImageDialog, setDisplayImageDialog] = useState(false) // Dialog for displaying images
+  const [selectedProductImages, setSelectedProductImages] = useState([]) // Selected product images
   const navigate = useNavigate()
 
   // Fetch all products from the backend with Bearer token
@@ -80,7 +82,7 @@ const Products = () => {
     if (!token) return
 
     try {
-      const updatedProduct = await axios.put(
+      await axios.put(
         `${import.meta.env.VITE_DEV_BACKEND_URL}/products/${
           selectedProduct._id
         }`,
@@ -145,6 +147,12 @@ const Products = () => {
             body={(rowData) => (rowData.isAvailable ? 'Yes' : 'No')}
           />
           <Column
+            header='Status' // Add this line for the new Status column
+            body={(rowData) => (
+              <span>{rowData.status ? rowData.status : 'Not set'}</span> // Display status or "Not set" if no status is available
+            )}
+          />
+          <Column
             header='Actions'
             body={(rowData) => (
               <div>
@@ -158,6 +166,25 @@ const Products = () => {
                   className='p-button-text p-button-danger ml-2'
                   onClick={() => handleDelete(rowData._id)}
                 />
+
+                {/* Check if the product is not approved or rejected */}
+                {rowData.status !== 'approved' &&
+                  rowData.status !== 'rejected' && (
+                    <>
+                      {/* Approve Button */}
+                      <Button
+                        icon='pi pi-check'
+                        className='p-button-text p-button-success ml-2'
+                        onClick={() => handleApprove(rowData._id)}
+                      />
+                      {/* Reject Button */}
+                      <Button
+                        icon='pi pi-times'
+                        className='p-button-text p-button-warning ml-2'
+                        onClick={() => handleReject(rowData._id)}
+                      />
+                    </>
+                  )}
               </div>
             )}
           />
@@ -177,6 +204,88 @@ const Products = () => {
     if (window.confirm('Are you sure you want to delete this product?')) {
       deleteProduct(productId)
     }
+  }
+
+  // Add the functions for handling the approve/reject actions
+  const handleApprove = async (productId) => {
+    try {
+      const token = localStorage.getItem('token')
+      if (!token) return
+
+      const response = await axios.put(
+        `${import.meta.env.VITE_DEV_BACKEND_URL}/products/${productId}`,
+        { status: 'approved' }, // Assuming status is the field you're updating
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+
+      toast.success('Product approved successfully')
+      fetchProducts() // Reload the product list after approval
+    } catch (error) {
+      console.error(error)
+      toast.error('Failed to approve product')
+    }
+  }
+
+  const handleReject = async (productId) => {
+    try {
+      const token = localStorage.getItem('token')
+      if (!token) return
+
+      const response = await axios.put(
+        `${import.meta.env.VITE_DEV_BACKEND_URL}/products/${productId}`,
+        { status: 'rejected' }, // Assuming status is the field you're updating
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+
+      toast.success('Product rejected successfully')
+      fetchProducts() // Reload the product list after rejection
+    } catch (error) {
+      console.error(error)
+      toast.error('Failed to reject product')
+    }
+  }
+
+  // Handle the "View Images" button click
+  const handleViewImages = (product) => {
+    setSelectedProductImages(product.images) // Assuming `product.images` contains the URLs of the images
+    setDisplayImageDialog(true) // Show the image dialog
+  }
+
+  // Render the Image Dialog
+  const renderImageDialog = () => {
+    return (
+      <Dialog
+        visible={displayImageDialog}
+        style={{ width: '80vw', maxWidth: '900px' }}
+        header='Product Images'
+        modal
+        onHide={() => setDisplayImageDialog(false)}
+      >
+        <div className='flex flex-wrap gap-4'>
+          {selectedProductImages.length > 0 ? (
+            selectedProductImages.map((image, index) => (
+              <div key={index} className='flex justify-center'>
+                <img
+                  src={image}
+                  alt={`Product Image ${index + 1}`}
+                  className='max-w-full max-h-64 object-cover'
+                />
+              </div>
+            ))
+          ) : (
+            <p>No images available</p>
+          )}
+        </div>
+      </Dialog>
+    )
   }
 
   // Dialog for updating a product
@@ -308,6 +417,7 @@ const Products = () => {
     <div className='container mx-auto p-6'>
       {loading ? renderSkeleton() : renderDataTable()}
       {renderDialog()}
+      {renderImageDialog()} {/* Add the image dialog here */}
     </div>
   )
 }

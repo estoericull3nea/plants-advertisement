@@ -1,24 +1,51 @@
+import imageKit from '../imagekit.js'
 import Product from '../models/product.model.js'
 import User from '../models/user.model.js'
 
 export const createProduct = async (req, res) => {
   try {
     const { title, caption, category, stock, price, address } = req.body
+    const images = req.files
 
-    const images = req.files.map((file) => file.path)
+    // Upload images to ImageKit
+    const uploadPromises = images.map((file) => {
+      return new Promise((resolve, reject) => {
+        imageKit.upload(
+          {
+            file: file.buffer, // Pass file buffer to ImageKit
+            fileName: file.originalname, // Set the file name
+            tags: ['product'], // Optional: You can add tags for the uploaded images
+          },
+          (error, result) => {
+            if (error) {
+              reject(error)
+            } else {
+              resolve(result.url) // Resolve the ImageKit URL for the uploaded image
+            }
+          }
+        )
+      })
+    })
 
+    // Wait for all image uploads to finish
+    const imageUrls = await Promise.all(uploadPromises)
+
+    // Create a new product
     const newProduct = new Product({
       title,
       caption,
       category,
       stock,
       price,
-      images,
-      userId: req.user,
+      images: imageUrls, // Save ImageKit URLs
+      userId: req.user, // Assuming user ID is set in the request
       address,
     })
 
+    // Save the product to the database
     const savedProduct = await newProduct.save()
+
+    // Respond with the created product
     res.status(201).json(savedProduct)
   } catch (error) {
     console.error(error)

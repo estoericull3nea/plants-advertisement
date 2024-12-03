@@ -11,7 +11,7 @@ const productSchema = new mongoose.Schema(
     },
     stock: { type: Number, required: true },
     price: { type: Number, required: true },
-    images: [{ type: String }],
+    images: [String],
     quantity: { type: Number, required: false },
     userId: {
       type: mongoose.Schema.Types.ObjectId,

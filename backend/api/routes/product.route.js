@@ -28,7 +28,7 @@ const storage = multer.diskStorage({
 })
 
 // Create the multer instance
-const upload = multer({ storage })
+const upload = multer({ storage: multer.memoryStorage() })
 
 import verifyToken from '../middlewares/verifyToken.js'
 

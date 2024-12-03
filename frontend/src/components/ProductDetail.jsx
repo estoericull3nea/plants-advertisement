@@ -310,7 +310,7 @@ const ProductDetail = () => {
             {product.images.map((image, index) => (
               <SwiperSlide key={index}>
                 <img
-                  src={`https://plants-advertisement.onrender.com/${image}`}
+                  src={`${image}`}
                   className='rounded-box w-full h-full object-cover'
                   alt={`Product Image ${index + 1}`}
                 />
