@@ -127,7 +127,7 @@ const PostProduct = () => {
           },
         }
       )
-      toast.success('Product posted successfully!')
+      toast.success('Your post is pending now, wait for admin approval!')
       setTrigger((prevState) => prevState + 1)
       resetForm()
     } catch (error) {

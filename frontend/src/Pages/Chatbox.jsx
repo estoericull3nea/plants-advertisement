@@ -257,7 +257,7 @@ const Chatbox = () => {
   }
 
   const getFullImageUrl = (filename) => {
-    return `https://plants-advertisement.onrender.com/${filename}`
+    return `${filename}`
   }
 
   const handleImageClick = (index) => {
@@ -304,26 +304,6 @@ const Chatbox = () => {
           onChange={(e) => setSearchQuery(e.target.value)}
           className='mb-4 p-2 border border-gray-300 rounded w-full'
         />
-
-        {filteredUsers.map((user) => (
-          <div
-            key={user._id}
-            className='p-2 border-b hover:bg-gray-100 cursor-pointer flex justify-between items-center'
-            onClick={() => handleUserSelect(user._id)}
-          >
-            <span>
-              {user.firstName} {user.lastName}
-            </span>
-            <span className='text-gray-500 text-sm'>
-              {formatLastActive(user.lastActive)}
-            </span>
-            {onlineUsers.has(user._id) ? (
-              <span className='text-green-500'>●</span> // Green dot for online
-            ) : (
-              <span className='text-red-500'>●</span> // Red dot for offline
-            )}
-          </div>
-        ))}
 
         {loadingUsers ? (
           <div className='flex flex-col gap-4'>
@@ -391,24 +371,7 @@ const Chatbox = () => {
 
                     {/* Conditionally render message text */}
                     <div>
-                      {extractLink(message.text) ? (
-                        <>
-                          {message.text.replace(extractLink(message.text), '')}{' '}
-                          {/* Display text without the link */}
-                          <a
-                            href={extractLink(message.text)}
-                            target='_blank'
-                            rel='noopener noreferrer'
-                            className='text-blue-500'
-                          >
-                            {extractDomain(extractLink(message.text))}{' '}
-                            {/* Display the domain name */}
-                          </a>
-                        </>
-                      ) : (
-                        // If no link is found, display the message as is
-                        message.text
-                      )}
+                      {message.text.replace(extractLink(message.text), '')}
                     </div>
 
                     {/* Product Preview */}
@@ -419,7 +382,7 @@ const Chatbox = () => {
                             {message?.productPreview?.title}
                           </h3>
                           <img
-                            src={`https://plants-advertisement.onrender.com/${message?.productPreview?.image}`}
+                            src={`${message?.productPreview?.image}`}
                             alt={message?.productPreview?.image}
                             className='h-36 w-full rounded-lg transition-transform transform hover:scale-105'
                           />

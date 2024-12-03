@@ -166,18 +166,15 @@ const Products = () => {
                   className='p-button-text p-button-danger ml-2'
                   onClick={() => handleDelete(rowData._id)}
                 />
-
                 {/* Check if the product is not approved or rejected */}
                 {rowData.status !== 'approved' &&
                   rowData.status !== 'rejected' && (
                     <>
-                      {/* Approve Button */}
                       <Button
                         icon='pi pi-check'
                         className='p-button-text p-button-success ml-2'
                         onClick={() => handleApprove(rowData._id)}
                       />
-                      {/* Reject Button */}
                       <Button
                         icon='pi pi-times'
                         className='p-button-text p-button-warning ml-2'
@@ -185,6 +182,13 @@ const Products = () => {
                       />
                     </>
                   )}
+                {/* Add the View Images Button */}
+                <Button
+                  label='View Images'
+                  icon='pi pi-image'
+                  className='p-button-text p-button-info ml-2'
+                  onClick={() => handleViewImages(rowData)}
+                />
               </div>
             )}
           />
