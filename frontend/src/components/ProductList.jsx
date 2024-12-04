@@ -130,7 +130,7 @@ const ProductList = ({ trigger, productsTest }) => {
               key={product._id}
               className='border rounded-lg overflow-hidden shadow-lg'
             >
-              <Link to={`/products/${product._id}`}>
+              <a href={`/products/${product._id}`} target='_blank'>
                 <img
                   src={`${product.images[0]}`}
                   alt={product.title}
@@ -144,7 +144,7 @@ const ProductList = ({ trigger, productsTest }) => {
                     {product.userId.lastName}
                   </p>
                 </div>
-              </Link>
+              </a>
             </div>
           ))
         )}
