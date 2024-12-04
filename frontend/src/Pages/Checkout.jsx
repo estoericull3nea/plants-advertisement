@@ -21,7 +21,13 @@ const Checkout = () => {
   const totalAmount = items.reduce((sum, item) => sum + item.total, 0)
 
   const handlePlaceOrder = async () => {
+    if (totalAmount < 100) {
+      toast.error('Please at least 100 pesos as required by Paymongo')
+      return
+    }
+
     setIsPlacingOrder(true)
+
     const amountInCents = convertToCents(totalAmount)
 
     const description = 'Order from E-commerce site'
