@@ -173,9 +173,9 @@ const UserInfo = ({ isVisitor }) => {
       <hr />
 
       <form className='p-3 space-y-4' onSubmit={handleUpdate}>
-        <div className='flex gap-3 items-center justify-center'>
+        <div className='flex gap-3 items-center justify-center flex-col sm:flex-row'>
           {userData?.profilePictureUrl?.length > 0 && (
-            <div className='mt-3 text-center w-1/2'>
+            <div className='mt-3 text-center sm:w-1/2'>
               <label className='block text-sm font-medium mb-2'>
                 Profile Picture
               </label>
@@ -186,13 +186,13 @@ const UserInfo = ({ isVisitor }) => {
                   ]
                 }
                 alt='Profile Picture'
-                className='w-full h-96  object-cover'
+                className='w-full h-96 object-cover'
               />
             </div>
           )}
 
           {userData?.validIdUrl?.length > 0 && (
-            <div className='mt-3 text-center w-1/2'>
+            <div className='mt-3 text-center sm:w-1/2'>
               <label className='block text-sm font-medium mb-2'>Valid ID</label>
               <img
                 src={userData.validIdUrl}
@@ -309,7 +309,7 @@ const UserInfo = ({ isVisitor }) => {
         </div>
 
         {/* first name and last name */}
-        <div className='flex gap-3 items-center'>
+        <div className='flex gap-3 items-center flex-col sm:flex-row'>
           <div className='w-full'>
             <label
               htmlFor='first-name'
