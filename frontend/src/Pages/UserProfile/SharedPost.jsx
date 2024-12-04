@@ -77,7 +77,7 @@ const SharedPost = ({ isVisitor }) => {
                       <img
                         src={
                           post.productId
-                            ? `https://plants-advertisement.onrender.com/${post.productId.images[0]}`
+                            ? `${post.productId.images[0]}`
                             : '/default-product-image.jpg'
                         }
                         alt={post.productId ? post.productId.title : 'No Image'}
