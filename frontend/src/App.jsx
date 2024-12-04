@@ -1,5 +1,10 @@
 import React from 'react'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  useLocation,
+} from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 
 import Navbar from './components/Navbar'
@@ -21,6 +26,81 @@ import Admin from './Pages/Admin/Admin'
 import CropsPlanning from './Pages/CropsPlanning'
 import Checkout from './Pages/Checkout'
 
+const Layout = () => {
+  const location = useLocation()
+  const isAdminRoute = location.pathname.startsWith('/admin')
+
+  return (
+    <>
+      {/* Conditionally render Navbar and Footer based on the route */}
+      {!isAdminRoute && <Navbar />}
+
+      <Routes>
+        <Route path='/' element={<Home />} />
+        <Route
+          path='/register'
+          element={
+            <ProtectedRoute>
+              <Register />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/login'
+          element={
+            <ProtectedRoute>
+              <Login />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/profile/:userId/*'
+          element={
+            <PrivateRoute>
+              <Profile />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path='/products/:id'
+          element={
+            <PrivateRoute>
+              <ProductDetail />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path='/chats'
+          element={
+            <PrivateRoute>
+              <Chatbox />
+            </PrivateRoute>
+          }
+        />
+        <Route path='/contact' element={<ContactUsForm />} />
+        <Route path='/about' element={<About />} />
+        <Route path='/crops-planning' element={<CropsPlanning />} />
+        <Route path='/checkout' element={<Checkout />} />
+
+        {/* Admin Route */}
+        <Route path='/admin/*' element={<Admin />} />
+
+        <Route
+          path='/posts'
+          element={
+            <PrivateRoute>
+              <PostProduct />
+            </PrivateRoute>
+          }
+        />
+      </Routes>
+
+      {/* Only render Footer if not on an Admin route */}
+      {!isAdminRoute && <Footer />}
+    </>
+  )
+}
+
 const App = () => {
   return (
     <div className=''>
@@ -30,67 +110,7 @@ const App = () => {
         containerClassName='text-xs'
       />
       <Router>
-        <Navbar />
-        <Routes>
-          <Route path='/' element={<Home />} />
-          <Route
-            path='/register'
-            element={
-              <ProtectedRoute>
-                <Register />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path='/login'
-            element={
-              <ProtectedRoute>
-                <Login />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path='/profile/:userId/*'
-            element={
-              <PrivateRoute>
-                <Profile />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path='/products/:id'
-            element={
-              <PrivateRoute>
-                <ProductDetail />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path='/chats'
-            element={
-              <PrivateRoute>
-                <Chatbox />
-              </PrivateRoute>
-            }
-          />
-          <Route path='/contact' element={<ContactUsForm />} />
-          <Route path='/about' element={<About />} />
-
-          <Route path='/crops-planning' element={<CropsPlanning />} />
-          <Route path='/checkout' element={<Checkout />} />
-
-          <Route path='/admin/*' element={<Admin />} />
-
-          <Route
-            path='/posts'
-            element={
-              <PrivateRoute>
-                <PostProduct />
-              </PrivateRoute>
-            }
-          />
-        </Routes>
-        <Footer />
+        <Layout />
       </Router>
     </div>
   )
