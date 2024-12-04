@@ -82,5 +82,125 @@
       "rows": 50
     },
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9t9fuaRweehTbHJMCtrhnh2_VkE_M7mAF7g&s"
+  },
+  {
+    "cropName": "Tomato",
+    "timeOfPlanting": "February - April",
+    "plantPopulation": "20000",
+    "maturity": "50 - 70 Days",
+    "volumeOfProduction": "25 - 40",
+    "distanceOfPlanting": {
+      "hill": 30,
+      "rows": 50
+    },
+    "image": "https://www.fervalle.com/wp-content/uploads/2022/07/580b57fcd9996e24bc43c23b-1024x982.png"
+  },
+  {
+    "cropName": "Spinach",
+    "timeOfPlanting": "All Season",
+    "plantPopulation": "250000",
+    "maturity": "40 - 50 Days",
+    "volumeOfProduction": "10 - 15",
+    "distanceOfPlanting": {
+      "hill": 15,
+      "rows": 30
+    },
+    "image": "https://post.healthline.com/wp-content/uploads/2019/05/spinach-1296x728-header.jpg"
+  },
+  {
+    "cropName": "Lettuce",
+    "timeOfPlanting": "March - August",
+    "plantPopulation": "150000",
+    "maturity": "45 - 60 Days",
+    "volumeOfProduction": "10 - 20",
+    "distanceOfPlanting": {
+      "hill": 20,
+      "rows": 25
+    },
+    "image": "https://i0.wp.com/post.healthline.com/wp-content/uploads/2020/03/romaine-lettuce-1296x728-body.jpg?w=1155&h=1528"
+  },
+  {
+    "cropName": "Potato",
+    "timeOfPlanting": "March - June",
+    "plantPopulation": "2500",
+    "maturity": "90 - 120 Days",
+    "volumeOfProduction": "35 - 50",
+    "distanceOfPlanting": {
+      "hill": 30,
+      "rows": 60
+    },
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTP0eqkPvKnP9hdTDq01i9tZi_u5EJvkzcBRg&s"
+  },
+  {
+    "cropName": "Onion",
+    "timeOfPlanting": "January - March",
+    "plantPopulation": "50000",
+    "maturity": "100 - 120 Days",
+    "volumeOfProduction": "15 - 25",
+    "distanceOfPlanting": {
+      "hill": 25,
+      "rows": 30
+    },
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_c4mzTsqYoLWHNziM4mHQEEp6-qCek6H7bQ&s"
+  },
+  {
+    "cropName": "Peas",
+    "timeOfPlanting": "March - May",
+    "plantPopulation": "30000",
+    "maturity": "50 - 60 Days",
+    "volumeOfProduction": "5 - 10",
+    "distanceOfPlanting": {
+      "hill": 20,
+      "rows": 25
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Peas_in_pods_-_Studio.jpg/800px-Peas_in_pods_-_Studio.jpg"
+  },
+  {
+    "cropName": "Bell Pepper",
+    "timeOfPlanting": "January - March",
+    "plantPopulation": "50000",
+    "maturity": "50 - 60 Days",
+    "volumeOfProduction": "15 - 20",
+    "distanceOfPlanting": {
+      "hill": 25,
+      "rows": 30
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/8/85/Green-Yellow-Red-Pepper-2009.jpg"
+  },
+  {
+    "cropName": "Corn",
+    "timeOfPlanting": "March - June",
+    "plantPopulation": "30000",
+    "maturity": "75 - 100 Days",
+    "volumeOfProduction": "50 - 75",
+    "distanceOfPlanting": {
+      "hill": 30,
+      "rows": 80
+    },
+    "image": "https://cdn.britannica.com/36/167236-050-BF90337E/Ears-corn.jpg"
+  },
+  {
+    "cropName": "Cucumber",
+    "timeOfPlanting": "April - June",
+    "plantPopulation": "50000",
+    "maturity": "50 - 70 Days",
+    "volumeOfProduction": "10 - 20",
+    "distanceOfPlanting": {
+      "hill": 40,
+      "rows": 80
+    },
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTlZhnkgqIZBluqIBsejzhkTenOiEjs7cBTEw&s"
+  },
+  {
+    "cropName": "Zucchini",
+    "timeOfPlanting": "May - July",
+    "plantPopulation": "10000",
+    "maturity": "50 - 60 Days",
+    "volumeOfProduction": "15 - 20",
+    "distanceOfPlanting": {
+      "hill": 50,
+      "rows": 100
+    },
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNZ2hJYtaYVZYq1AdkzdUAK3kPZ8hUjFkz7A&s"
   }
 ]
