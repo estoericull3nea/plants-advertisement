@@ -7,5 +7,4 @@ integrate map
 login admin redirect
 add speedinsights in vercel
 
-remove link on chat
 check the payment history
