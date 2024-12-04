@@ -20,8 +20,17 @@ export const createPaymentLinkController = async (req, res) => {
 }
 
 export const getAllPaymentLinksController = async (req, res) => {
-  const paymentLinks = await getAllPaymentLinks()
-  res.status(200).json(paymentLinks)
+  const { userId } = req.params
+
+  console.log(userId)
+
+  try {
+    const paymentLinks = await getAllPaymentLinks(userId)
+    res.status(200).json(paymentLinks)
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ error: 'Failed to fetch payment links' })
+  }
 }
 
 export const getPaymentLinkByIdController = async (req, res) => {

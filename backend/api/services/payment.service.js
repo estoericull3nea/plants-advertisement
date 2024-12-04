@@ -43,8 +43,11 @@ export const createPaymentLink = async (
   return paymentLink
 }
 
-export const getAllPaymentLinks = async () => {
-  const paymentLinks = await PaymentLink.find().populate('userId', 'name email')
+export const getAllPaymentLinks = async (userId) => {
+  const paymentLinks = await PaymentLink.find({ userId })
+    .populate('userId', 'firstName lastName email')
+    .exec()
+
   return paymentLinks
 }
 

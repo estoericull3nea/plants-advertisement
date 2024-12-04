@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import toast from 'react-hot-toast'
 import { useParams } from 'react-router-dom'
+import { jwtDecode } from 'jwt-decode'
 
 const PaymentHistory = ({ isVisitor }) => {
   if (isVisitor) {
@@ -21,10 +22,16 @@ const PaymentHistory = ({ isVisitor }) => {
 
   const fetchPaymentHistory = async () => {
     setLoading(true)
+
+    const token = localStorage.getItem('token')
+    const userId = jwtDecode(token).id
+
     try {
       // Fetch payment links for the user
       const paymentLinksResponse = await axios.get(
-        `${import.meta.env.VITE_DEV_BACKEND_URL}/payments/payment-links`,
+        `${
+          import.meta.env.VITE_DEV_BACKEND_URL
+        }/payments/payment-links/users/${userId}`,
         {
           params: { userId },
         }
