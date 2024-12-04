@@ -116,7 +116,7 @@ const ProductTable = ({ isVisitor }) => {
       {rowData.images.map((image, index) => (
         <img
           key={index}
-          src={`https://plants-advertisement.onrender.com/${image}`}
+          src={`${image}`}
           alt={`Product Image ${index + 1}`}
           className='h-20 w-20 object-cover'
         />
@@ -150,6 +150,8 @@ const ProductTable = ({ isVisitor }) => {
           <Column field='category' header='Category' />
           <Column field='stock' header='Stock' />
           <Column field='price' header='Price' />
+          <Column field='status' header='Status' sortable />
+
           <Column field='address' header='Address' />
           <Column
             field='isAvailable'
@@ -339,14 +341,14 @@ const ProductTable = ({ isVisitor }) => {
               selectedProduct.map((image, index) => (
                 <img
                   key={index}
-                  src={`https://plants-advertisement.onrender.com/${image}`}
+                  src={`${image}`}
                   alt={`Product Image ${index + 1}`}
                   className='h-40 w-40 object-cover'
                 />
               ))
             ) : (
               <img
-                src={`https://plants-advertisement.onrender.com/${selectedProduct}`}
+                src={`${selectedProduct}`}
                 alt='Product Image'
                 className='h-40 w-40 object-cover'
               />

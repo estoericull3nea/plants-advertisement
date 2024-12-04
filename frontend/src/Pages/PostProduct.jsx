@@ -17,6 +17,7 @@ const PostProduct = () => {
   const [searchQuery, setSearchQuery] = useState('')
   const [searchResults, setSearchResults] = useState([])
   const [userStatus, setUserStatus] = useState(null) // Stores the user verification status
+  const [loadingSubmit, setLoadingSubmit] = useState(false)
 
   const [loading, setLoading] = useState(false)
   const [notFoundSearch, setNotFoundSearch] = useState(false)
@@ -97,6 +98,7 @@ const PostProduct = () => {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault()
+    setLoadingSubmit(true)
     const productData = new FormData()
     productData.append('title', title)
     productData.append('caption', caption)
@@ -127,11 +129,13 @@ const PostProduct = () => {
           },
         }
       )
-      toast.success('Your post is pending now, wait for admin approval!')
+      toast.success('Product posted, wait for admin approval!')
       setTrigger((prevState) => prevState + 1)
       resetForm()
     } catch (error) {
       setMessage('Error posting product: ' + error.message)
+    } finally {
+      setLoadingSubmit(false) // Set loading to false once the submission is complete
     }
   }
 
@@ -378,8 +382,9 @@ const PostProduct = () => {
             <button
               type='submit'
               className='py-1 px-3 rounded-lg border-main bg-main text-white shadow-lg'
+              disabled={loadingSubmit} // Disable the button when submitting
             >
-              Post Product
+              {loadingSubmit ? 'Posting...' : 'Post Product'}
             </button>
           </form>
         </div>
