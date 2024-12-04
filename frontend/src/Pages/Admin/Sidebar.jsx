@@ -1,14 +1,24 @@
 import React, { useState } from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom' // Import useNavigate for redirection
 import { HiChevronLeft, HiChevronRight } from 'react-icons/hi' // Import arrow icons
 
 const Sidebar = () => {
   // State to manage the mobile menu visibility
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
+  const navigate = useNavigate() // Initialize useNavigate hook to redirect
+
   // Toggle menu visibility for mobile
   const toggleMenu = () => {
     setIsMenuOpen((prevState) => !prevState)
+  }
+
+  // Handle logout functionality
+  const handleLogout = () => {
+    localStorage.removeItem('token')
+    localStorage.removeItem('userId')
+
+    navigate('/login')
   }
 
   return (
@@ -90,6 +100,12 @@ const Sidebar = () => {
               Contacts
             </NavLink>
           </li>
+          {/* Logout Button for Mobile */}
+          <li>
+            <button onClick={handleLogout} className='text-red-500'>
+              Logout
+            </button>
+          </li>
         </ul>
       </div>
 
@@ -147,6 +163,10 @@ const Sidebar = () => {
             >
               Contacts
             </NavLink>
+          </li>
+          {/* Logout Button for Desktop */}
+          <li>
+            <button onClick={handleLogout}>Logout</button>
           </li>
         </ul>
       </div>

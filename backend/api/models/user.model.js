@@ -18,6 +18,12 @@ const UserSchema = new mongoose.Schema(
     isVerified: { type: Boolean, default: false },
     validIdUrl: { type: String, required: false },
     profilePictureUrl: { type: [String], required: false },
+
+    role: {
+      type: String,
+      enum: ['user', 'admin'],
+      default: 'user',
+    },
   },
   { timestamps: true }
 )

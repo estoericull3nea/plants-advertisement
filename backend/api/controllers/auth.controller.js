@@ -74,8 +74,6 @@ export const registerUser = async (req, res) => {
 export const loginUser = async (req, res, next) => {
   const { email, password } = req.body
 
-  console.log(req.body)
-
   const user = await User.findOne({ email })
 
   if (!user || !(await bcrypt.compare(password, user.password))) {
@@ -85,9 +83,13 @@ export const loginUser = async (req, res, next) => {
   user.lastActive = new Date()
   await user.save()
 
-  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-    expiresIn: '1h',
-  })
+  const token = jwt.sign(
+    { id: user._id, role: user.role },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: '1h',
+    }
+  )
 
   res.status(200).json({ token })
 }
