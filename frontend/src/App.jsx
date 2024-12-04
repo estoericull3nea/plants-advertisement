@@ -32,7 +32,6 @@ const Layout = () => {
 
   return (
     <>
-      {/* Conditionally render Navbar and Footer based on the route */}
       {!isAdminRoute && <Navbar />}
 
       <Routes>
@@ -95,7 +94,6 @@ const Layout = () => {
         />
       </Routes>
 
-      {/* Only render Footer if not on an Admin route */}
       {!isAdminRoute && <Footer />}
     </>
   )
@@ -103,7 +101,7 @@ const Layout = () => {
 
 const App = () => {
   useEffect(() => {
-    document.title = 'Home | FarmMart' // Set the page title
+    document.title = 'FarmMart'
   }, [])
 
   return (
