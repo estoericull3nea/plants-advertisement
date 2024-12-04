@@ -79,7 +79,6 @@ function Navbar() {
       transition: {
         type: 'tween',
         when: 'beforeChildren',
-        staggerChildren: 0.2,
       },
     },
   }
