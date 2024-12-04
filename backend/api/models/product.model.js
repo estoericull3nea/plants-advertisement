@@ -18,7 +18,7 @@ const productSchema = new mongoose.Schema(
       ref: 'User',
       required: true,
     },
-    address: { type: String, required: true },
+    address: { type: String, required: false },
     isAvailable: { type: Boolean, default: true },
     status: {
       type: String,

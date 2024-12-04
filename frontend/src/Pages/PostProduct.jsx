@@ -18,6 +18,7 @@ const PostProduct = () => {
   const [searchResults, setSearchResults] = useState([])
   const [userStatus, setUserStatus] = useState(null) // Stores the user verification status
   const [loadingSubmit, setLoadingSubmit] = useState(false)
+  const [completeAddress, setCompleteAddress] = useState(false)
 
   const [loading, setLoading] = useState(false)
   const [notFoundSearch, setNotFoundSearch] = useState(false)
@@ -36,6 +37,11 @@ const PostProduct = () => {
         const response = await axios.get(
           `${import.meta.env.VITE_DEV_BACKEND_URL}/users/${userId}`
         )
+
+        const barangay = response.data.barangay
+        const municipality = response.data.municipality
+        const completeAddress = `${barangay}, ${municipality}, Pangasinan`
+        setCompleteAddress(completeAddress)
 
         // Check if the user is verified
         if (response.data.isVerified !== true) {
@@ -61,6 +67,10 @@ const PostProduct = () => {
     productData.append('category', category)
     productData.append('stock', stock)
     productData.append('price', price)
+    productData.append('address', completeAddress)
+
+    console.log(productData)
+    return
 
     images.forEach((image) => {
       productData.append('images', image)
