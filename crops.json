@@ -8,7 +8,8 @@
     "distanceOfPlanting": {
       "hill": 40,
       "rows": 60
-    }
+    },
+    "image": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRjmFNidKrIMM_tf1sVQoS4VHcUEx136nJRyqvK8iIVvbQtnFhIgg6YDzAo1NEcVv1KbrUVJB91eFnUylU2aMUJOg"
   },
   {
     "cropName": "Cantaloupe",
@@ -19,7 +20,8 @@
     "distanceOfPlanting": {
       "hill": 50,
       "rows": 100
-    }
+    },
+    "image": "https://shopsuki.ph/cdn/shop/products/108154482_1024x.jpg?v=1696494225"
   },
   {
     "cropName": "Carrot",
@@ -30,50 +32,55 @@
     "distanceOfPlanting": {
       "hill": 15,
       "rows": 20
-    }
+    },
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTba3FfUO6CI9cySnHdGt1roZY60bdUInxLXQ&s"
   },
   {
     "cropName": "Cauliflower",
     "timeOfPlanting": "September - December",
     "plantPopulation": "14619",
-    "maturity": "45 - 60 Dat",
+    "maturity": "45 - 60 Days",
     "volumeOfProduction": "20 Heads",
     "distanceOfPlanting": {
       "hill": 35,
       "rows": 60
-    }
+    },
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXo1pTXhMFZ52F1Ydkf5Qd7yrdSOrGfYMIQA&s"
   },
   {
     "cropName": "Celery",
     "timeOfPlanting": "September - January",
     "plantPopulation": "250000",
-    "maturity": "65 - 75 Dap",
+    "maturity": "65 - 75 DAP",
     "volumeOfProduction": "5 - 6",
     "distanceOfPlanting": {
       "hill": 20,
       "rows": 20
-    }
+    },
+    "image": "https://media.post.rvohealth.io/wp-content/uploads/sites/3/2020/02/270678_1100-1100x628.jpg"
   },
   {
     "cropName": "Chayote",
     "timeOfPlanting": "September - January",
     "plantPopulation": "12500",
-    "maturity": "6 - 10 Dat",
+    "maturity": "6 - 10 Days",
     "volumeOfProduction": "2.5 - 4.0",
     "distanceOfPlanting": {
       "hill": 40,
       "rows": 200
-    }
+    },
+    "image": "https://www.health.com/thmb/xYj4BV9SxIn9K5lDNaV84x2sr08=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/Chayote-022b6c79efcd4dda831535144b3cb30c.jpg"
   },
   {
     "cropName": "Chick Pea",
     "timeOfPlanting": "September - January",
     "plantPopulation": "133333",
-    "maturity": "60 - 90 Dat",
+    "maturity": "60 - 90 Days",
     "volumeOfProduction": "2.5 - 3.0",
     "distanceOfPlanting": {
       "hill": 15,
       "rows": 50
-    }
+    },
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9t9fuaRweehTbHJMCtrhnh2_VkE_M7mAF7g&s"
   }
 ]

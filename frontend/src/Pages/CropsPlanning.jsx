@@ -95,6 +95,16 @@ const CropsPlanning = () => {
           responsiveLayout='scroll'
           globalFilter={searchTerm}
         >
+          <Column
+            header='Image'
+            body={(rowData) => (
+              <img
+                src={rowData.image}
+                alt={rowData.cropName}
+                className='w-20 h-20 object-cover'
+              />
+            )}
+          />
           <Column field='cropName' header='Crop Name' sortable />
           <Column field='timeOfPlanting' header='Time of Planting' sortable />
           <Column field='plantPopulation' header='Plant Population' sortable />
