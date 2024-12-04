@@ -69,9 +69,6 @@ const PostProduct = () => {
     productData.append('price', price)
     productData.append('address', completeAddress)
 
-    console.log(productData)
-    return
-
     images.forEach((image) => {
       productData.append('images', image)
     })
