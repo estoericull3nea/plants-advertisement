@@ -14,6 +14,7 @@ import User from './api/models/user.model.js'
 const allowedOrigins = [
   process.env.VITE_DEV_FRONTEND_URL,
   'http://localhost:5173',
+  'https://farmmart-trading.vercel.app',
 ]
 
 dotenv.config()
