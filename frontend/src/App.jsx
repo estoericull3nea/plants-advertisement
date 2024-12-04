@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   BrowserRouter as Router,
   Route,
@@ -102,6 +102,10 @@ const Layout = () => {
 }
 
 const App = () => {
+  useEffect(() => {
+    document.title = 'Home | FarmMart' // Set the page title
+  }, [])
+
   return (
     <div className=''>
       <Toaster
