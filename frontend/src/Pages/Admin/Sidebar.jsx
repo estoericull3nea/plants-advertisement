@@ -164,6 +164,16 @@ const Sidebar = () => {
               Contacts
             </NavLink>
           </li>
+          <li>
+            <NavLink
+              to={`/admin/transactions`}
+              className={({ isActive }) =>
+                isActive ? 'bg-main' : 'text-gray-700'
+              }
+            >
+              Transactions
+            </NavLink>
+          </li>
           {/* Logout Button for Desktop */}
           <li>
             <button onClick={handleLogout}>Logout</button>
