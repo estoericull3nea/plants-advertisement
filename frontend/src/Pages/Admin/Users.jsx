@@ -158,11 +158,15 @@ const Users = () => {
   const actionBodyTemplate = (rowData) => {
     return (
       <div className='flex gap-2'>
-        {/* <Button
-          icon='pi pi-eye'
-          className='p-button-rounded p-button-info'
-          onClick={() => viewUser(rowData._id)}
-        /> */}
+        {/* Replace delete button with toggle enabled/disabled button */}
+        <Button
+          icon={rowData.isEnabled ? 'pi pi-lock-open' : 'pi pi-lock'}
+          className={`p-button-rounded ${
+            rowData.isEnabled ? 'p-button-success' : 'p-button-danger'
+          }`}
+          onClick={() => toggleEnabledStatus(rowData)}
+          title={rowData.isEnabled ? 'Disable User' : 'Enable User'}
+        />
         <Button
           icon='pi pi-pencil'
           className='p-button-rounded p-button-warning'
@@ -173,31 +177,38 @@ const Users = () => {
           }}
         />
         <Button
-          icon='pi pi-trash'
-          className='p-button-rounded p-button-danger'
-          onClick={() => deleteUser(rowData._id)}
-        />
-        <Button
-          label='View Valid ID'
           icon='pi pi-eye'
+          label='View Valid ID'
           className='p-button-rounded p-button-info'
           onClick={() => {
             setValidIdUrl(rowData.validIdUrl)
             setShowValidIdDialog(true)
           }}
         />
-        <Button
-          label={rowData.isVerified ? 'Make Unverified' : 'Make Verified'}
-          icon={rowData.isVerified ? 'pi pi-times' : 'pi pi-check'}
-          className={`p-button-rounded ${
-            rowData.isVerified
-              ? 'p-button-danger bg-red-200 p-3 text-black'
-              : 'p-button-success bg-green-200 p-3 text-black'
-          }`}
-          onClick={() => toggleVerificationStatus(rowData)}
-        />
       </div>
     )
+  }
+
+  const toggleEnabledStatus = (user) => {
+    const updatedUser = { ...user, isEnabled: !user.isEnabled }
+
+    axios
+      .put(
+        `${import.meta.env.VITE_DEV_BACKEND_URL}/users/${user._id}`,
+        updatedUser
+      )
+      .then((response) => {
+        setUsers(users.map((u) => (u._id === user._id ? response.data : u)))
+        toast.success(
+          `User ${user.firstName} has been ${
+            user.isEnabled ? 'enabled' : 'disabled'
+          } successfully!`
+        )
+      })
+      .catch((error) => {
+        console.error('Error updating user status:', error)
+        toast.error('Could not update user status!')
+      })
   }
 
   // Skeleton loading while fetching users
@@ -558,6 +569,22 @@ const Users = () => {
               </span>
             )}
           />
+
+          <Column
+            field='isEnabled'
+            header='Status'
+            sortable
+            body={(rowData) => (
+              <span
+                className={
+                  rowData.isEnabled ? 'text-green-500' : 'text-red-500'
+                }
+              >
+                {rowData.isEnabled ? 'Enabled' : 'Disabled'}
+              </span>
+            )}
+          />
+
           {/* <Column
             field='isVerified'
             header='Verified'
