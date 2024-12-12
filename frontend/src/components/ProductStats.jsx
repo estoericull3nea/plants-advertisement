@@ -1,28 +1,17 @@
-// src/components/ProductStats.js
-
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import { Line } from 'react-chartjs-2'
+import { Bar } from 'react-chartjs-2'
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
-  PointElement,
-  LineElement,
+  BarElement,
   Title,
   Tooltip,
   Legend,
 } from 'chart.js'
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
-)
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 const ProductStats = () => {
   const [data, setData] = useState(null)
@@ -55,8 +44,10 @@ const ProductStats = () => {
                 selectedOption.charAt(0).toUpperCase() + selectedOption.slice(1)
               } Product Posts`,
               data: data[selectedOption].data,
-              borderColor: 'rgba(75, 192, 192, 1)',
-              fill: false,
+              backgroundColor: 'rgba(0, 0, 0, 0.7)', // Set bar color to black
+              borderColor: 'rgba(0, 0, 0, 1)', // Set border color to black
+              borderWidth: 1,
+              barThickness: 20, // Optional: Adjust the bar thickness
             },
           ],
         }
@@ -105,6 +96,7 @@ const ProductStats = () => {
         </div>
       ) : (
         <div>
+          {/* Dropdown to select daily, weekly, monthly, or yearly */}
           <div className='mb-4'>
             <label htmlFor='timeframe' className='mr-2'>
               Select Timeframe:
@@ -121,7 +113,9 @@ const ProductStats = () => {
               <option value='yearly'>Yearly</option>
             </select>
           </div>
-          <Line data={chartData} options={options} />
+
+          {/* Bar Chart component */}
+          <Bar data={chartData} options={options} />
         </div>
       )}
     </div>

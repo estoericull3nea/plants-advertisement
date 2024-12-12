@@ -285,7 +285,7 @@ const AdminDashboard = () => {
                     Age
                   </th>
                   <th className='px-4 py-2 text-left text-sm font-semibold text-gray-600'>
-                    Last Active
+                    Date and Time Registered
                   </th>
                   <th className='px-4 py-2 text-left text-sm font-semibold text-gray-600'>
                     Verified
@@ -315,7 +315,7 @@ const AdminDashboard = () => {
                     </td>
                     <td className='px-4 py-2'>{user.age || 'N/A'}</td>
                     <td className='px-4 py-2'>
-                      {new Date(user.lastActive).toLocaleString()}
+                      {new Date(user.createdAt).toLocaleString()}
                     </td>
                     <td className='px-4 py-2'>
                       {user.isVerified ? 'Yes' : 'No'}

@@ -1,28 +1,17 @@
-// src/components/RegistrationStats.js
-
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import { Line } from 'react-chartjs-2'
+import { Bar } from 'react-chartjs-2'
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
-  PointElement,
-  LineElement,
+  BarElement,
   Title,
   Tooltip,
   Legend,
 } from 'chart.js'
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
-)
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 const RegistrationStats = () => {
   const [data, setData] = useState(null)
@@ -56,8 +45,10 @@ const RegistrationStats = () => {
                 selectedOption.charAt(0).toUpperCase() + selectedOption.slice(1)
               } Registrations`,
               data: data[selectedOption].data,
-              borderColor: 'rgba(75, 192, 192, 1)',
-              fill: false,
+              backgroundColor: 'rgba(0, 0, 0, 0.7)', // Set bar color to black
+              borderColor: 'rgba(0, 0, 0, 1)', // Set border color to black
+              borderWidth: 1,
+              barThickness: 20, // You can adjust the bar thickness
             },
           ],
         }
@@ -126,8 +117,8 @@ const RegistrationStats = () => {
             </select>
           </div>
 
-          {/* Chart component */}
-          <Line data={chartData} options={options} />
+          {/* Bar Chart component */}
+          <Bar data={chartData} options={options} />
         </div>
       )}
     </div>
