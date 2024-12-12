@@ -3,6 +3,7 @@ import {
   checkStatusOfPaymentById,
   createPaymentLinkController,
   getAllPaymentLinksController,
+  getAllPaymentsController,
   getPaymentLinkByIdController,
   paymentWebhook,
 } from '../controllers/payment.controller.js'
@@ -20,5 +21,6 @@ router.get(
   verifyToken,
   checkStatusOfPaymentById
 )
+router.get('/payments', verifyToken, getAllPaymentsController)
 
 export default router

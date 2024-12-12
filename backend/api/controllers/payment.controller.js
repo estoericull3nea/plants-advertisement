@@ -3,6 +3,7 @@ import {
   getAllPaymentLinks,
   getPaymentLinkById,
   updatePaymentStatus,
+  getAllPayments,
 } from '../services/payment.service.js'
 
 import axios from 'axios'
@@ -101,4 +102,14 @@ export const checkStatusOfPaymentById = async (req, res) => {
 
   const paymentStatus = paymentLink.attributes.status
   return res.status(200).json(response.data.data)
+}
+
+export const getAllPaymentsController = async (req, res) => {
+  try {
+    const payments = await getAllPayments()
+    res.status(200).json(payments)
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ error: 'Failed to fetch payments' })
+  }
 }

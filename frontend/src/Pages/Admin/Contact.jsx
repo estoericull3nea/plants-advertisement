@@ -58,23 +58,23 @@ const Contact = () => {
   }
 
   // Delete a contact
-  const deleteContact = async (id) => {
-    setLoading(true)
-    try {
-      await axios.delete(
-        `${import.meta.env.VITE_DEV_BACKEND_URL}/contacts/${id}`
-      )
-      setContacts((prevContacts) =>
-        prevContacts.filter((contact) => contact._id !== id)
-      )
-      toast.success('Contact deleted successfully')
-    } catch (error) {
-      console.error('Error deleting contact:', error)
-      toast.error('Failed to delete contact')
-    } finally {
-      setLoading(false)
-    }
-  }
+  // const deleteContact = async (id) => {
+  //   setLoading(true)
+  //   try {
+  //     await axios.delete(
+  //       `${import.meta.env.VITE_DEV_BACKEND_URL}/contacts/${id}`
+  //     )
+  //     setContacts((prevContacts) =>
+  //       prevContacts.filter((contact) => contact._id !== id)
+  //     )
+  //     toast.success('Contact deleted successfully')
+  //   } catch (error) {
+  //     console.error('Error deleting contact:', error)
+  //     toast.error('Failed to delete contact')
+  //   } finally {
+  //     setLoading(false)
+  //   }
+  // }
 
   // Date formatting function
   const dateBodyTemplate = (rowData) => {
@@ -145,7 +145,7 @@ const Contact = () => {
             sortable
             body={dateBodyTemplate} // Date and time formatting
           />
-          <Column
+          {/* <Column
             header='Actions'
             body={(rowData) => (
               <div className='flex gap-2'>
@@ -157,7 +157,7 @@ const Contact = () => {
                 </button>
               </div>
             )}
-          />
+          /> */}
         </DataTable>
       )}
     </div>

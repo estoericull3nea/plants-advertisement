@@ -74,3 +74,9 @@ export const updatePaymentStatus = async (paymongoId, status) => {
 
   console.log('Payment status updated successfully')
 }
+
+export const getAllPayments = async () => {
+  const payments = await PaymentLink.find().populate('userId').exec()
+
+  return payments
+}
