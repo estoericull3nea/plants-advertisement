@@ -74,22 +74,32 @@ export const registerUser = async (req, res) => {
 export const loginUser = async (req, res, next) => {
   const { email, password } = req.body
 
+  // Find the user by email
   const user = await User.findOne({ email })
 
+  // If user doesn't exist or password is incorrect, return an error
   if (!user || !(await bcrypt.compare(password, user.password))) {
     return res.status(401).json({ message: 'Invalid credentials' })
   }
 
+  // Check if the user is disabled
+  if (!user.isEnabled) {
+    return res
+      .status(403)
+      .json({ message: 'Account is disabled. Please contact support.' })
+  }
+
+  // Update the last active time of the user
   user.lastActive = new Date()
   await user.save()
 
+  // Generate a JWT token
   const token = jwt.sign(
     { id: user._id, role: user.role },
     process.env.JWT_SECRET,
-    {
-      expiresIn: '1h',
-    }
+    { expiresIn: '1h' }
   )
 
+  // Send the token in the response
   res.status(200).json({ token })
 }
