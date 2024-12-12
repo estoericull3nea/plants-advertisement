@@ -22,8 +22,6 @@ export const createPaymentLinkController = async (req, res) => {
 export const getAllPaymentLinksController = async (req, res) => {
   const { userId } = req.params
 
-  console.log(userId)
-
   try {
     const paymentLinks = await getAllPaymentLinks(userId)
     res.status(200).json(paymentLinks)

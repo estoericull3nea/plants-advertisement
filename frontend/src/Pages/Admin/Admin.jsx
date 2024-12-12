@@ -6,6 +6,7 @@ import Users from './Users'
 import Products from './Products'
 import Chats from './Chats'
 import Contact from './Contact'
+import Transactions from './Transactions'
 
 const Admin = () => {
   return (
@@ -22,6 +23,7 @@ const Admin = () => {
             <Route path='/products' element={<Products />} />
             <Route path='/chats' element={<Chats />} />
             <Route path='/contacts' element={<Contact />} />
+            <Route path='/transactions' element={<Transactions />} />
           </Routes>
         </div>
       </div>
