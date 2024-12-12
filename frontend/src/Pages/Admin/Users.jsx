@@ -118,6 +118,27 @@ const Users = () => {
       })
   }
 
+  const toggleVerificationStatus = (user) => {
+    const updatedUser = { ...user, isVerified: !user.isVerified }
+    axios
+      .put(
+        `${import.meta.env.VITE_DEV_BACKEND_URL}/users/${user._id}`,
+        updatedUser
+      )
+      .then((response) => {
+        setUsers(users.map((u) => (u._id === user._id ? response.data : u)))
+        toast.success(
+          `User ${user.firstName} ${
+            user.isVerified ? 'unverified' : 'verified'
+          } successfully!`
+        )
+      })
+      .catch((error) => {
+        console.error('Error updating user verification status:', error)
+        toast.error('Could not update user verification status!')
+      })
+  }
+
   // Handle viewing a single user
   const viewUser = (userId) => {
     axios
@@ -164,6 +185,14 @@ const Users = () => {
             setValidIdUrl(rowData.validIdUrl)
             setShowValidIdDialog(true)
           }}
+        />
+        <Button
+          label={rowData.isVerified ? 'Make Unverified' : 'Make Verified'}
+          icon={rowData.isVerified ? 'pi pi-times' : 'pi pi-check'}
+          className={`p-button-rounded ${
+            rowData.isVerified ? 'p-button-danger' : 'p-button-success'
+          }`}
+          onClick={() => toggleVerificationStatus(rowData)}
         />
       </div>
     )
@@ -290,7 +319,15 @@ const Users = () => {
           <input
             id='dateOfBirth'
             type='date'
-            value={isEditing ? selectedUser.dateOfBirth : newUser.dateOfBirth}
+            value={
+              isEditing
+                ? selectedUser.dateOfBirth
+                  ? new Date(selectedUser.dateOfBirth)
+                      .toISOString()
+                      .split('T')[0]
+                  : ''
+                : newUser.dateOfBirth
+            }
             onChange={(e) =>
               isEditing
                 ? setSelectedUser({
@@ -302,7 +339,7 @@ const Users = () => {
             className='input input-bordered w-full'
           />
         </div>
-        <div className='p-field'>
+        {/* <div className='p-field'>
           <label htmlFor='age'>Age</label>
           <input
             id='age'
@@ -315,7 +352,7 @@ const Users = () => {
             }
             className='input input-bordered w-full'
           />
-        </div>
+        </div> */}
         <div className='p-field'>
           <label htmlFor='isVerified'>Verified</label>
           <select
@@ -499,13 +536,27 @@ const Users = () => {
               rowData.dateOfBirth ? formatDate(rowData.dateOfBirth) : 'N/A'
             } // If dateOfBirth is null/undefined, show 'N/A'
           />
-          <Column
+          {/* <Column
             field='age'
             header='Age'
             sortable
             body={(rowData) => (rowData.age != null ? rowData.age : 'N/A')} // Display 'N/A' if age is null/undefined
-          />
+          /> */}
           <Column
+            field='isVerified'
+            header='Verified'
+            sortable
+            body={(rowData) => (
+              <span
+                className={
+                  rowData.isVerified ? 'text-green-500' : 'text-red-500'
+                }
+              >
+                {rowData.isVerified ? 'Yes' : 'No'}
+              </span>
+            )}
+          />
+          {/* <Column
             field='isVerified'
             header='Verified'
             sortable
@@ -516,7 +567,7 @@ const Users = () => {
                   : 'No'
                 : 'N/A'
             } // Display 'Yes'/'No' based on isVerified, 'N/A' if null
-          />
+          /> */}
 
           <Column header='Actions' body={actionBodyTemplate} />
         </DataTable>
