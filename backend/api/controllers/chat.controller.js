@@ -118,10 +118,17 @@ export const deleteMessage = async (req, res) => {
 }
 
 export const getAllMessages = async (req, res) => {
-  const messages = await Message.find()
-    .populate('senderId')
-    .populate('receiverId')
-  return res.status(200).json(messages)
+  try {
+    const messages = await Message.find()
+      .sort({ createdAt: -1 }) // Sort messages by createdAt in descending order
+      .populate('senderId')
+      .populate('receiverId')
+
+    return res.status(200).json(messages)
+  } catch (error) {
+    console.error('Error fetching messages:', error)
+    return res.status(500).json({ error: 'Error fetching messages' })
+  }
 }
 
 export const getUsersWithConversations = async (req, res) => {

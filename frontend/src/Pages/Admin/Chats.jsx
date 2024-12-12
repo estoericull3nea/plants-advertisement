@@ -75,42 +75,42 @@ const Chats = () => {
   }
 
   // Delete a message
-  // const deleteMessage = async (id) => {
-  //   setLoading(true)
-  //   try {
-  //     await axios.delete(
-  //       `${import.meta.env.VITE_DEV_BACKEND_URL}/chats/${id}`,
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${localStorage.getItem('token')}`,
-  //         },
-  //       }
-  //     )
-  //     setMessages((prevMessages) =>
-  //       prevMessages.filter((msg) => msg._id !== id)
-  //     )
-  //     toast.success('Message deleted successfully')
-  //   } catch (error) {
-  //     console.error('Error deleting message:', error)
-  //     toast.error('Failed to delete message')
-  //   } finally {
-  //     setLoading(false)
-  //   }
-  // }
+  const deleteMessage = async (id) => {
+    setLoading(true)
+    try {
+      await axios.delete(
+        `${import.meta.env.VITE_DEV_BACKEND_URL}/chats/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        }
+      )
+      setMessages((prevMessages) =>
+        prevMessages.filter((msg) => msg._id !== id)
+      )
+      toast.success('Message deleted successfully')
+    } catch (error) {
+      console.error('Error deleting message:', error)
+      toast.error('Failed to delete message')
+    } finally {
+      setLoading(false)
+    }
+  }
 
   // Action Template for editing and deleting
-  // const actionBodyTemplate = (rowData) => {
-  //   return (
-  //     <div className='flex gap-2'>
-  //       <button
-  //         className='btn btn-error btn-xs'
-  //         onClick={() => deleteMessage(rowData._id)}
-  //       >
-  //         Delete
-  //       </button>
-  //     </div>
-  //   )
-  // }
+  const actionBodyTemplate = (rowData) => {
+    return (
+      <div className='flex gap-2'>
+        <button
+          className='btn btn-error btn-xs'
+          onClick={() => deleteMessage(rowData._id)}
+        >
+          Delete
+        </button>
+      </div>
+    )
+  }
 
   return (
     <div className='p-4'>
