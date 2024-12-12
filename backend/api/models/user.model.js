@@ -19,6 +19,8 @@ const UserSchema = new mongoose.Schema(
     validIdUrl: { type: String, required: false },
     profilePictureUrl: { type: [String], required: false },
 
+    isEnabled: { type: Boolean, default: true },
+
     role: {
       type: String,
       enum: ['user', 'admin'],

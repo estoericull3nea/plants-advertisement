@@ -190,7 +190,9 @@ const Users = () => {
           label={rowData.isVerified ? 'Make Unverified' : 'Make Verified'}
           icon={rowData.isVerified ? 'pi pi-times' : 'pi pi-check'}
           className={`p-button-rounded ${
-            rowData.isVerified ? 'p-button-danger' : 'p-button-success'
+            rowData.isVerified
+              ? 'p-button-danger bg-red-200 p-3 text-black'
+              : 'p-button-success bg-green-200 p-3 text-black'
           }`}
           onClick={() => toggleVerificationStatus(rowData)}
         />
@@ -353,7 +355,7 @@ const Users = () => {
             className='input input-bordered w-full'
           />
         </div> */}
-        <div className='p-field'>
+        {/* <div className='p-field'>
           <label htmlFor='isVerified'>Verified</label>
           <select
             id='isVerified'
@@ -371,7 +373,7 @@ const Users = () => {
             <option value='true'>Verified</option>
             <option value='false'>Not Verified</option>
           </select>
-        </div>
+        </div> */}
 
         {/* Password Fields for Edit User */}
         {isEditing && (
