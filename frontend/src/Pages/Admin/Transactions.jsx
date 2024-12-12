@@ -76,6 +76,10 @@ const Payments = () => {
     }
   }
 
+  const formatAmountToPeso = (amountInCents) => {
+    return `₱${(amountInCents / 100).toFixed(2)}`
+  }
+
   return (
     <div className='p-4'>
       <h1 className='text-2xl font-bold mb-4'>Payments</h1>
@@ -109,7 +113,15 @@ const Payments = () => {
           editable
           onRowEditComplete={onRowEditSave}
         >
-          <Column field='amount' header='Amount' sortable />
+          <Column
+            field='amount'
+            header='Amount'
+            sortable
+            body={(rowData) => (
+              <span>{formatAmountToPeso(rowData.amount)}</span>
+            )}
+          />
+
           <Column field='status' header='Status' sortable />
           <Column
             field='payment_url'

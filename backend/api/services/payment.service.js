@@ -76,7 +76,10 @@ export const updatePaymentStatus = async (paymongoId, status) => {
 }
 
 export const getAllPayments = async () => {
-  const payments = await PaymentLink.find().populate('userId').exec()
+  const payments = await PaymentLink.find()
+    .populate('userId')
+    .sort({ createdAt: -1 })
+    .exec()
 
   return payments
 }
