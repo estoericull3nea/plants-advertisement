@@ -114,6 +114,33 @@ const Products = () => {
     )
   }
 
+  // Handle toggling the "isEnabled" status of a product
+  const handleToggleEnabled = async (productId, currentStatus) => {
+    const token = localStorage.getItem('token')
+    if (!token) return
+
+    try {
+      const newStatus = !currentStatus // Toggle the status
+      await axios.put(
+        `${import.meta.env.VITE_DEV_BACKEND_URL}/products/${productId}`,
+        { isEnabled: newStatus },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+
+      toast.success(
+        `Product ${newStatus ? 'enabled' : 'disabled'} successfully`
+      )
+      fetchProducts() // Reload the product list after toggling the status
+    } catch (error) {
+      console.error(error)
+      toast.error('Failed to update product status')
+    }
+  }
+
   // Render DataTable when data is loaded
   const renderDataTable = () => {
     return (
@@ -153,6 +180,13 @@ const Products = () => {
             )}
           />
           <Column
+            header='Is Enabled' // Status column header
+            body={(rowData) => (
+              <span>{rowData.isEnabled ? 'Enabled' : 'Disabled'}</span> // Display based on isEnabled
+            )}
+          />
+
+          <Column
             header='Actions'
             body={(rowData) => (
               <div>
@@ -161,11 +195,24 @@ const Products = () => {
                   className='p-button-text'
                   onClick={() => handleEdit(rowData)}
                 />
+                {/* Remove the Delete Button */}
+                {/* <Button
+        icon='pi pi-trash'
+        className='p-button-text p-button-danger ml-2'
+        onClick={() => handleDelete(rowData._id)}
+      /> */}
+
+                {/* Add the Toggle Enabled Button */}
                 <Button
-                  icon='pi pi-trash'
-                  className='p-button-text p-button-danger ml-2'
-                  onClick={() => handleDelete(rowData._id)}
+                  icon={rowData.isEnabled ? 'pi pi-lock' : 'pi pi-unlock'}
+                  className={`p-button-text ml-2 ${
+                    rowData.isEnabled ? 'p-button-warning' : 'p-button-success'
+                  }`}
+                  onClick={() =>
+                    handleToggleEnabled(rowData._id, rowData.isEnabled)
+                  }
                 />
+
                 {/* Check if the product is not approved or rejected */}
                 {rowData.status !== 'approved' &&
                   rowData.status !== 'rejected' && (

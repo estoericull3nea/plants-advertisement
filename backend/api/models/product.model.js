@@ -25,6 +25,8 @@ const productSchema = new mongoose.Schema(
       enum: ['pending', 'approved', 'rejected'],
       default: 'pending',
     },
+
+    isEnabled: { type: Boolean, default: true },
   },
   { timestamps: true }
 )

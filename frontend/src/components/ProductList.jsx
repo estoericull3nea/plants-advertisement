@@ -22,13 +22,14 @@ const ProductList = ({ trigger, productsTest }) => {
           }
         )
 
-        // Filter products to only include those with 'approved' status
-        const approvedProducts = response.data.filter(
-          (product) => product.status === 'approved'
+        // Filter products to only include those with 'approved' status and 'isEnabled' set to true
+        const approvedEnabledProducts = response.data.filter(
+          (product) =>
+            product.status === 'approved' && product.isEnabled === true // Check if status is approved and product is enabled
         )
 
-        setProducts(approvedProducts)
-        applyFilter(approvedProducts)
+        setProducts(approvedEnabledProducts)
+        applyFilter(approvedEnabledProducts)
       } catch (error) {
         console.error('Error fetching products:', error)
       } finally {
