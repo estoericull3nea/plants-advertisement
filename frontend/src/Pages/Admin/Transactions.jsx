@@ -32,7 +32,6 @@ const Payments = () => {
       )
 
       setPayments(response.data)
-      console.log(response.data)
     } catch (error) {
       if (error.response?.data?.message === 'Unauthorized! Invalid token.') {
         localStorage.clear()
@@ -90,7 +89,7 @@ const Payments = () => {
         </div>
       ) : (
         <DataTable
-          value={payments} // Use payments data
+          value={payments}
           paginator
           rows={10}
           header={
@@ -126,7 +125,39 @@ const Payments = () => {
               </a>
             )}
           />
-          <Column field='userId.firstName' header='User' sortable />
+          {/* User Column: Full Name */}
+          <Column
+            field='userId.firstName'
+            header='User'
+            sortable
+            body={(rowData) => (
+              <span>
+                {rowData.userId.firstName} {rowData.userId.lastName}
+              </span>
+            )}
+          />
+          {/* Email Column */}
+          <Column
+            field='userId.email'
+            header='Email'
+            sortable
+            body={(rowData) => <span>{rowData.userId.email}</span>}
+          />
+          {/* Description Column */}
+          <Column
+            field='description'
+            header='Description'
+            sortable
+            body={(rowData) => <span>{rowData.description}</span>}
+          />
+          {/* Remarks Column */}
+          <Column
+            field='remarks'
+            header='Remarks'
+            sortable
+            body={(rowData) => <span>{rowData.remarks}</span>}
+          />
+          {/* Created At Column */}
           <Column
             field='createdAt'
             header='Created At'

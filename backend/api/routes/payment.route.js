@@ -21,6 +21,6 @@ router.get(
   verifyToken,
   checkStatusOfPaymentById
 )
-router.get('/payments', verifyToken, getAllPaymentsController)
+router.get('/', verifyToken, getAllPaymentsController)
 
 export default router
