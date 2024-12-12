@@ -66,7 +66,7 @@ const AdminDashboard = () => {
         )
         setRecentProducts(recentProductsResponse.data)
 
-        // Fetch latest chats (top 5 latest chats)
+        // Fetch latest chats (latest chats)
         const latestChatsResponse = await axios.get(
           `${import.meta.env.VITE_DEV_BACKEND_URL}/datas/latest-chats`
         )
@@ -240,9 +240,7 @@ const AdminDashboard = () => {
 
       {/* Recent Users Section */}
       <div className='card shadow-lg bg-base-100 p-6 rounded-xl col-span-1 md:col-span-2 xl:col-span-1'>
-        <h2 className='text-xl font-medium text-gray-700 mb-4'>
-          Top 5 Recent Users
-        </h2>
+        <h2 className='text-xl font-medium text-gray-700 mb-4'>Recent Users</h2>
         {loading ? (
           <div className='flex w-full flex-col gap-4'>
             <div className='skeleton h-32 w-full'></div>
@@ -331,7 +329,7 @@ const AdminDashboard = () => {
       {/* Recent Products Section */}
       <div className='card shadow-lg bg-base-100 p-6 rounded-xl col-span-1 md:col-span-2 xl:col-span-1'>
         <h2 className='text-xl font-medium text-gray-700 mb-4'>
-          Top 5 Recent Products
+          Recent Products
         </h2>
         {loading ? (
           <div className='flex w-full flex-col gap-4'>
@@ -390,9 +388,7 @@ const AdminDashboard = () => {
 
       {/* Recent Chats Section */}
       <div className='card shadow-lg bg-base-100 p-6 rounded-xl col-span-1 md:col-span-2 xl:col-span-1'>
-        <h2 className='text-xl font-medium text-gray-700 mb-4'>
-          Top 5 Recent Chats
-        </h2>
+        <h2 className='text-xl font-medium text-gray-700 mb-4'>Recent Chats</h2>
         {loading ? (
           <div className='flex w-full flex-col gap-4'>
             <div className='skeleton h-32 w-full'></div>
