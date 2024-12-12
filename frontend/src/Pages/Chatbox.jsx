@@ -364,9 +364,9 @@ const Chatbox = () => {
             {messages.length === 0 ? (
               <div className='text-center p-4 text-gray-500'>No messages</div>
             ) : (
-              messages.map((message, index) => (
+              messages.map((message) => (
                 <div
-                  key={`${message._id}-${index}`} // Make the key unique by adding the index
+                  key={message._id}
                   className={`flex mb-2 ${
                     message.senderId._id === currentUserId
                       ? 'justify-end'
@@ -414,13 +414,13 @@ const Chatbox = () => {
                     {Array.isArray(message.images) &&
                       message.images.length > 0 && (
                         <div className='flex space-x-2 mt-2'>
-                          {message.images.map((image, imageIndex) => (
+                          {message.images.map((image, index) => (
                             <img
-                              key={`${image}-${imageIndex}`} // Unique key for images
+                              key={image}
                               src={getFullImageUrl(image)}
                               alt='Message attachment'
                               className='w-20 h-20 rounded-md cursor-pointer'
-                              onClick={() => handleImageClick(imageIndex)}
+                              onClick={() => handleImageClick(index)}
                             />
                           ))}
                         </div>
