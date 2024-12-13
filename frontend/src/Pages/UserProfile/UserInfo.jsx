@@ -175,8 +175,8 @@ const UserInfo = ({ isVisitor }) => {
       <form className='p-3 space-y-4' onSubmit={handleUpdate}>
         <div className='flex gap-3 items-center justify-center flex-col sm:flex-row'>
           {userData?.profilePictureUrl?.length > 0 && (
-            <div className='mt-3 text-center sm:w-1/2'>
-              <label className='block text-sm font-medium mb-2'>
+            <div className='mt-3 '>
+              <label className='block text-sm font-medium mb-2 text-center'>
                 Profile Picture
               </label>
               <img
@@ -186,21 +186,21 @@ const UserInfo = ({ isVisitor }) => {
                   ]
                 }
                 alt='Profile Picture'
-                className='w-full h-96 object-cover'
+                className=' h-52 w-52 rounded-full object-cover'
               />
             </div>
           )}
 
-          {userData?.validIdUrl?.length > 0 && (
-            <div className='mt-3 text-center sm:w-1/2'>
-              <label className='block text-sm font-medium mb-2'>Valid ID</label>
-              <img
-                src={userData.validIdUrl}
-                alt='Valid ID'
-                className='w-full h-96 rounded object-cover'
-              />
-            </div>
-          )}
+          {/* {userData?.validIdUrl?.length > 0 && (
+              <div className='mt-3 text-center sm:w-1/2'>
+                <label className='block text-sm font-medium mb-2'>Valid ID</label>
+                <img
+                  src={userData.validIdUrl}
+                  alt='Valid ID'
+                  className='w-full h-96 rounded object-cover'
+                />
+              </div>
+            )} */}
         </div>
 
         <div className='w-full'>
@@ -351,7 +351,7 @@ const UserInfo = ({ isVisitor }) => {
 
         {/* age and dob */}
         <div className='flex gap-3 items-center'>
-          <div className='w-full'>
+          {/* <div className='w-full'>
             <label
               htmlFor='age'
               className='block mb-2 text-sm font-medium text-gray-900'
@@ -371,7 +371,7 @@ const UserInfo = ({ isVisitor }) => {
               required
               disabled={isVisitor}
             />
-          </div>
+          </div> */}
 
           <div className='w-full'>
             <label
