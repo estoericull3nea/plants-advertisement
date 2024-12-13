@@ -422,14 +422,14 @@ const ProductDetail = () => {
                     {product.userId.barangay || 'N/A'}
                   </td>
                 </tr>
-                <tr>
+                {/* <tr>
                   <td className='border px-4 py-2'>
                     <strong>Age:</strong>
                   </td>
                   <td className='border px-4 py-2'>
                     {product.userId.age === 0 ? product.userId.age : 'N/A'}
                   </td>
-                </tr>
+                </tr> */}
                 <tr>
                   <td className='border px-4 py-2'>
                     <strong>Date of Birth:</strong>
