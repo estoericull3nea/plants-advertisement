@@ -42,9 +42,10 @@ const UserInfo = ({ isVisitor }) => {
     const formData = new FormData()
     formData.append('firstName', e.target.firstName.value)
     formData.append('lastName', e.target.lastName.value)
-    formData.append('age', e.target.age.value)
     formData.append('dateOfBirth', e.target.dob.value)
     formData.append('contactNumber', e.target.contactNumber.value)
+    formData.append('municipality', e.target.municipality.value)
+    formData.append('barangay', e.target.barangay.value)
 
     const profilePicture = e.target.profilePicture.files[0]
     if (profilePicture) {
@@ -388,6 +389,47 @@ const UserInfo = ({ isVisitor }) => {
               defaultValue={
                 userData?.dateOfBirth ? userData.dateOfBirth.split('T')[0] : ''
               }
+              required
+              disabled={isVisitor}
+            />
+          </div>
+        </div>
+
+        {/* Municipality and Barangay */}
+        <div className='flex gap-3 items-center flex-col sm:flex-row'>
+          <div className='w-full'>
+            <label
+              htmlFor='municipality'
+              className='block mb-2 text-sm font-medium text-gray-900'
+            >
+              Municipality
+            </label>
+            <input
+              type='text'
+              name='municipality'
+              id='municipality'
+              className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5'
+              placeholder='Municipality'
+              defaultValue={userData?.municipality || ''}
+              required
+              disabled={isVisitor}
+            />
+          </div>
+
+          <div className='w-full'>
+            <label
+              htmlFor='barangay'
+              className='block mb-2 text-sm font-medium text-gray-900'
+            >
+              Barangay
+            </label>
+            <input
+              type='text'
+              name='barangay'
+              id='barangay'
+              className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5'
+              placeholder='Barangay'
+              defaultValue={userData?.barangay || ''}
               required
               disabled={isVisitor}
             />
