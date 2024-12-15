@@ -6,6 +6,7 @@ import {
   getAllPayments,
 } from '../services/payment.service.js'
 import Product from '../models/product.model.js'
+import Cart from '../models/cartItem.model.js'
 
 import axios from 'axios'
 
@@ -46,6 +47,9 @@ export const createPaymentLinkController = async (req, res) => {
       // Decrease the stock based on the quantity
       product.stock -= quantityToDeduct
       await product.save()
+
+      // Remove the cart item for this product
+      await Cart.findOneAndDelete({ userId, productId })
     }
 
     // Proceed to create the payment link
