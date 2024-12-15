@@ -185,6 +185,16 @@ const Users = () => {
             setShowValidIdDialog(true)
           }}
         />
+        <Button
+          label={rowData.isVerified ? 'Unverify' : 'Verify'}
+          icon={
+            rowData.isVerified ? 'pi pi-times-circle' : 'pi pi-check-circle'
+          }
+          className={`p-button-rounded ${
+            rowData.isVerified ? 'p-button-warning' : 'p-button-success'
+          }`}
+          onClick={() => toggleVerificationStatus(rowData)}
+        />
       </div>
     )
   }
