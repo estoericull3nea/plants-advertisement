@@ -59,6 +59,7 @@ const ProductTable = ({ isVisitor }) => {
       price: product.price,
       address: product.address,
       isAvailable: product.isAvailable, // Set isAvailable when opening the dialog
+      packaging: product.packaging || 'per kilo',
     })
     setDialogVisible(true)
   }
@@ -153,6 +154,8 @@ const ProductTable = ({ isVisitor }) => {
           <Column field='status' header='Status' sortable />
 
           <Column field='address' header='Address' />
+          <Column field='packaging' header='Packaging' />
+
           <Column
             field='isAvailable'
             header='Available'
@@ -303,6 +306,27 @@ const ProductTable = ({ isVisitor }) => {
             required
           />
         </div>
+        <div>
+          <label
+            htmlFor='packaging'
+            className='block mb-2 text-sm font-medium text-gray-900'
+          >
+            Packaging
+          </label>
+          <select
+            name='packaging'
+            id='packaging'
+            className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5'
+            value={formData.packaging}
+            onChange={handleInputChange}
+            required
+          >
+            <option value='per kilo'>Per Kilo</option>
+            <option value='per sack'>Per Sack</option>
+            <option value='per bundle'>Per Bundle</option>
+          </select>
+        </div>
+
         <div className='flex align-items-center'>
           <input
             type='checkbox'
