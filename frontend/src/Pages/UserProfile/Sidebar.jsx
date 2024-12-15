@@ -138,7 +138,7 @@ const Sidebar = ({ isVisitor }) => {
         </li>
         <li>
           <NavLink to={`/profile/${userId}/payment-history`}>
-            Payment History
+            Transaction History
           </NavLink>
         </li>
       </ul>

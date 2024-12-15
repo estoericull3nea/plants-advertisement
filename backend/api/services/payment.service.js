@@ -45,6 +45,7 @@ export const createPaymentLink = async (
 
 export const getAllPaymentLinks = async (userId) => {
   const paymentLinks = await PaymentLink.find({ userId })
+    .sort({ createdAt: -1 })
     .populate('userId', 'firstName lastName email')
     .exec()
 

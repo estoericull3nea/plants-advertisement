@@ -10,5 +10,5 @@ add speedinsights in vercel
 
 
 important
-- sharing profile
 - notify seller who bought his/her product
+- not decreasing stock

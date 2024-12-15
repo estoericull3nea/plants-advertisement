@@ -30,7 +30,13 @@ const Checkout = () => {
 
     const amountInCents = convertToCents(totalAmount)
 
-    const description = 'Order from E-commerce site'
+    const description =
+      items
+        .map((item) => item.productId.title)
+        .join(', ')
+        .slice(0, 200) || 'Order from E-commerce site'
+
+    // const description = 'Order from E-commerce site'
     const remarks = 'Payment for selected items'
 
     try {
