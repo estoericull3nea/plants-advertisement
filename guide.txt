@@ -6,3 +6,9 @@ py-1 rounded-lg border-main bg-main text-white shadow-lg px-3
 integrate map
 login admin redirect
 add speedinsights in vercel
+
+
+
+important
+- sharing profile
+- notify seller who bought his/her product
