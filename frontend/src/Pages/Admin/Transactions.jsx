@@ -140,7 +140,7 @@ const Payments = () => {
           {/* User Column: Full Name */}
           <Column
             field='userId.firstName'
-            header='User'
+            header='Buyer FullName'
             sortable
             body={(rowData) => (
               <span>
@@ -151,7 +151,7 @@ const Payments = () => {
           {/* Email Column */}
           <Column
             field='userId.email'
-            header='Email'
+            header='Buyer Email'
             sortable
             body={(rowData) => <span>{rowData.userId.email}</span>}
           />

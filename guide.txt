@@ -11,4 +11,4 @@ add speedinsights in vercel
 
 important
 - notify seller who bought his/her product
-- not decreasing stock
+- status of unpaid but success
