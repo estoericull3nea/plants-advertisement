@@ -31,7 +31,7 @@ const productSchema = new mongoose.Schema(
     packaging: {
       type: String,
       enum: ['per kilo', 'per sack', 'per bundle'],
-      required: true,
+      required: false,
     },
   },
   { timestamps: true }

@@ -39,6 +39,9 @@ const Checkout = () => {
     // const description = 'Order from E-commerce site'
     const remarks = 'Payment for selected items'
 
+    const itemIds = items.map((item) => item.productId._id)
+    const itemQuantities = items.map((item) => item.quantity)
+
     try {
       const response = await fetch(
         `${import.meta.env.VITE_DEV_BACKEND_URL}/payments/create-payment-link`,
@@ -52,6 +55,8 @@ const Checkout = () => {
             amount: amountInCents,
             description,
             remarks,
+            itemIds,
+            itemQuantities,
           }),
         }
       )
