@@ -27,6 +27,12 @@ const productSchema = new mongoose.Schema(
     },
 
     isEnabled: { type: Boolean, default: true },
+
+    packaging: {
+      type: String,
+      enum: ['per kilo', 'per sack', 'per bundle'],
+      required: true,
+    },
   },
   { timestamps: true }
 )

@@ -19,6 +19,7 @@ const PostProduct = () => {
   const [userStatus, setUserStatus] = useState(null) // Stores the user verification status
   const [loadingSubmit, setLoadingSubmit] = useState(false)
   const [completeAddress, setCompleteAddress] = useState(false)
+  const [packaging, setPackaging] = useState('per kilo')
 
   const [loading, setLoading] = useState(false)
   const [notFoundSearch, setNotFoundSearch] = useState(false)
@@ -68,6 +69,7 @@ const PostProduct = () => {
     productData.append('stock', stock)
     productData.append('price', price)
     productData.append('address', completeAddress)
+    productData.append('packaging', packaging) // Add packaging field
 
     images.forEach((image) => {
       productData.append('images', image)
@@ -258,6 +260,24 @@ const PostProduct = () => {
                   required
                 />
               </div>
+            </div>
+            <div>
+              <label
+                htmlFor='packaging'
+                className='block mb-2 text-sm font-medium text-gray-900'
+              >
+                Packaging/Quantity Measurement
+              </label>
+              <select
+                id='packaging'
+                className='select select-bordered w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 p-2.5'
+                value={packaging}
+                onChange={(e) => setPackaging(e.target.value)}
+              >
+                <option value='per kilo'>Per Kilo</option>
+                <option value='per sack'>Per Sack</option>
+                <option value='per bundle'>Per Bundle</option>
+              </select>
             </div>
             <div>
               <label

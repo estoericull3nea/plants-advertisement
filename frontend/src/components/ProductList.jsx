@@ -139,6 +139,9 @@ const ProductList = ({ trigger, productsTest }) => {
                 />
                 <div className='p-4'>
                   <p className='font-bold'>{product.category.toUpperCase()}</p>
+                  <p className='text-gray-500'>
+                    Packaging: {product.packaging ? product.packaging : 'None'}
+                  </p>
                   <p className='font-bold'>₱ {product.price}</p>
                   <p className='text-gray-500'>
                     Posted by: {product.userId.firstName}{' '}

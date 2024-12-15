@@ -4,7 +4,8 @@ import User from '../models/user.model.js'
 
 export const createProduct = async (req, res) => {
   try {
-    const { title, caption, category, stock, price, address } = req.body
+    const { title, caption, category, stock, price, address, packaging } =
+      req.body
     const images = req.files
 
     // Upload images to ImageKit
@@ -40,6 +41,7 @@ export const createProduct = async (req, res) => {
       images: imageUrls, // Save ImageKit URLs
       userId: req.user, // Assuming user ID is set in the request
       address,
+      packaging,
     })
 
     // Save the product to the database
