@@ -59,3 +59,27 @@ export const deleteShare = async (req, res) => {
 
   return res.status(200).json({ message: 'Shared post deleted successfully.' })
 }
+
+export const getAllShares = async (req, res) => {
+  try {
+    // Fetch all shares from the database
+    const shares = await Share.find()
+      .populate('productId') // Populate product details
+      .populate('userId') // Populate user details
+      .sort({ createdAt: -1 }) // Sort by creation date in descending order
+
+    if (!shares || shares.length === 0) {
+      return res.status(404).json({ message: 'No shared posts found.' })
+    }
+
+    return res.status(200).json({
+      message: 'All shared posts retrieved successfully.',
+      shares,
+    })
+  } catch (error) {
+    console.error('Error fetching shares:', error)
+    return res
+      .status(500)
+      .json({ message: 'Server error while retrieving shares.' })
+  }
+}

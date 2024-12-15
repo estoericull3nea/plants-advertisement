@@ -69,8 +69,9 @@ const SharedPost = ({ isVisitor }) => {
                   className='card w-full bg-base-100 shadow-lg rounded-xl transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow-2xl hover:bg-gray-50'
                 >
                   <figure>
-                    <Link
-                      to={`/products/${
+                    <a
+                      target='_blank'
+                      href={`/products/${
                         post.productId ? post.productId._id : ''
                       }`} // Make the product clickable
                     >
@@ -83,7 +84,7 @@ const SharedPost = ({ isVisitor }) => {
                         alt={post.productId ? post.productId.title : 'No Image'}
                         className='w-full h-48 object-cover rounded-t-xl'
                       />
-                    </Link>
+                    </a>
                   </figure>
                   <div className='card-body'>
                     <h2 className='card-title'>

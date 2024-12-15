@@ -3,6 +3,7 @@ import axios from 'axios'
 import { toast } from 'react-hot-toast'
 import ProductList from '../components/ProductList'
 import { jwtDecode } from 'jwt-decode'
+import SharedPost from '../components/SharedPost'
 
 const PostProduct = () => {
   const [title, setTitle] = useState('')
@@ -20,6 +21,7 @@ const PostProduct = () => {
   const [loadingSubmit, setLoadingSubmit] = useState(false)
   const [completeAddress, setCompleteAddress] = useState(false)
   const [packaging, setPackaging] = useState('per kilo')
+  const [sharedProducts, setSharedProducts] = useState([])
 
   const [loading, setLoading] = useState(false)
   const [notFoundSearch, setNotFoundSearch] = useState(false)
@@ -158,6 +160,27 @@ const PostProduct = () => {
       setLoading(false)
     }
   }
+
+  useEffect(() => {
+    const fetchSharedProducts = async () => {
+      const token = localStorage.getItem('token')
+      if (!token) return
+
+      try {
+        // Fetch all shared posts
+        const response = await axios.get(
+          `${import.meta.env.VITE_DEV_BACKEND_URL}/shares/all`
+        )
+
+        // Set shared products
+        setSharedProducts(response.data.shares)
+      } catch (error) {
+        console.error('Error fetching shared products:', error)
+      }
+    }
+
+    fetchSharedProducts()
+  }, [trigger]) // Trigger re-fetching when `trigger` changes
 
   return (
     <div>
@@ -336,6 +359,23 @@ const PostProduct = () => {
           You need to verify your account before posting a product.
         </div>
       )}
+
+      {/* Display shared posts */}
+      <div className='my-4 container'>
+        {sharedProducts.length > 0 ? (
+          <div>
+            <hr />
+            <h1 className='text-lg font-bold mt-3'>Shared Post</h1>
+            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5'>
+              {sharedProducts.map((share, index) => (
+                <SharedPost key={index} share={share} />
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div>No shared products found.</div>
+        )}
+      </div>
     </div>
   )
 }
