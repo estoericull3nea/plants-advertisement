@@ -37,7 +37,7 @@ export const countChats = async (req, res) => {
 }
 
 export const getTop5RecentUsers = async (req, res) => {
-  const topUsers = await User.find().sort({ createdAt: -1 }).limit(5)
+  const topUsers = await User.find().sort({ createdAt: -1 })
 
   return res.status(200).json(topUsers)
 }
@@ -45,7 +45,7 @@ export const getTop5RecentUsers = async (req, res) => {
 export const getTop5RecentProducts = async (req, res) => {
   const recentProducts = await Product.find({})
     .sort({ createdAt: -1 })
-    .limit(5)
+
     .populate('userId', 'firstName lastName email')
     .exec()
 
@@ -57,9 +57,7 @@ export const getLatestChats = async (req, res) => {
     {
       $sort: { createdAt: -1 },
     },
-    {
-      $limit: 5,
-    },
+
     {
       $lookup: {
         from: 'users',
