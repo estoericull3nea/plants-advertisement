@@ -127,7 +127,7 @@ const Chats = () => {
         <DataTable
           value={messages}
           paginator
-          rows={10}
+          rows={50}
           header={
             <div className='flex justify-between items-center'>
               <span className='p-input-icon-left'>

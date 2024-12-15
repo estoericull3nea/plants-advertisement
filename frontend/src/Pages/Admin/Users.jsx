@@ -502,7 +502,7 @@ const Users = () => {
         <DataTable
           value={users}
           paginator
-          rows={10}
+          rows={20}
           globalFilter={globalFilter}
         >
           <Column

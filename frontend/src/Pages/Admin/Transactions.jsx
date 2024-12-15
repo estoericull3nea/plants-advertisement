@@ -95,7 +95,7 @@ const Payments = () => {
         <DataTable
           value={payments}
           paginator
-          rows={10}
+          rows={20}
           header={
             <div className='flex justify-between items-center'>
               <span className='p-input-icon-left'>

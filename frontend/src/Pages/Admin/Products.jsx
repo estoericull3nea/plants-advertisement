@@ -155,7 +155,7 @@ const Products = () => {
         <DataTable
           value={products}
           paginator
-          rows={10}
+          rows={20}
           globalFilter={globalFilter}
           emptyMessage='No products found'
           className='shadow-2xl'
