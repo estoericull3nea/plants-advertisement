@@ -58,7 +58,9 @@ export const createProduct = async (req, res) => {
 }
 
 export const getAllProducts = async (req, res) => {
-  const products = await Product.find().populate('userId', '-password')
+  const products = await Product.find()
+    .populate('userId', '-password')
+    .sort({ createdAt: -1 })
   res.json(products)
 }
 
