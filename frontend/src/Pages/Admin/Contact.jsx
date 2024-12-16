@@ -132,13 +132,13 @@ const Contact = () => {
           <Column field='lastName' header='Last Name' sortable />
           <Column field='email' header='Email' sortable />
           <Column field='message' header='Message' sortable />
-          <Column
+          {/* <Column
             field='status'
             header='Status'
             sortable
             editor={(options) => statusEditor(options)} // Inline editing for status
             onCellEditComplete={(e) => updateContact(e.rowData._id, e.newValue)}
-          />
+          /> */}
           <Column
             field='createdAt'
             header='Send Time'
