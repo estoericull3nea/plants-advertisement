@@ -90,7 +90,7 @@ const PostProduct = () => {
           },
         }
       )
-      toast.success('Product posted, wait for admin approval!')
+      toast.success('Product pending, wait for admin approval!')
       setTrigger((prevState) => prevState + 1)
       resetForm()
     } catch (error) {
