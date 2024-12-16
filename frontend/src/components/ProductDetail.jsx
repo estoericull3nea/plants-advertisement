@@ -321,7 +321,7 @@ const ProductDetail = () => {
 
         <div className='w-full  border p-3 shadow-lg rounded-lg text-sm'>
           <h1 className='text-xl font-bold mb-4'>{product.title}</h1>
-          <p className='font-bold text-xl mb-2'>
+          <p className='font-bold text-lg mb-2'>
             Packaging: {product.packaging || 'N/A'}
           </p>
           <p className='text-lg mb-2'>{product.caption}</p>
