@@ -451,12 +451,12 @@ const Chatbox = () => {
               }}
             />
 
-            <input
+            {/* <input
               type='file'
               multiple
               onChange={(e) => setImages([...e.target.files])}
               className='border border-gray-300 rounded-lg mx-2'
-            />
+            /> */}
             <button
               type='submit'
               className='bg-blue-500 text-white rounded-lg px-4 py-3'
