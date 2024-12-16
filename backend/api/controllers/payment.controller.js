@@ -4,6 +4,7 @@ import {
   getPaymentLinkById,
   updatePaymentStatus,
   getAllPayments,
+  getAllUsersWhoBought,
 } from '../services/payment.service.js'
 import Product from '../models/product.model.js'
 import Cart from '../models/cartItem.model.js'
@@ -169,5 +170,17 @@ export const getAllPaymentsController = async (req, res) => {
   } catch (error) {
     console.error(error)
     res.status(500).json({ error: 'Failed to fetch payments' })
+  }
+}
+
+export const getAllUsersWhoBoughtYourProducts = async (req, res) => {
+  const { userId } = req.params
+
+  try {
+    const paymentLinks = await getAllUsersWhoBought(userId)
+    res.status(200).json(paymentLinks)
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ error: 'Failed to fetch payment links' })
   }
 }

@@ -141,6 +141,11 @@ const Sidebar = ({ isVisitor }) => {
             Transaction History
           </NavLink>
         </li>
+        <li>
+          <NavLink to={`/profile/${userId}/bought-products`}>
+            Users Who Bought Your Products
+          </NavLink>
+        </li>
       </ul>
     </aside>
   )

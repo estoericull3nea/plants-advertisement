@@ -1,4 +1,5 @@
 import axios from 'axios'
+import User from '../models/user.model.js'
 import PaymentLink from '../models/paymentLink.model.js'
 
 export const createPaymentLink = async (
@@ -85,4 +86,20 @@ export const getAllPayments = async () => {
     .exec()
 
   return payments
+}
+
+export const getAllUsersWhoBought = async (userId) => {
+  let paymentLinks = await PaymentLink.find()
+    .sort({ createdAt: -1 })
+    .populate('userId')
+    .exec()
+
+  const user = await User.findById(userId)
+  const userWhoPostedEmail = user.email
+
+  paymentLinks = paymentLinks.filter(
+    (data) => data?.userWhoPosted?.email === userWhoPostedEmail
+  )
+
+  return paymentLinks
 }

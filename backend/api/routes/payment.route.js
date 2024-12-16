@@ -4,6 +4,7 @@ import {
   createPaymentLinkController,
   getAllPaymentLinksController,
   getAllPaymentsController,
+  getAllUsersWhoBoughtYourProducts,
   getPaymentLinkByIdController,
   paymentWebhook,
 } from '../controllers/payment.controller.js'
@@ -22,5 +23,10 @@ router.get(
   checkStatusOfPaymentById
 )
 router.get('/', verifyToken, getAllPaymentsController)
+
+router.get(
+  '/payment-links/users/boughts-products/:userId',
+  getAllUsersWhoBoughtYourProducts
+)
 
 export default router
