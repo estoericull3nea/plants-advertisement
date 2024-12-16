@@ -13,6 +13,10 @@ const paymentLinkSchema = new mongoose.Schema(
       ref: 'User',
       required: true,
     },
+    userWhoPosted: {
+      type: Object,
+      required: true,
+    },
   },
   {
     timestamps: true,

@@ -122,8 +122,8 @@ const Payments = () => {
             )}
           />
 
-          <Column field='status' header='Status' sortable />
-          <Column
+          {/* <Column field='status' header='Status' sortable /> */}
+          {/* <Column
             field='payment_url'
             header='Payment Link'
             sortable
@@ -136,11 +136,11 @@ const Payments = () => {
                 {rowData.payment_url ? 'View Payment' : 'N/A'}
               </a>
             )}
-          />
+          /> */}
           {/* User Column: Full Name */}
           <Column
             field='userId.firstName'
-            header='Buyer FullName'
+            header='Buyer Full Name'
             sortable
             body={(rowData) => (
               <span>
@@ -157,22 +157,43 @@ const Payments = () => {
           />
           {/* Description Column */}
           <Column
-            field='description'
             header='Description'
             sortable
             body={(rowData) => <span>{rowData.description}</span>}
           />
-          {/* Remarks Column */}
+
           <Column
+            field='description'
+            header='Seller Full Name'
+            sortable
+            body={(rowData) => (
+              <span>
+                {rowData?.userWhoPosted?.firstName || 'N/A'}{' '}
+                {rowData?.userWhoPosted?.lastName}
+              </span>
+            )}
+          />
+
+          <Column
+            field='description'
+            header='Seller Email'
+            sortable
+            body={(rowData) => (
+              <span>{rowData?.userWhoPosted?.email || 'N/A'}</span>
+            )}
+          />
+
+          {/* Remarks Column */}
+          {/* <Column
             field='remarks'
             header='Remarks'
             sortable
             body={(rowData) => <span>{rowData.remarks}</span>}
-          />
+          /> */}
           {/* Created At Column */}
           <Column
             field='createdAt'
-            header='Created At'
+            header='Transaction Created At'
             sortable
             body={dateTimeBodyTemplate}
           />

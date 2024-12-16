@@ -25,12 +25,20 @@ export const createPaymentLinkController = async (req, res) => {
 
   try {
     // Loop through the items and update stock based on quantities
+    let userWhoPosted = {}
     for (let i = 0; i < itemIds.length; i++) {
       const productId = itemIds[i]
       const quantityToDeduct = itemQuantities[i]
 
       // Fetch the product by ID
-      const product = await Product.findById(productId)
+      const product = await Product.findById(productId).populate('userId')
+
+      userWhoPosted = {
+        firstName: product.userId.firstName,
+        lastName: product.userId.lastName,
+        email: product.userId.email,
+      }
+
       if (!product) {
         return res
           .status(404)
@@ -57,7 +65,8 @@ export const createPaymentLinkController = async (req, res) => {
       amount,
       description,
       remarks,
-      userId
+      userId, // User making the purchase
+      userWhoPosted
     )
 
     return res.status(200).json(linkData) // Return the created payment link data

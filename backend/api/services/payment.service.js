@@ -5,7 +5,8 @@ export const createPaymentLink = async (
   amount,
   description,
   remarks,
-  userId
+  userId,
+  userWhoPosted
 ) => {
   const options = {
     method: 'POST',
@@ -36,6 +37,7 @@ export const createPaymentLink = async (
     status: response.data.data.attributes.status,
     payment_url: response.data.data.attributes.checkout_url,
     userId,
+    userWhoPosted,
   })
 
   await paymentLink.save()
@@ -81,6 +83,7 @@ export const getAllPayments = async () => {
     .populate('userId')
     .sort({ createdAt: -1 })
     .exec()
+  console.log(payments)
 
   return payments
 }
