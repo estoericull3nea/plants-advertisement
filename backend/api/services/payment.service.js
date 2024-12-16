@@ -83,7 +83,6 @@ export const getAllPayments = async () => {
     .populate('userId')
     .sort({ createdAt: -1 })
     .exec()
-  console.log(payments)
 
   return payments
 }
