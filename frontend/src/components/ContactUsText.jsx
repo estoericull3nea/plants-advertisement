@@ -39,7 +39,14 @@ function ContactUsText() {
             <p className='mt-2 text-gray-600'>
               Our team is available to answer your questions.
             </p>
-            <p className='mt-bold text-main font-bold'>support@company.com</p>
+            <p className='mt-bold text-main font-bold'>
+              <a
+                href='mailto:deveneciamelinauson@mgmail.com'
+                className='text-main font-bold'
+              >
+                deveneciamelinauson@mgmail.com
+              </a>
+            </p>
           </div>
 
           <div className='flex flex-col items-center justify-center text-center'>
@@ -65,12 +72,12 @@ function ContactUsText() {
               </svg>
             </span>
 
-            <h2 className='mt-4 text-lg font-medium text-gray-800'>Office</h2>
+            <h2 className='mt-4 text-lg font-medium text-gray-800'>Shop</h2>
             <p className='mt-2 text-gray-600'>
-              Visit us at our office during working hours.
+              Visit us at our shop during working hours.
             </p>
             <p className='mt-bold text-main font-bold'>
-              123 Corporate Blvd, City, Country
+              Melinda Uson De Venecia | M.B Uson Agriculture
             </p>
           </div>
 
@@ -94,9 +101,13 @@ function ContactUsText() {
 
             <h2 className='mt-4 text-lg font-medium text-gray-800'>Phone</h2>
             <p className='mt-2 text-gray-600'>
-              Available from 9am to 6pm, Mon-Fri.
+              Available from 9am to 6pm, Mon-Sat.
             </p>
-            <p className='mt-bold text-main font-bold'>+1 (123) 456-7890</p>
+            <p className='mt-bold text-main font-bold'>
+              <a href='tel:+639126444530' className='text-main font-bold'>
+                (+63) 912-644-4530
+              </a>
+            </p>
           </div>
         </div>
       </div>
