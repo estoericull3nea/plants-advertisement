@@ -41,10 +41,10 @@ function ContactUsText() {
             </p>
             <p className='mt-bold text-main font-bold'>
               <a
-                href='mailto:deveneciamelinauson@mgmail.com'
+                href='mailto:deveneciamelinauson@gmail.com'
                 className='text-main font-bold'
               >
-                deveneciamelinauson@mgmail.com
+                deveneciamelinauson@gmail.com
               </a>
             </p>
           </div>
