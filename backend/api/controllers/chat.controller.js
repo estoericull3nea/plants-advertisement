@@ -84,7 +84,6 @@ export const getMessages = async (req, res) => {
   res.status(200).json(messages)
 }
 
-// Get a message by ID
 export const getMessageById = async (req, res) => {
   const { id } = req.params
   const message = await Message.findById(id).populate('senderId receiverId')
@@ -94,7 +93,6 @@ export const getMessageById = async (req, res) => {
   return res.status(200).json(message)
 }
 
-// Update a message
 export const updateMessage = async (req, res) => {
   const { id } = req.params
   const updates = req.body
@@ -107,7 +105,6 @@ export const updateMessage = async (req, res) => {
   return res.status(200).json(updatedMessage)
 }
 
-// Delete a message
 export const deleteMessage = async (req, res) => {
   const { id } = req.params
   const deletedMessage = await Message.findByIdAndDelete(id)

@@ -6,9 +6,9 @@ import ChatStats from '../../components/ChatStats'
 
 const AdminDashboard = () => {
   const [loading, setLoading] = useState(true)
-  const [recentUsers, setRecentUsers] = useState([]) // For storing recent users
-  const [recentProducts, setRecentProducts] = useState([]) // For storing recent products
-  const [latestChats, setLatestChats] = useState([]) // For storing the latest 5 chats
+  const [recentUsers, setRecentUsers] = useState([])
+  const [recentProducts, setRecentProducts] = useState([])
+  const [latestChats, setLatestChats] = useState([])
 
   const [userCountData, setUserCountData] = useState({
     userCount: null,
@@ -28,7 +28,6 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchCounts = async () => {
       try {
-        // Fetch user count data
         const userCountResponse = await axios.get(
           `${import.meta.env.VITE_DEV_BACKEND_URL}/datas/count-users`
         )
@@ -38,7 +37,6 @@ const AdminDashboard = () => {
           nonVerifiedCount: userCountResponse.data.nonVerifiedCount,
         })
 
-        // Fetch product count data
         const productCountResponse = await axios.get(
           `${import.meta.env.VITE_DEV_BACKEND_URL}/datas/count-products`
         )
@@ -48,7 +46,6 @@ const AdminDashboard = () => {
           unavailableCount: productCountResponse.data.unavailableCount,
         })
 
-        // Fetch chat count data (totalChats)
         const chatCountResponse = await axios.get(
           `${import.meta.env.VITE_DEV_BACKEND_URL}/datas/count-chats`
         )
@@ -81,6 +78,48 @@ const AdminDashboard = () => {
 
     fetchCounts()
   }, [])
+
+  const itemsPerPage = 10
+  const [userPage, setUserPage] = useState(1)
+  const [productPage, setProductPage] = useState(1)
+  const [chatPage, setChatPage] = useState(1)
+
+  const paginatedUsers = recentUsers.slice(
+    (userPage - 1) * itemsPerPage,
+    userPage * itemsPerPage
+  )
+  const paginatedProducts = recentProducts.slice(
+    (productPage - 1) * itemsPerPage,
+    productPage * itemsPerPage
+  )
+  const paginatedChats = latestChats.slice(
+    (chatPage - 1) * itemsPerPage,
+    chatPage * itemsPerPage
+  )
+
+  const Pagination = ({ currentPage, totalPages, onPageChange }) => {
+    return (
+      <div className='flex justify-center mt-4'>
+        <button
+          onClick={() => onPageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+          className='px-4 py-2 border rounded-l disabled:opacity-50'
+        >
+          Previous
+        </button>
+        <span className='px-4 py-2 border-t border-b'>
+          Page {currentPage} of {totalPages}
+        </span>
+        <button
+          onClick={() => onPageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
+          className='px-4 py-2 border rounded-r disabled:opacity-50'
+        >
+          Next
+        </button>
+      </div>
+    )
+  }
 
   return (
     <div className='py-6 space-y-6'>
@@ -291,15 +330,8 @@ const AdminDashboard = () => {
                 </tr>
               </thead>
               <tbody>
-                {recentUsers.map((user) => (
+                {paginatedUsers.map((user) => (
                   <tr key={user._id} className='border-b'>
-                    {/* <td className='px-4 py-2'>
-                      <img
-                        src={user.picture || 'default-avatar.jpg'} // Fallback if no profile picture
-                        alt={`${user.firstName} ${user.lastName}`}
-                        className='w-10 h-10 rounded-full object-cover'
-                      />
-                    </td> */}
                     <td className='px-4 py-2'>{user.firstName}</td>
                     <td className='px-4 py-2'>{user.lastName}</td>
                     <td className='px-4 py-2'>{user.email}</td>
@@ -320,6 +352,12 @@ const AdminDashboard = () => {
                     </td>
                   </tr>
                 ))}
+
+                <Pagination
+                  currentPage={userPage}
+                  totalPages={Math.ceil(recentUsers.length / itemsPerPage)}
+                  onPageChange={setUserPage}
+                />
               </tbody>
             </table>
           </div>
@@ -366,7 +404,7 @@ const AdminDashboard = () => {
                 </tr>
               </thead>
               <tbody>
-                {recentProducts.map((product) => (
+                {paginatedProducts.map((product) => (
                   <tr key={product._id} className='border-b'>
                     <td className='px-4 py-2'>{product.title}</td>
                     <td className='px-4 py-2'>{product.category}</td>
@@ -380,6 +418,12 @@ const AdminDashboard = () => {
                     </td>
                   </tr>
                 ))}
+
+                <Pagination
+                  currentPage={productPage}
+                  totalPages={Math.ceil(recentProducts.length / itemsPerPage)}
+                  onPageChange={setProductPage}
+                />
               </tbody>
             </table>
           </div>
@@ -421,7 +465,7 @@ const AdminDashboard = () => {
                 </tr>
               </thead>
               <tbody>
-                {latestChats.map((chat) => (
+                {paginatedChats.map((chat) => (
                   <tr key={chat._id} className='border-b'>
                     <td className='px-4 py-2'>
                       {chat.sender[0]?.firstName +
@@ -449,6 +493,12 @@ const AdminDashboard = () => {
                     </td>
                   </tr>
                 ))}
+
+                <Pagination
+                  currentPage={chatPage}
+                  totalPages={Math.ceil(latestChats.length / itemsPerPage)}
+                  onPageChange={setChatPage}
+                />
               </tbody>
             </table>
           </div>
