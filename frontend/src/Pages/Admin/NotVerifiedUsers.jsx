@@ -39,11 +39,7 @@ const Users = () => {
     axios
       .get(`${import.meta.env.VITE_DEV_BACKEND_URL}/users`)
       .then((response) => {
-        setUsers(
-          response.data.filter(
-            (user) => user.isVerified === true && user.isEnabled === true
-          )
-        )
+        setUsers(response.data.filter((user) => user.isVerified === false))
         setLoading(false)
       })
       .catch((error) => {

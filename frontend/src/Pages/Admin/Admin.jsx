@@ -7,6 +7,8 @@ import Products from './Products'
 import Chats from './Chats'
 import Contact from './Contact'
 import Transactions from './Transactions'
+import NotVerifiedUsers from './NotVerifiedUsers'
+import DisabledUsers from './DisabledUsers'
 
 const Admin = () => {
   return (
@@ -24,6 +26,8 @@ const Admin = () => {
             <Route path='/chats' element={<Chats />} />
             <Route path='/contacts' element={<Contact />} />
             <Route path='/transactions' element={<Transactions />} />
+            <Route path='/not-verified-users' element={<NotVerifiedUsers />} />
+            <Route path='/disabled-users' element={<DisabledUsers />} />
           </Routes>
         </div>
       </div>
