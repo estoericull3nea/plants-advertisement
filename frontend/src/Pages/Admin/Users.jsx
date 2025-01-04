@@ -1,4 +1,3 @@
-// Users.js
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { DataTable } from 'primereact/datatable'
@@ -7,8 +6,6 @@ import { Button } from 'primereact/button'
 import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
 import { toast } from 'react-hot-toast'
-import { InputNumber } from 'primereact/inputnumber'
-import { Calendar } from 'primereact/calendar'
 import { formatDate } from '../../utils/formatDate'
 
 const Users = () => {
@@ -36,9 +33,8 @@ const Users = () => {
     isVerified: true,
   })
 
-  const [globalFilter, setGlobalFilter] = useState('') // Global search state
+  const [globalFilter, setGlobalFilter] = useState('')
 
-  // Fetch users from backend
   useEffect(() => {
     axios
       .get(`${import.meta.env.VITE_DEV_BACKEND_URL}/users`)
@@ -52,7 +48,6 @@ const Users = () => {
       })
   }, [])
 
-  // Handle adding a new user
   const addUser = () => {
     axios
       .post(`${import.meta.env.VITE_DEV_BACKEND_URL}/users`, newUser)
@@ -82,21 +77,6 @@ const Users = () => {
       })
   }
 
-  // Handle deleting a user
-  const deleteUser = (userId) => {
-    axios
-      .delete(`${import.meta.env.VITE_DEV_BACKEND_URL}/users/${userId}`)
-      .then(() => {
-        setUsers(users.filter((user) => user._id !== userId))
-        toast.success('User deleted successfully!')
-      })
-      .catch((error) => {
-        console.error('Error deleting user:', error)
-        toast.error('Could not delete user!')
-      })
-  }
-
-  // Handle updating a user
   const updateUser = () => {
     axios
       .put(
@@ -139,26 +119,9 @@ const Users = () => {
       })
   }
 
-  // Handle viewing a single user
-  const viewUser = (userId) => {
-    axios
-      .get(`${import.meta.env.VITE_DEV_BACKEND_URL}/users/${userId}`)
-      .then((response) => {
-        setSelectedUser(response.data)
-        setShowDialog(true)
-        setIsEditing(false) // Set to view mode
-      })
-      .catch((error) => {
-        console.error('Error fetching user details:', error)
-        toast.error('Could not fetch user details!')
-      })
-  }
-
-  // Table Action Buttons
   const actionBodyTemplate = (rowData) => {
     return (
       <div className='flex gap-2'>
-        {/* Replace delete button with toggle enabled/disabled button */}
         <Button
           icon={rowData.isEnabled ? 'pi pi-lock-open' : 'pi pi-lock'}
           className={`p-button-rounded ${
@@ -221,7 +184,6 @@ const Users = () => {
       })
   }
 
-  // Skeleton loading while fetching users
   const skeletonLoader = (
     <div className='flex w-full flex-col gap-4'>
       <div className='skeleton h-32 w-full'></div>
@@ -231,7 +193,6 @@ const Users = () => {
     </div>
   )
 
-  // Dialog for adding or updating a user
   const userDialog = (
     <Dialog
       visible={showDialog}
@@ -241,7 +202,6 @@ const Users = () => {
       onHide={() => setShowDialog(false)}
     >
       <div className='p-fluid'>
-        {/* Existing fields */}
         <div className='p-field'>
           <label htmlFor='firstName'>First Name</label>
           <input
@@ -362,41 +322,7 @@ const Users = () => {
             className='input input-bordered w-full'
           />
         </div>
-        {/* <div className='p-field'>
-          <label htmlFor='age'>Age</label>
-          <input
-            id='age'
-            type='number'
-            value={isEditing ? selectedUser.age : newUser.age}
-            onChange={(e) =>
-              isEditing
-                ? setSelectedUser({ ...selectedUser, age: e.target.value })
-                : setNewUser({ ...newUser, age: e.target.value })
-            }
-            className='input input-bordered w-full'
-          />
-        </div> */}
-        {/* <div className='p-field'>
-          <label htmlFor='isVerified'>Verified</label>
-          <select
-            id='isVerified'
-            value={isEditing ? selectedUser.isVerified : newUser.isVerified}
-            onChange={(e) =>
-              isEditing
-                ? setSelectedUser({
-                    ...selectedUser,
-                    isVerified: e.target.value,
-                  })
-                : setNewUser({ ...newUser, isVerified: e.target.value })
-            }
-            className='select select-bordered w-full'
-          >
-            <option value='true'>Verified</option>
-            <option value='false'>Not Verified</option>
-          </select>
-        </div> */}
 
-        {/* Password Fields for Edit User */}
         {isEditing && (
           <>
             <div className='p-field'>
@@ -418,7 +344,6 @@ const Users = () => {
           </>
         )}
 
-        {/* Password Fields for Add User */}
         {!isEditing && (
           <>
             <div className='p-field'>
@@ -478,7 +403,6 @@ const Users = () => {
         }}
       />
 
-      {/* Global Search Field */}
       <div className='p-inputgroup mb-4'>
         <span className='p-inputgroup-addon'>
           <i className='pi pi-search'></i>
@@ -543,13 +467,13 @@ const Users = () => {
             field='municipality'
             header='Municipality'
             sortable
-            body={(rowData) => rowData.municipality || 'N/A'} // Display 'N/A' if municipality is null/undefined
+            body={(rowData) => rowData.municipality || 'N/A'}
           />
           <Column
             field='barangay'
             header='Barangay'
             sortable
-            body={(rowData) => rowData.barangay || 'N/A'} // Display 'N/A' if barangay is null/undefined
+            body={(rowData) => rowData.barangay || 'N/A'}
           />
           <Column
             field='dateOfBirth'
@@ -557,14 +481,9 @@ const Users = () => {
             sortable
             body={(rowData) =>
               rowData.dateOfBirth ? formatDate(rowData.dateOfBirth) : 'N/A'
-            } // If dateOfBirth is null/undefined, show 'N/A'
+            }
           />
-          {/* <Column
-            field='age'
-            header='Age'
-            sortable
-            body={(rowData) => (rowData.age != null ? rowData.age : 'N/A')} // Display 'N/A' if age is null/undefined
-          /> */}
+
           <Column
             field='isVerified'
             header='Verified'
@@ -594,19 +513,6 @@ const Users = () => {
               </span>
             )}
           />
-
-          {/* <Column
-            field='isVerified'
-            header='Verified'
-            sortable
-            body={(rowData) =>
-              rowData.isVerified != null
-                ? rowData.isVerified
-                  ? 'Yes'
-                  : 'No'
-                : 'N/A'
-            } // Display 'Yes'/'No' based on isVerified, 'N/A' if null
-          /> */}
 
           <Column header='Actions' body={actionBodyTemplate} />
         </DataTable>
